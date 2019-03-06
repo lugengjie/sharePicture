@@ -34,5 +34,39 @@ public class FileUploadUtil
 		}
 		return false;
 	}
+	
+	/**
+	 * 上传文件
+	 * 1.获取文件名后缀，用UUID生成唯一标识，拼接成新文件名
+	 * 2.根据文件名的hashCode%1000为存放文件夹
+	 * 3.转存文件到指定路径
+	 * 4.返回文件路径和名字
+	 * @param multipartFile
+	 * @param uploadPath
+	 * @return
+	 */
+	public static String upLoad(MultipartFile multipartFile,String localAbsolutePath)
+	{
+		String fileName=multipartFile.getOriginalFilename();
+		int fileNameHashCode=Math.abs(fileName.hashCode());
+		String packageName=(fileNameHashCode%1000)+"";
+		localAbsolutePath+="/"+packageName;
+		File newFilePath=new File(localAbsolutePath);
+		if(!newFilePath.exists())
+		{
+			newFilePath.mkdirs();
+		}
+		String suffixName=fileName.substring(fileName.lastIndexOf(".")+1);
+		String newFileName=UuidUtil.getUUID()+"."+suffixName;
+		try
+		{
+			multipartFile.transferTo(new File(newFilePath,newFileName));
+		}
+		catch (IOException e)
+		{
+			return null;
+		}
+		return packageName+"/"+newFileName;
+	}
 
 }

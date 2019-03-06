@@ -26,7 +26,18 @@
         border-radius:5px
     }
   </style>
-
+  <script type="text/javascript">
+      $(document).ready(function(){
+          $("#addAlbumButton").click(function(){
+	        	  $.ajax({ 
+	           		type: "POST",//方法类型
+	               dataType: "json",//预期服务器返回的数据类型
+	               url: "/album/addAlbum" ,//url
+	               data: $('#addAlbumForm').serialize()        
+	           });
+          });           
+      });
+  </script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -34,7 +45,7 @@
        <!--  <div class="container"> -->
             <div style="margin-left:4%">
                 <div class="navbar-header" >
-                    <img src="logo.png" style="width:50px;height: 50px">
+                    <img src="./../logo.png" style="width:50px;height: 50px">
                 </div>
                 <ul class="nav navbar-nav">
                     <li><a class="navbar-brand" href="#">SharePicture</a></li>
@@ -65,7 +76,7 @@
         <div class="container" style="margin-left:-15px;">
            <div class="row">
               <div class="col-md-2" >
-                <img src="aa.jfif" style="height:150px;width:140px;margin-top:-60px;" class="img-thumbnail">
+                <img src="./../aa.jfif" style="height:150px;width:140px;margin-top:-60px;" class="img-thumbnail">
               </div>
               <div class="col-md-2" style="margin-left:-3%;margin-top:-2%">
                 <h2><strong>卢耿杰</strong></h2>
@@ -98,14 +109,73 @@
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active" style="margin-left:4%;margin-right:4%">  
             <div>
-                <div class="myPanel" style="text-align: center;">
-                  <div style="border:2px dashed #dedede;width:90%;height:300px;margin:13px">
-                      <div style="margin-top: 50%;font-size: 20px;">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        <p>创建相册</p>
+                <a data-toggle="modal" data-target="#addAlbum">
+                    <div class="myPanel" style="text-align: center;">
+                      <div style="border:2px dashed #dedede;width:90%;height:300px;margin:13px">
+                          <div style="margin-top: 50%;font-size: 20px;">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <p>创建相册</p>
+                          </div>
                       </div>
-                  </div>
-                </div>   
+                    </div>  
+                </a>
+                <!-- 添加相册模态框 -->
+                <div class="modal fade" id="addAlbum" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:7%">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">新建相册</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addAlbumForm" role="form">
+                                    <div class="form-group">
+                                        <input name="albumTitle" type="text" class="form-control input-lg"  placeholder="相册标题，不能超过32个字符"> 
+                                    </div>
+                                    <div class="form-group">
+                                        <select  name="albumClassification" class="form-control input-lg">
+                                            <option>UI/UX</option>
+                                            <option>平面</option>
+                                            <option>插画/漫画</option>
+                                            <option>家居/家装</option>
+                                            <option>女装</option>
+                                            <option>男士/风尚</option>
+                                            <option>婚礼</option>
+                                            <option>工业设计</option>
+                                            <option>摄影</option>
+                                            <option>造型/美妆</option>
+                                            <option>美食</option>
+                                            <option>旅游</option>
+                                            <option>手工/布艺</option>
+                                            <option>健身/舞蹈</option>
+                                            <option>儿童</option>
+                                            <option>美图</option>
+                                            <option>明星</option>
+                                            <option>美女</option>
+                                            <option>礼物</option>
+                                            <option>极客</option>
+                                            <option>动漫</option>
+                                            <option>建筑设计</option>
+                                            <option>人文艺术</option>
+                                            <option>数据图</option>
+                                            <option>游戏</option>
+                                            <option>汽车/摩托</option>
+                                            <option>电影/图书</option>
+                                            <option>生活百科</option>
+                                            <option>教育</option>
+                                            <option>运动</option>
+                                        </select> 
+                                    </div> 
+                                    
+                                </form>    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button id="addAlbumButton" type="button" class="btn btn-primary">创建相册</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="myPanel" style="text-align: center;">
                     <div style="border:2px dashed #dedede;width:90%;height:300px;margin:13px">
                         <div style="margin-top: 50%;font-size: 20px;">

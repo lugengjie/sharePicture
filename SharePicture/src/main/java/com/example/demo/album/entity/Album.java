@@ -9,9 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.example.demo.account.entity.User;
 import com.example.demo.picture.entity.Picture;
 
 @Entity
@@ -29,6 +31,8 @@ public class Album
 	private String albumCover;
 	// 图片数
 	private int pictureNumber;
+	//用户
+	private User user;
 	// 图片集合
 	private List<Picture> pictures = new ArrayList<Picture>();
 	
@@ -39,6 +43,12 @@ public class Album
 		return id;
 	}
 	
+	@ManyToOne(cascade=CascadeType.ALL)
+	public User getUser()
+	{
+		return user;
+	}
+
 	@Column(nullable=false)
 	public String getAlbumTitle()
 	{
@@ -106,5 +116,19 @@ public class Album
 	{
 		this.pictures = pictures;
 	}
+	
+	public void setUser(User user)
+	{
+		this.user = user;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Album [id=" + id + ", albumTitle=" + albumTitle + ", albumDescribe=" + albumDescribe
+				+ ", albumClassification=" + albumClassification + ", albumCover=" + albumCover + ", pictureNumber="
+				+ pictureNumber + ", user=" + user ;
+	}
+	
 
 }

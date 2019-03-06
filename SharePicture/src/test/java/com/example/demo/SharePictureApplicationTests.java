@@ -48,8 +48,8 @@ public class SharePictureApplicationTests
 	@Test
 	public void saveAccountAndSendEmialTest()
 	{
-		User user = userRepository.findByEmial("1923808485@qq.com");
-//		accountService.saveAccountAndSendEmial(user);
+		User user = userRepository.findByEmial("xueyuancpt@163.com");
+		System.out.println(user.getAlbums().get(0));
 	}
 
 	@Test
