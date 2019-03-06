@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.picture.entity.PictureDTO;
 import com.example.demo.picture.service.PictureService;
 
+@RequestMapping("/picture")
 @Controller
 public class PictureController
 {
@@ -25,7 +26,7 @@ public class PictureController
 	 * @param picture
 	 * @return
 	 */
-	@RequestMapping("/upp")
+	@RequestMapping("/uploadPicture")
 	public @ResponseBody String uploadPicture(MultipartFile multipartFile,PictureDTO picture)
 	{
 		if(pictureService.uploadPicture(multipartFile, picture))
