@@ -47,16 +47,15 @@ public class FileUploadUtil
 	 */
 	public static String upLoad(MultipartFile multipartFile,String localAbsolutePath)
 	{
-		String fileName=multipartFile.getOriginalFilename();
-		int fileNameHashCode=Math.abs(fileName.hashCode());
-		String packageName=(fileNameHashCode%1000)+"";
+		int fileHashCode=Math.abs(multipartFile.hashCode());
+		String packageName=(fileHashCode%1000)+"";
 		localAbsolutePath+="/"+packageName;
 		File newFilePath=new File(localAbsolutePath);
 		if(!newFilePath.exists())
 		{
 			newFilePath.mkdirs();
 		}
-		String suffixName=fileName.substring(fileName.lastIndexOf(".")+1);
+		String suffixName="jpeg";
 		String newFileName=UuidUtil.getUUID()+"."+suffixName;
 		try
 		{

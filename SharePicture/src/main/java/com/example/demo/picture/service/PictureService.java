@@ -52,7 +52,7 @@ public class PictureService implements IPictureService
 	public boolean uploadPicture(MultipartFile multipartFile,PictureDTO picture)
 	{
 		if(multipartFile==null)
-		{
+		{	
 			return false;
 		}
 		if(!FileUploadUtil.isImage(multipartFile))

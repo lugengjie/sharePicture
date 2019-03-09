@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<title>菜鸟教程(runoob.com)</title> 
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+</script>
+<script>
+$(document).ready(function(){
+	  $("#uploadPictureInput").change(function(){
+	   		var pictureFile = document.getElementById('uploadPictureInput').files[0];
+	   		var fileReader = new FileReader();
+	   		fileReader.readAsDataURL(pictureFile);
+			fileReader.onload=function(){
+				var image = new Image();
+				image.src = fileReader.result;
+				/*将图片显示在屏幕*/
+			    image.onload = function(){
+			    	compressImage(image);
+			    }
+			    
+			};
+	  });
+
+	  function compressImage(image){
+	  		var canvas=document.createElement('canvas');
+	  		var context = canvas.getContext('2d');
+			var pictureQuality=1;
+			// 将 canvas宽高设为原图的1/10，即将原图宽高压缩10倍
+			if(image.width>658){
+				canvas.width = 658;
+				canvas.height = image.height / image.width * 658;
+				pictureQuality=0.92;
+			}else{
+				canvas.width = image.width;
+				canvas.height = image.height;
+			}
+
+			// 绘制图片
+  			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+  			canvas.toBlob(function(blob){
+  				var formData = new FormData();
+  	  			formData.append('multipartFile',blob);
+  				$.ajax({
+  					  url: "/picture/uploadPicture",
+  					  type: "POST",
+  					  data: formData,
+  					  processData: false,	
+  					  contentType: false   
+  				});	
+  			},'image/jpeg', pictureQuality);
+  			
+	  } 
+});
+</script>
+</head>
+<body>
+<input id="uploadPictureInput" type="file" accept="image/*" >
+<img id="testImg" src="" style="width:150px;height:150px">
+</body>
+</html>
