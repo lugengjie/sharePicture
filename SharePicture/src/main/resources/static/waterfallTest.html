@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<title>菜鸟教程(runoob.com)</title> 
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+</script>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    img {
+    	display:none;
+    	width:200px;
+    	height:auto;
+        position:absolute;
+    }
+
+
+    div
+    {
+        border:1px solid black;
+    }
+    
+  </style>
+  <script type="text/javascript">
+  	$(document).ready(function(){
+  		   window.index=0;		 
+  		   var box = document.getElementById('box');
+    	   var images =box.children;  	  
+    	   var pageWidth=window.innerWidth;
+    	   var imageWidth=250;
+    	   var gap = 5;
+    	   var heightArray=[];
+    	   var boxColum=parseInt(pageWidth / (imageWidth + gap));
+    	   // var scrollTopAndViewHeight=$(window).height() + $(window).scrollTop();
+    	  
+    	   recursionAndOnload(images.length,images,pageWidth,imageWidth,boxColum,gap,heightArray);
+    	   window.onscroll=function(){   
+    	   		// console.log($(window).height() + $(window).scrollTop());
+    	   		scrollAndOnload(images.length,images,pageWidth,imageWidth,boxColum,gap,heightArray);
+    	   }
+  	});
+  	
+	  function recursionAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray){
+	  		if(index<imagesLength){
+		  		pictureLoad(images);
+		  		images[index].onload=function(){
+		  			waterFall(pageWidth,images,imageWidth,boxColum,gap,heightArray);
+		  			if(images[index].offsetTop<=($(window).height() + $(window).scrollTop())){	
+		  				    // console.log('offsetTop:'+images[index].offsetTop+'  '+scrollTopAndViewHeight);
+		  				 	index++;
+		  					recursionAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray);
+		  			}
+		  		}
+	  	   }
+	  }
+
+	  function scrollAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray){
+	  		if((index+1)<imagesLength){	
+  				if(images[index].offsetTop<=($(window).height() + $(window).scrollTop())){
+  					index++;
+	  				pictureLoad(images);
+	  				images[index].onload=function(){
+			  			waterFall(pageWidth,images,imageWidth,boxColum,gap,heightArray);
+			  			scrollAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray);	
+		  			}  			
+	  			}
+	  		}
+	  }
+
+	  function pictureLoad(images){ 
+	  		 console.log(index); 
+  			images[index].style.display='block';
+  			images[index].setAttribute('src',images[index].getAttribute("data_src"));
+	  }
+
+  	function waterFall(pageWidth,images,imageWidth,boxColum,gap,heightArray){
+  		if(index<boxColum){			
+  			images[index].style.top = 0;
+  			images[index].style.left = (imageWidth+gap)*index+'px';
+  			heightArray.push(images[index].offsetHeight);	
+  		}else{
+  			var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));
+  			images[index].style.top = heightArray[minHeightIndex]+gap+'px';
+  			images[index].style.left = images[minHeightIndex].offsetLeft+'px';
+  			heightArray[minHeightIndex] = heightArray[minHeightIndex]+images[index].offsetHeight+gap;
+  		}
+  	}
+  </script>
+</head>
+<body>
+	<div id="box">
+	<!-- 	<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif">
+		<img  src="aa.jfif" data_src="aa.jfif"> -->
+		<!--  <img  src="" data_src="aa.jfif" style="top:100px">
+		<img  src="" data_src="aa.jfif" style="left:100px">
+		<img  src="" data_src="aa.jfif" style="left:200px"> -->
+		
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">
+
+		<img  src="" data_src="aa.jfif">
+		<img  src="" data_src="aa.jfif">  
+	   <!--  <img  src="" data_src="aa.jfif" style="height:100px; ">
+		<img   src="" data_src="aa.jfif" style="height:344px; ">
+		<img src="" data_src="aa.jfif"  style="height:222px;">
+		<img src="" data_src="aa.jfif"  style="height:78px;">
+		<img src="" data_src="aa.jfif"  style="height:100px;">
+		<img src="" data_src="aa.jfif"  style="height:136px;">
+		<img src="" data_src="aa.jfif"  style="height:223px;">
+		<img src="" data_src="aa.jfif"  style="height:431px;">
+		<img src="" data_src="aa.jfif"  style="height:98px;">
+		<img src="" data_src="aa.jfif"  style="height:333px;">
+		<img src="" data_src="aa.jfif"  style="height:222px;">
+		<img src="" data_src="aa.jfif"  style="height:153px;">
+		<img src="" data_src="aa.jfif"  style="height:88px;">
+		<img src="" data_src="aa.jfif"  style="height:50px;">
+		<img src="" data_src="aa.jfif"  style="height:466px;">
+		<img src="" data_src="aa.jfif"  style="height:60px;">
+		<img src="" data_src="aa.jfif"  style="height:100px;">  -->
+</div>
+
+
+</body>
+</html>
