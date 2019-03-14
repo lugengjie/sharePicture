@@ -13,22 +13,27 @@
     }
     div
     {
-       /* border:1px solid black;*/
+        border:1px solid black;
     }
     .uploadPicturePanel
     {
-        width:18%;
-        height:126px;
+        width:18%; 
         background-color:white;
         margin:10px;
         margin-left:1.08%;
-        float:left;
-        border-radius:5px
+        float:left;  
     }
+    .uploadPicturePanel:hover .buttonShowAndHide{
+    	display:block ;
+	}
+	.buttonShowAndHide{
+		display:none;
+	}
+   /* .btn:focus{outline:none;}*/
   </style>
   <script type="text/javascript">
   		$(document).ready(function(){
-		  	$('#selectAlbum').modal('show');
+		  	// $('#selectAlbum').modal('show');
 
 		  /*	在选择相册模态框中，当相册个数超过6个时添加下拉条*/
 		  	var albumNuber=$('#albumUl li').length;
@@ -64,7 +69,7 @@
                       <li><a href="#">推荐</a></li>    
                   </ul>
               </div>
-              <div class="col-md-4 col-md-offset-4"  style="margin-right:-100%">     
+              <div class="col-md-4 col-md-offset-4"  style="margin-right:-100px">     
                       <form class="navbar-form navbar-right" role="search">
                           <div class="form-group">
                               <input type="text" class="form-control" placeholder="Search">
@@ -80,7 +85,7 @@
     </nav>
 
 <!--  相册相关数据   -->
-<div class="panel panel-default" style="width:91.9%;margin-left:4%">
+<div class="panel panel-default" style="width:1250px;;margin-left:50px">
     <div class="panel-body">
         <div class="container" style="width:1230px">
             <div class="row">
@@ -112,13 +117,46 @@
             <div class="row">
 
                 <a data-toggle="modal" data-target="#uploadPicture">
-                    <div class="uploadPicturePanel" style="text-align: center;border:2px dashed #dedede;">                 
+                    <div class="uploadPicturePanel" style="text-align: center;border:2px dashed #dedede;height:126px;">                 
                           <div style="margin-top: 14%;font-size: 20px;">
                               <span class="glyphicon glyphicon-plus"></span>
                               <p>添加图片</p>
                           </div>    
                     </div>  
                 </a>
+
+                <div class="uploadPicturePanel">
+                	<div class="buttonShowAndHide" style="position:absolute;z-index:2">      		            		
+						<div class="btn-group">
+						    <a type="button" class="btn btn-default" >收藏</a>
+						    <a type="button" class="btn btn-default">
+						    	<span class="glyphicon glyphicon-flash"></span>
+						    </a>		    
+						</div>
+					</div>
+					<div class="buttonShowAndHide" style="position:absolute;z-index:2;margin-left:13.7%">   
+            			<a type="button" class="btn btn-default">
+            				<span class="glyphicon glyphicon-heart"></span>
+            			</a>	
+            		</div> 
+                	
+                	<div>
+                		<img src="aa.jfif" style="width:226px;border-radius:5px 5px 0 0;">
+                	</div>
+                	<div style="border-bottom:2px solid #f2f2f2;">
+	                	<span >
+	                		【直白摄影】吹风机+落地扇摄影|摄影|产品|Mugostudio - 原创作品 - 站酷 
+	                	</span>
+                	</div>
+                	<div style="border-radius:0 0 5px 5px;display:flex;height:70px">
+                		<div style="align-self:center;margin-left: 15px;">
+                			<img src="aa.jfif" class="img-circle" style="width:34px;height:34px;">
+                		</div>
+                		<div style="align-self:center;margin-left: 15px;padding:0">
+                			<span >卢耿杰收藏到<br>工业设计</span>
+                		</div>
+                	</div>
+                </div>
 
                 <!-- 上传图片模态框 -->
                 <div class="modal fade" id="uploadPicture" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:7%">
@@ -188,12 +226,6 @@
 											</div>
                              	 		</div>
                              	 	</div>
-
-                             	 
-
-
-
-
                              	 </div>
                             </div> 
                         </div>
@@ -205,8 +237,10 @@
         </div>
     </div>
     <div id="menu2" class="tab-pane fade"> 
-         <h3>菜单 3</h3>
-         <p>这是菜单 3 显示的内容。这是菜单 3 显示的内容。这是菜单 3 显示的内容。</p>
+         <div class="container" style="width:1230px;min-height:400px ">
+            <div class="row">
+            </div>
+         </div>
     </div>   
 </div>
 
