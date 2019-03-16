@@ -1,14 +1,19 @@
 package com.example.demo.picture.controller;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.album.entity.AlbumDTO;
+import com.example.demo.album.service.AlbumService;
+import com.example.demo.album.service.IAlbumService;
 import com.example.demo.picture.entity.PictureDTO;
+import com.example.demo.picture.service.IPictureService;
 import com.example.demo.picture.service.PictureService;
 
 @RequestMapping("/picture")
@@ -17,11 +22,15 @@ public class PictureController
 {
 	
 	@Autowired
-	PictureService pictureService;
+	IPictureService pictureService;
+	@Autowired
+	IAlbumService albumService;
 	
-	@RequestMapping("/pic")
-    public String picUpload(){
-        return "NewFile";
+	@RequestMapping("/addPicture")
+    public String addPicture(Model model){
+		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		model.addAttribute("albums", albums);
+        return "addPicture";
     }
 	
 	/**

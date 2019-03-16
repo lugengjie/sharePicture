@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"> 
+  <title>上传图片</title>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    body{background-color:#f5f5f5;}
+    /*防止打开模态框时页面抖动*/
+
+	.modal-open{
+       overflow-y: scroll;
+    }
+    body{
+        padding-right:1px!important;
+    }
+
+    /*div{border:1px solid black;}*/
+    .uploadPicturePanel{width:18%;background-color:white;margin:10px;margin-left:1.08%;float:left;}
+    .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
+	.buttonShowAndHide{display:none;}
+
+	/* 导航栏 */
+    nav{background-color:white;}
+    nav .container{width:1250px;}
+    #navLogo{width:50px;height: 50px}
+    #bellButton{font-size: 20px;color:#a6a6a6;margin-top: 8px}
+
+    /*相册相关数据*/
+    #albumDataPanel{width:1250px;margin-left:50px;margin-top:75px;}
+    #albumDataPanel .container{width:1230px}
+    #albumDescribeSpan{color:#777}
+    #albumDataPanelFooter{background-color:white;}
+    #albumDataPanelFooter .container{width:1230px;background-color:white}
+
+    /*图片组*/
+    #picturePage .container{width:1275px;}
+    #outerBorder{text-align: center;border:2px dashed #dedede;height:126px;}
+    #innerBorder{margin-top: 14%;font-size: 20px;}
+
+    /*循环显示图片*/
+    .collectPictureButton{position:absolute;z-index:2}
+    .likePictureButton{position:absolute;z-index:2;margin-left:13.7%}
+
+	/*选择相册模态框*/
+	#selectAlbumCol{height:314px}
+	#selectAlbumModal .container{width:100%;height: 100%}
+	#selectAlbumModal{margin-top:3%;}
+	#inputPictureData{width:200px;}
+	#createAlbumButton{width:100%;display:none;margin-right:10px}
+	.uploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
+	#albumUl li:hover .uploadPictureButton{display:block;}
+	#uploadPictureSize{width:200px;height:220px}
+
+	/*上传图片模态框*/
+	#uploadPictureModal{margin-top:7%}
+	#uploadPictureInnerBorder{height:280px;margin:20px;border:2px dashed #dedede;}
+	#uploadPictureCue01{text-align:center;background-color:#ededed;width:120px;height:50px;margin-left:40%;margin-top: 70px}
+	#uploadPictureCue02{text-align:center;margin-left:10px;margin-top:30px;font-size:16px;color:#999999}
+	#uploadPictureCue03{text-align:center;margin-top:40px;font-size:16px;color:#999999}
+	#uploadPictureInput{display:none;}
+  </style>
+  <script type="text/javascript">
+  		$(document).ready(function(){
+		  	/*上传图片的FormDate变量*/
+		  	var formData;
+
+		  /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
+		  	var albumNuber=$('#albumUl li').length;
+		  	if(albumNuber>6){
+		  		$("#dropDownBar").addClass("row pre-scrollable");
+		  		$('#dropDownBar').css({
+		  			'height':'250px',
+		  			'margin-left':'0px'
+		  		});
+		  	}
+
+		  	/*在选择相册模态框中，搜索或创建相册*/
+		  	function searchOrBuildAlbum() {
+    			var searchAlbumName = $("#searchOrBuildAlbum").val();    
+    			if (searchAlbumName == "") {
+     			 	$("#albumUl li").show();
+     			 	$('#createAlbumButton').hide();
+    			}
+    			else
+    			{
+    				$('#createAlbumButton').show();
+      				$("#albumUl li").each(function() {
+            			var albumName = $(this).text();                       
+            			if (albumName.indexOf(searchAlbumName) != -1) {
+              				$(this).show();
+            			} else {
+              				$(this).hide();
+            			}
+          			});
+    			}
+  			}
+
+			/*	在选择相册模态框中，当'搜索或创建相册'有输入时触发事件*/
+			$("#searchOrBuildAlbum").bind('input propertychange',function () {	
+					searchOrBuildAlbum();
+			});
+
+			/*	在上传图片模态框中，点击特定区域触发提交文件*/
+			$("#uploadPictureInnerBorder").click(function(){
+ 				$("#uploadPictureInput").trigger("click");
+			});
+
+			/*在上传图片模态框中，当文件输入框变化时，FileReader()读取图片，并给选择相册框的图片src赋值*/
+			$("#uploadPictureInput").change(function(){
+		   		var pictureFile = document.getElementById('uploadPictureInput').files[0];
+		   		var fileReader = new FileReader();
+		   		fileReader.readAsDataURL(pictureFile);
+				fileReader.onload=function(){
+					/*清除文件输入框内容*/
+					$("#uploadPictureInput").val("");
+
+					var image = new Image();
+					image.src = fileReader.result;
+					/*将图片显示在屏幕*/
+					document.getElementById('uploadPictureSize').src=fileReader.result;
+				    image.onload = function(){
+				    	compressImage(image);
+				    }   
+				};
+	  		});
+
+			/*文件压缩*/
+			function compressImage(image){
+		  		var canvas=document.createElement('canvas');
+		  		var context = canvas.getContext('2d');
+				var pictureQuality=1;
+				// 图片的宽度超过658px就改为658同时高度等比例，同时降低清晰度进行压缩
+				// 图片的宽度没超过658就不进行压缩
+				if(image.width>658){
+					canvas.width = 658;
+					canvas.height = image.height / image.width * 658;
+					pictureQuality=0.92;
+				}else{
+					canvas.width = image.width;
+					canvas.height = image.height;
+				}
+
+				// 绘制图片
+	  			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+	  			//将canvas上的图片转为二进制大文件同时添加到FormData
+	  			canvas.toBlob(function(blob){
+	  				formData = new FormData();
+	  	  			formData.append('multipartFile',blob);
+	  	  			$('#selectAlbumModal').modal('show');
+	  	  			$('#uploadPictureModal').modal('hide');
+	  			},'image/jpeg', pictureQuality);		
+	        } 	  		
+			
+			 /*  提交压缩后图片按钮的触发事件 */
+			 $(".uploadPictureButton").click(function(){
+		        	var albumId=$(this).siblings().attr("albumId");
+		        	formData.append('albumId',albumId);
+		        	formData.append('pictureLabel',$(pictureLabel).val());
+		        	formData.append('pictureDescribe',$(pictureDescribe).val());
+		        	$.ajax({
+					  url: "/picture/uploadPicture",
+					  type: "POST",
+					  data: formData,
+					  processData: false,	
+					  contentType: false ,
+					  success: function(data){
+						  $('#selectAlbumModal').modal('hide');     
+	              }
+		  			});	      	
+			  });
+			 
+			 $("#createAlbumButton").click(function(){
+				 var albumTitle=$("#searchOrBuildAlbum").val();
+				 /* $.ajax({
+					  url: "/album/addAlbum?albumTitle="+albumTitle,
+					  type: "GET",
+					  processData: false,	
+					  contentType: false
+		  			}); */
+		  			var url="/album/addAlbumAtSelectAlbum?albumTitle="+albumTitle;
+				 $('#albumUl').load(url);
+			 });
+  	 });
+  	</script>
+</head>
+<body>
+
+   <!-- 导航栏 -->
+    <nav class="navbar navbar-fixed-top" role="navigation">
+        <div class="container">
+	        <div class="row">
+	            <div class="col-md-4">
+	                <div class="navbar-header" >
+	                    <img id="navLogo" src="logo.png">
+	                </div>
+	                <ul class="nav navbar-nav">
+	                    <li><a class="navbar-brand" href="#">SharePicture</a></li>
+	                    <li><a href="#">首页</a></li>
+	                    <li><a href="#">推荐</a></li>    
+	                </ul>
+	            </div>
+	            <div class="col-md-4 col-md-offset-4">     
+	                    <form class="navbar-form navbar-right" role="search">
+	                        <div class="form-group">
+	                            <input type="text" class="form-control" placeholder="Search">
+	                        </div>
+	                        <button type="submit" class="btn btn-default">提交</button>
+	                    </form>
+	                    <div class="navbar-header navbar-right">
+	                    	<button  id="bellButton" class="btn btn-default">
+	                        <span  class="glyphicon glyphicon-bell"></span>
+	                        </button> 
+	                    </div>  
+	            </div>
+	        </div>
+        </div>
+    </nav>
+
+<!--  相册相关数据   -->
+<div id="albumDataPanel" class="panel panel-default">
+    <div class="panel-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6" >
+                    <h3><strong>海贼王打赏</strong>&nbsp;<span style="color: #ddd">|</span>&nbsp;<small>所属分类:<span style="color: #9e7e6b">UI/UX</span> </small></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <br>
+                    <span id="albumDescribeSpan">这是一个画板测试</span>
+                </div>
+            </div>
+        </div>    
+    </div>
+    <div id="albumDataPanelFooter" class="panel-footer">
+         <div class="container">
+              <ul class="nav nav-tabs navbar-right">
+                  <li class="active"><a data-toggle="tab" href="#picturePage">1收藏</a></li>
+                  <li><a data-toggle="tab" href="#menu2">被1人关注</a></li>
+              </ul>
+         </div>  
+    </div>
+</div>
+
+<div class="tab-content">
+    <div id="picturePage" class="tab-pane fade in active"> 
+        <div class="container">
+            <div class="row">
+
+                <a data-toggle="modal" data-target="#uploadPictureModal">
+                    <div id="outerBorder" class="uploadPicturePanel">     
+                          <div id="innerBorder">
+                              <span class="glyphicon glyphicon-plus"></span>
+                              <p>添加图片</p>
+                          </div>    
+                    </div>  
+                </a>
+
+                <div class="uploadPicturePanel">
+                	<div class="buttonShowAndHide collectPictureButton">      		            		
+						<div class="btn-group">
+						    <a type="button" class="btn btn-default" >收藏</a>
+						    <a type="button" class="btn btn-default">
+						    	<span class="glyphicon glyphicon-flash"></span>
+						    </a>		    
+						</div>
+					</div>
+					<div class="buttonShowAndHide likePictureButton">   
+            			<a type="button" class="btn btn-default">
+            				<span class="glyphicon glyphicon-heart"></span>
+            			</a>	
+            		</div> 
+                	<div>
+                		<img src="./../aa.jfif" style="width:226px;border-radius:5px 5px 0 0;">
+                	</div>
+                	<div style="border-bottom:2px solid #f2f2f2;">
+	                	<span >
+	                		【直白摄影】吹风机+落地扇摄影|摄影|产品|Mugostudio - 原创作品 - 站酷 
+	                	</span>
+                	</div>
+                	<div style="border-radius:0 0 5px 5px;display:flex;height:70px">
+                		<div style="align-self:center;margin-left: 15px;">
+                			<img src="./../aa.jfif" class="img-circle" style="width:34px;height:34px;">
+                		</div>
+                		<div style="align-self:center;margin-left: 15px;padding:0">
+                			<span >卢耿杰收藏到<br>工业设计</span>
+                		</div>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div id="menu2" class="tab-pane fade"> 
+         <div class="container" style="width:1230px;min-height:400px ">
+            <div class="row">
+            </div>
+         </div>
+    </div>
+
+</div>
+
+
+<!-- 上传图片模态框 -->
+<!-- 上传图片输入框已隐藏 -->
+<input id="uploadPictureInput" type="file" accept="image/*" >
+<div class="modal fade" id="uploadPictureModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">上传收藏</h4>
+            </div>
+            <div class="modal-body">
+                  <div id="uploadPictureInnerBorder">
+                        <div id="uploadPictureCue01">
+                            <h1><small>上传收藏</small></h1>
+                        </div>
+                        <div id="uploadPictureCue02">
+                            <span>
+                                <small>支持单张10M以内图片上传</small>
+                            </span>
+                        </div>
+                        <div id="uploadPictureCue03">
+                            <span>
+                                <small>[提示]请严格遵守保密法律法规，严禁在互联网、存储、处理、传输、发布涉密信息</small>
+                            </span>
+                      </div>
+                  </div>
+            </div>   
+        </div>
+    </div>
+</div>
+
+<!-- 选择相册模态框 -->
+<div class="modal fade" id="selectAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">上传收藏</h4>
+            </div>
+            <div class="modal-body">
+             	 <div class="container">
+             	 	<div class="row">
+             	 		<div class="col-md-5">
+             	 			<img id="uploadPictureSize" src="">
+             	 			<div id="inputPictureData" class="form-group">
+             	 				<br>
+             	 				<textarea id="pictureDescribe" class="form-control" placeholder="输入描述" ></textarea>
+             	 				<br>
+             	 				<input id="pictureLabel" type="text" class="form-control" placeholder="输入标签">
+						  	</div>
+             	 		</div>
+             	 		<div class="col-md-7"> 
+             	 			<div id="selectAlbumCol" class="row">     	 	
+             	 			<input id="searchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
+             	 			<br>
+             	 			<div id="dropDownBar">
+             	 				<ul id="albumUl" class="list-group" th:fragment="albumUl">
+								    <li class="list-group-item"  th:each="albums : ${albums}">
+								    	<span th:text="${albums.albumTitle}" th:albumId="${albums.id}"></span>
+								    	<button class="btn btn-danger uploadPictureButton" >收藏</button>
+								    </li>  						       
+								</ul>
+							</div>
+							</div>
+							<div class="row">	
+								<button id="createAlbumButton" class="btn btn-default">创建相册</button>
+							</div>
+             	 		</div>
+             	 	</div>
+             	 </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+
+  
+    
+    
+
+</body>
+</html>

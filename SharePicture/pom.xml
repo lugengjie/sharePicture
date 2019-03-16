@@ -79,8 +79,10 @@
 				<configuration>
 					<fork>true</fork>
 				</configuration>
-			</plugin>
+			</plugin>	
 		</plugins>
+		
 	</build>
+
 
 </project>

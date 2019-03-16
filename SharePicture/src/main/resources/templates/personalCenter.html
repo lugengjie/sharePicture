@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"> 
   <title>Bootstrap 实例 - 面板脚注</title>
@@ -7,97 +7,129 @@
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
+  	 /* div
+    {
+        border:1px solid black;
+    }  */
+    
     body
     {
       background-color:#f5f5f5;
     }
-    div
-    {
-        /*border:1px solid black;*/
-    }
+
     .myPanel
     {
         width:18%;
         height:326px;
+        text-align: center;
         background-color:white;
-        margin:10px;
-        margin-left:14px;
+        padding:12px;
+       	margin:10px;
+        margin-left:1.08%;
         float:left;
         border-radius:5px
     }
+   
+    /* navCss*/
+    nav{background-color:white;}
+    nav .container{width:1250px;}
+    #navLogo{width:50px;height: 50px}
+    #bellButton{font-size: 20px;color:#a6a6a6;margin-top: 8px}
+
+    /*pictureAndNamePanelCss*/
+    #pictureAndNamePanel{margin-left:4%;margin-right:4%;margin-top:8.5%;}
+    #pictureAndNamePanel .container{width:1220px;}
+    #userPicture{height:150px;width:140px;margin-top:-60px;}
+    #userName{margin-top:-2%;margin-left:-4%}
+    #setting{font-size: 25px;text-align: right}
+    #fans{border-right:1px solid #ededed;width:70px;margin-left:1.3%}
+    #follow{width:70px}
+    #fansAndFollow{text-align:center;}
+    #navTabPanel{background-color:white;}
+
+    /* 相册组 */
+    #albumPage .container{width:1275px;}
+    .outerBorder{border:2px dashed #dedede;width:100%;height:100%;}
+    .innerBorder{margin-top: 50%;font-size: 20px;}
+    .coverPicture{height:65%;width:99%;margin-bottom:1.6%;border:1.5px solid #ededed;}
+    .littlePicture{height:20%;width:32.34%;float:left;margin-right:1%;border:1.5px solid #ededed;}
+    .albumEditButton{margin-top: 4%}
+
+
+     <!-- 添加相册模态框 -->
+     #addAlbum{margin-top:7%}
+
   </style>
   <script type="text/javascript">
       $(document).ready(function(){
-          $("#addAlbumButton").click(function(){
-	        	  $.ajax({ 
-	           		type: "POST",//方法类型
-	               dataType: "json",//预期服务器返回的数据类型
-	               url: "/album/addAlbum" ,//url
-	               data: $('#addAlbumForm').serialize()        
-	           });
-          });           
+      	   /*上传图片*/
+          $("#addAlbumButton").click(function(){ 
+	           $('#addAlbumForm').submit();
+          });    
       });
   </script>
 </head>
 <body>
+
     <!-- 导航栏 -->
-    <nav class="navbar navbar-default" role="navigation" style="background-color:white">
-       <!--  <div class="container"> -->
-            <div style="margin-left:4%">
-                <div class="navbar-header" >
-                    <img src="./../logo.png" style="width:50px;height: 50px">
-                </div>
-                <ul class="nav navbar-nav">
-                    <li><a class="navbar-brand" href="#">SharePicture</a></li>
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#">推荐</a></li>    
-                </ul>
-            </div>
-            <div style="margin-right:4%">
-                <ul class="nav navbar-nav navbar-right"> 
-                    <li>
-                        <span class="glyphicon glyphicon-bell" style="font-size: 25px;margin-top:50%;color:#a6a6a6"></span> 
-                    </li> 
-                    <li>
-                        <form class="navbar-form" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search">
-                            </div>
-                            <button type="submit" class="btn btn-default">提交</button>
-                        </form>
-                    </li> 
-                </ul> 
-            </div>
+    <nav class="navbar navbar-fixed-top" role="navigation">
+        <div class="container">
+	        <div class="row">
+	            <div class="col-md-4">
+	                <div class="navbar-header" >
+	                    <img id="navLogo" src="./../logo.png">
+	                </div>
+	                <ul class="nav navbar-nav">
+	                    <li><a class="navbar-brand" href="#">SharePicture</a></li>
+	                    <li><a href="#">首页</a></li>
+	                    <li><a href="#">推荐</a></li>    
+	                </ul>
+	            </div>
+	            <div class="col-md-4 col-md-offset-4">     
+	                    <form class="navbar-form navbar-right" role="search">
+	                        <div class="form-group">
+	                            <input type="text" class="form-control" placeholder="Search">
+	                        </div>
+	                        <button type="submit" class="btn btn-default">提交</button>
+	                    </form>
+	                    <div class="navbar-header navbar-right">
+	                    	<button  id="bellButton" class="btn btn-default">
+	                        <span  class="glyphicon glyphicon-bell"></span>
+	                        </button> 
+	                    </div>  
+	            </div>
+	        </div>
+        </div>
     </nav>
 
     <!-- 照片加名字 -->
-    <div class="panel panel-default" style="margin-left:4%;margin-right:4%;margin-top:5%">
-      <div class="panel-body" style="height:170px">
-        <div class="container" style="margin-left:-15px;">
+    <div id="pictureAndNamePanel" class="panel panel-default">
+      <div class="panel-body">
+        <div class="container">
            <div class="row">
-              <div class="col-md-2" >
-                <img src="./../aa.jfif" style="height:150px;width:140px;margin-top:-60px;" class="img-thumbnail">
+              <div class="col-md-2">
+                <img id="userPicture" class="img-thumbnail" src="./../aa.jfif" >
               </div>
-              <div class="col-md-2" style="margin-left:-3%;margin-top:-2%">
+              <div id="userName" class="col-md-2">
                 <h2><strong>卢耿杰</strong></h2>
               </div>
-              <div class="col-md-1 col-md-offset-8" style="margin-right:-100px;font-size: 25px;">
+              <div id="setting" class="col-md-1 col-md-offset-7">
                   <span class="glyphicon glyphicon-cog"></span>
               </div>
             </div>
-            <div class="row" style="width:80%;text-align:center;margin-left:-0.5%;">
-              <div class="col-md-1" style=" border-right:1px solid #ededed">
+            <div  id="fansAndFollow" class="row">
+              <div id="fans" class="col-md-1">
                  <strong>4</strong><br>粉丝
               </div>
-              <div class="col-md-1">
+              <div id="follow" class="col-md-1">
                  <strong>4</strong><br>关注
-              </div>
+              </div> 
             </div> 
-          </div>
+          </div> 
         </div>
-      <div class="panel-footer" style="background-color:white">
+      <div id="navTabPanel" class="panel-footer">
            <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#home">首页</a></li>
+              <li class="active"><a data-toggle="tab" href="#albumPage">相册</a></li>
               <li><a data-toggle="tab" href="#menu1">相册</a></li>
               <li><a data-toggle="tab" href="#menu2">收藏</a></li>
               <li><a data-toggle="tab" href="#menu3">喜欢</a></li>
@@ -105,95 +137,51 @@
       </div>
      </div>
     
+
      <!-- 相册组 -->
     <div class="tab-content">
-        <div id="home" class="tab-pane fade in active" style="margin-left:4%;margin-right:4%">  
-            <div>
-                <a data-toggle="modal" data-target="#addAlbum">
-                    <div class="myPanel" style="text-align: center;">
-                      <div style="border:2px dashed #dedede;width:90%;height:300px;margin:13px">
-                          <div style="margin-top: 50%;font-size: 20px;">
-                            <span class="glyphicon glyphicon-plus"></span>
-                            <p>创建相册</p>
-                          </div>
-                      </div>
-                    </div>  
-                </a>
-                <!-- 添加相册模态框 -->
-                <div class="modal fade" id="addAlbum" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:7%">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">新建相册</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form id="addAlbumForm" role="form">
-                                    <div class="form-group">
-                                        <input name="albumTitle" type="text" class="form-control input-lg"  placeholder="相册标题，不能超过32个字符"> 
-                                    </div>
-                                    <div class="form-group">
-                                        <select  name="albumClassification" class="form-control input-lg">
-                                            <option>UI/UX</option>
-                                            <option>平面</option>
-                                            <option>插画/漫画</option>
-                                            <option>家居/家装</option>
-                                            <option>女装</option>
-                                            <option>男士/风尚</option>
-                                            <option>婚礼</option>
-                                            <option>工业设计</option>
-                                            <option>摄影</option>
-                                            <option>造型/美妆</option>
-                                            <option>美食</option>
-                                            <option>旅游</option>
-                                            <option>手工/布艺</option>
-                                            <option>健身/舞蹈</option>
-                                            <option>儿童</option>
-                                            <option>美图</option>
-                                            <option>明星</option>
-                                            <option>美女</option>
-                                            <option>礼物</option>
-                                            <option>极客</option>
-                                            <option>动漫</option>
-                                            <option>建筑设计</option>
-                                            <option>人文艺术</option>
-                                            <option>数据图</option>
-                                            <option>游戏</option>
-                                            <option>汽车/摩托</option>
-                                            <option>电影/图书</option>
-                                            <option>生活百科</option>
-                                            <option>教育</option>
-                                            <option>运动</option>
-                                        </select> 
-                                    </div> 
-                                    
-                                </form>    
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button id="addAlbumButton" type="button" class="btn btn-primary">创建相册</button>
-                            </div>
-                        </div>
-                    </div>
+        <div id="albumPage" class="tab-pane fade in active">  
+            <div class="container">
+            	<div class="row">
+	                <a data-toggle="modal" data-target="#addAlbum">
+	                    <div class="myPanel">
+	                      <div class="outerBorder">
+	                          <div class="innerBorder">
+	                            <span class="glyphicon glyphicon-plus"></span>
+	                            <p>创建相册</p>
+	                          </div>
+	                      </div>
+	                    </div>  
+	                </a>
+	            	<div class="myPanel">
+	                    <div class="outerBorder">
+	                        <div class="innerBorder">
+	                            <span class="glyphicon glyphicon-picture"></span>
+	                            <p>默认相册</p>
+	                        </div>
+	                    </div>
+                	</div>
+                	<div th:each="album:${albums}">
+	                	<div class="myPanel" th:data-src='${album.albumTitle}'>
+	                		<div class="coverPicture">
+	                		</div>
+	                		<div class="littlePicture">
+	                		</div>
+	                		<div class="littlePicture">
+	                		</div>
+	                		<div class="littlePicture">
+	                		</div>
+	                		<button class="btn albumEditButton" style="width:99%">编辑</button>
+	                	</div>
+                	</div>
+
                 </div>
-                <div class="myPanel" style="text-align: center;">
-                    <div style="border:2px dashed #dedede;width:90%;height:300px;margin:13px">
-                        <div style="margin-top: 50%;font-size: 20px;">
-                            <span class="glyphicon glyphicon-picture"></span>
-                            <p>默认相册</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="myPanel"></div> 
-                <div class="myPanel"></div>
-                <div class="myPanel"></div>
-                <div class="myPanel"></div>
-                <div class="myPanel"></div>
             </div>
         </div>
-        <div id="menu1" class="tab-pane fade">
-            <h3>菜单 1</h3>
-            <p>这是菜单 1 显示的内容。这是菜单 1 显示的内容。这是菜单 1 显示的内容。</p>
+
+
+        <div id="home" class="tab-pane fade">
+           
         </div>
         <div id="menu2" class="tab-pane fade">
             <h3>菜单 2</h3>
@@ -204,6 +192,64 @@
             <p>这是菜单 3 显示的内容。这是菜单 3 显示的内容。这是菜单 3 显示的内容。</p>
         </div>
   </div>
+
+
+   <!-- 添加相册模态框 -->
+	<div class="modal fade" id="addAlbum" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">新建相册</h4>
+	            </div>
+	            <div class="modal-body">
+	                <form id="addAlbumForm" role="form" action="/album/addAlbum" method="post">
+	                    <div class="form-group">
+	                        <input name="albumTitle" type="text" class="form-control input-lg"  placeholder="相册标题，不能超过32个字符"> 
+	                    </div>
+	                    <div class="form-group">
+	                        <select  name="albumClassification" class="form-control input-lg">
+	                            <option>UI/UX</option>
+	                            <option>平面</option>
+	                            <option>插画/漫画</option>
+	                            <option>家居/家装</option>
+	                            <option>女装</option>
+	                            <option>男士/风尚</option>
+	                            <option>婚礼</option>
+	                            <option>工业设计</option>
+	                            <option>摄影</option>
+	                            <option>造型/美妆</option>
+	                            <option>美食</option>
+	                            <option>旅游</option>
+	                            <option>手工/布艺</option>
+	                            <option>健身/舞蹈</option>
+	                            <option>儿童</option>
+	                            <option>美图</option>
+	                            <option>明星</option>
+	                            <option>美女</option>
+	                            <option>礼物</option>
+	                            <option>极客</option>
+	                            <option>动漫</option>
+	                            <option>建筑设计</option>
+	                            <option>人文艺术</option>
+	                            <option>数据图</option>
+	                            <option>游戏</option>
+	                            <option>汽车/摩托</option>
+	                            <option>电影/图书</option>
+	                            <option>生活百科</option>
+	                            <option>教育</option>
+	                            <option>运动</option>
+	                        </select> 
+	                    </div>   
+	                </form>    
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	                <button id="addAlbumButton" type="button" class="btn btn-primary">创建相册</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
 </body>
 </html>

@@ -2,6 +2,10 @@ package com.example.demo.album.service;
 
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
@@ -19,8 +23,6 @@ import com.example.demo.album.repository.AlbumRepository;
 public class AlbumService implements IAlbumService
 {
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private AlbumRepository albumRepository;
 	
 	/**
@@ -28,12 +30,31 @@ public class AlbumService implements IAlbumService
 	 */
 	public void addAlbum(Long userId, AlbumDTO albumDto)
 	{
-		User user=userRepository.findById(userId).get();
 		Album album=new Album();
 		BeanUtils.copyProperties(albumDto,album);
-		album.setUser(user);	
-		user.getAlbums().add(album);
+		album.setUserId(userId);	
 		albumRepository.save(album);
+	}
+	
+	/**
+	 * 展示相册
+	 */
+	public List<AlbumDTO> showAlbum(Long userId)
+	{
+		List<Album> albums=albumRepository.findAlbumsByUserId(userId);
+		if (albums!=null || !albums.isEmpty()) 
+		{
+			List<AlbumDTO> albumDtos = new ArrayList<AlbumDTO>();
+			for (Album album : albums) {
+				AlbumDTO albumDto = new AlbumDTO();
+				BeanUtils.copyProperties(album, albumDto);
+				albumDtos.add(albumDto);
+			}
+			Collections.reverse(albumDtos);
+			return albumDtos;
+		}
+		return null;
+		
 	}
 
 }

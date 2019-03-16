@@ -1,20 +1,13 @@
 package com.example.demo.account.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import com.example.demo.account.entity.State;
-import com.example.demo.album.entity.Album;
+
 
 @Entity
 @Table(name = "t_user")
@@ -26,7 +19,7 @@ public class User
 	private String password;
 	// 是否账号是否已经激活
 	private State state = State.NO;
-	private List<Album> albums=new ArrayList<Album>();
+	
 		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,11 +50,6 @@ public class User
 		return state;
 	}
 	
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="user",fetch = FetchType.EAGER)
-	public List<Album> getAlbums()
-	{
-		return albums;
-	}
 	
 	public void setId(Long id)
 	{
@@ -88,11 +76,6 @@ public class User
 		this.state = state;
 	}
 	
-	public void setAlbums(List<Album> albums)
-	{
-		this.albums = albums;
-	}
-
 	@Override
 	public String toString()
 	{

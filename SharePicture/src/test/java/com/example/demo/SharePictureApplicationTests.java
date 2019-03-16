@@ -45,12 +45,7 @@ public class SharePictureApplicationTests
 		System.out.println(accountService.emialIsExist("1923808485@qq.com"));
 	}
 
-	@Test
-	public void saveAccountAndSendEmialTest()
-	{
-		User user = userRepository.findByEmial("xueyuancpt@163.com");
-		System.out.println(user.getAlbums().get(0));
-	}
+	
 
 	@Test
 	public void findByUserId()

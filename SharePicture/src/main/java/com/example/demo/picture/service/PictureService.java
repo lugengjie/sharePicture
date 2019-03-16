@@ -21,24 +21,17 @@ import com.example.demo.picture.repository.PictureRepository;
 public class PictureService implements IPictureService
 {
 	@Autowired
-	private AlbumRepository albumRepository;
-	@Autowired
 	private PictureRepository pictureRepository;
 	@Value("${web.upload-path}")
 	String localAbsolutePath;
 	
 	/**
-	 * 保存图片
+	 * 保存图片路径
 	 */
 	public void savePicture(PictureDTO pictureDto)
 	{
-		Album album=albumRepository.findById(pictureDto.getAlbumId()).get();
 		Picture picture=new Picture();
 		BeanUtils.copyProperties(pictureDto, picture);
-		int pictureNumber=album.getPictureNumber()+1;
-		album.setPictureNumber(pictureNumber);
-		album.getPictures().add(picture);
-		picture.setAlbum(album);
 		pictureRepository.save(picture);		
 	}
 	

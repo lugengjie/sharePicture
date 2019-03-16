@@ -1,15 +1,11 @@
 package com.example.demo.picture.entity;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.example.demo.album.entity.Album;
 
 @Entity
 @Table(name = "t_picture")
@@ -23,7 +19,7 @@ public class Picture
 	// 图片名称
 	private String pictureName;
 	// 所属相册
-	private Album album;
+	private Long albumId;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,12 +42,16 @@ public class Picture
 	public String getPictureName()
 	{
 		return pictureName;
-	}
-	
-	@ManyToOne(cascade=CascadeType.ALL)
-	public Album getAlbum()
+	}	
+
+	public Long getAlbumId()
 	{
-		return album;
+		return albumId;
+	}
+
+	public void setAlbumId(Long albumId)
+	{
+		this.albumId = albumId;
 	}
 
 	public void setId(Long id)
@@ -72,11 +72,6 @@ public class Picture
 	public void setPictureName(String pictureName)
 	{
 		this.pictureName = pictureName;
-	}
-
-	public void setAlbum(Album album)
-	{
-		this.album = album;
 	}
 
 }

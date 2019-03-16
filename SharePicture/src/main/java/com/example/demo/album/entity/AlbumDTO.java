@@ -2,11 +2,22 @@ package com.example.demo.album.entity;
 
 public class AlbumDTO
 {
+	private Long id;
 	// 标题
 	private String albumTitle;
 	// 类别
 	private String albumClassification;
 	
+	public Long getId()
+	{
+		return id;
+	}
+
+	public void setId(Long id)
+	{
+		this.id = id;
+	}
+
 	public String getAlbumTitle()
 	{
 		return albumTitle;
