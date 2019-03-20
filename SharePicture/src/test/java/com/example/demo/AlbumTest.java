@@ -40,4 +40,23 @@ public class AlbumTest
 	{
 		albumService.showAlbum(1L);
 	}
+	
+	@Test
+	public void showAlbumAndCoverPictureTest()
+	{
+		List<AlbumDTO> albumDtos=albumService.showAlbumAndCoverPicture(1L);
+		for(AlbumDTO albumDTO:albumDtos)
+		{
+			System.out.println(albumDTO);
+		}
+	}
+	
+	@Test
+	public void changeAlbum() 
+	{
+		AlbumDTO albumDTO=new AlbumDTO();
+		albumDTO.setId(1L);
+		albumDTO.setAlbumTitle("卡卡");
+		albumService.changeAlbum(albumDTO);
+	}
 }

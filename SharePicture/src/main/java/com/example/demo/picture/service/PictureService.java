@@ -1,5 +1,7 @@
 package com.example.demo.picture.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
@@ -60,6 +62,14 @@ public class PictureService implements IPictureService
 		picture.setPictureName(fileName);
 		savePicture(picture);
 		return true;
+	}
+	
+	/**
+	 * 根据相册Id查找图片
+	 */
+	public List<Picture> findPictureByAlbumId(Long albumId)
+	{
+		return pictureRepository.findPictureByUserId(albumId);
 	}
 
 }

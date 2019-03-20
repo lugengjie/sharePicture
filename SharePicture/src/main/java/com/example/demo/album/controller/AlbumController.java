@@ -25,8 +25,10 @@ public class AlbumController
 	IAlbumService albumService;
 	
 	@RequestMapping(value="/personal")
-	public String toPersonalCenter(Model model)
+	public String toPersonalCenter(HttpSession session,Model model)
 	{
+		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
+		model.addAttribute("albums", albums);
 		return "personalCenter";
 	}
 	
@@ -44,6 +46,13 @@ public class AlbumController
 		return "addPicture";
 	}
 	
+	/**
+	 * 在选择相册模态框中中添加相册
+	 * @param session
+	 * @param albumDto
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/addAlbumAtSelectAlbum")
 	public String addAlbumAtSelectAlbum(HttpSession session, AlbumDTO albumDto,Model model)
 	{
@@ -52,5 +61,36 @@ public class AlbumController
 		model.addAttribute("albums", albums);
 		return "addPicture::albumUl";
 
+	}
+	
+	/**
+	 * 修改相册
+	 * @param session
+	 * @param albumDto
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/changeAlbum")
+	public String changeAlbum(AlbumDTO albumDTO,Model model)
+	{
+		albumService.changeAlbum(albumDTO);
+		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
+		model.addAttribute("albums", albums);
+		return "personalCenter";
+	}
+	
+	/**
+	 * 删除相册
+	 * @param albumDTO
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteAlbum")
+	public String deleteAlbum(AlbumDTO albumDTO,Model model)
+	{
+		albumService.deleteAlbum(albumDTO.getId());
+		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
+		model.addAttribute("albums", albums);
+		return "personalCenter";
 	}
 }

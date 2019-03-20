@@ -74,4 +74,10 @@ public class Picture
 		this.pictureName = pictureName;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Picture [id=" + id + ", pictureLabel=" + pictureLabel + ", pictureDescribe=" + pictureDescribe
+				+ ", pictureName=" + pictureName + ", albumId=" + albumId + "]";
+	}
 }

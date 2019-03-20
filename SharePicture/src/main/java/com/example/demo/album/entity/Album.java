@@ -17,8 +17,6 @@ public class Album
 	private String albumDescribe;
 	// 类别
 	private String albumClassification;
-	// 封面
-	private String albumCover;
 	// 图片数
 	private int pictureNumber;
 	//用户Id
@@ -44,10 +42,6 @@ public class Album
 	public String getAlbumClassification()
 	{
 		return albumClassification;
-	}
-	public String getAlbumCover()
-	{
-		return albumCover;
 	}
 	
 	public int getPictureNumber()
@@ -78,12 +72,7 @@ public class Album
 	public void setAlbumClassification(String albumClassification)
 	{
 		this.albumClassification = albumClassification;
-	}
-	
-	public void setAlbumCover(String albumCover)
-	{
-		this.albumCover = albumCover;
-	}
+	}	
 	
 	public void setPictureNumber(int pictureNumber)
 	{
@@ -99,7 +88,7 @@ public class Album
 	public String toString()
 	{
 		return "Album [id=" + id + ", albumTitle=" + albumTitle + ", albumDescribe=" + albumDescribe
-				+ ", albumClassification=" + albumClassification + ", albumCover=" + albumCover + ", pictureNumber="
+				+ ", albumClassification=" + albumClassification + ", pictureNumber="
 				+ pictureNumber + ", userId=" + userId + "]";
 	}
 	

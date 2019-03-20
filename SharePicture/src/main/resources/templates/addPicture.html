@@ -9,7 +9,6 @@
   <style>
     body{background-color:#f5f5f5;}
     /*防止打开模态框时页面抖动*/
-
 	.modal-open{
        overflow-y: scroll;
     }
@@ -17,8 +16,8 @@
         padding-right:1px!important;
     }
 
-    /*div{border:1px solid black;}*/
-    .uploadPicturePanel{width:18%;background-color:white;margin:10px;margin-left:1.08%;float:left;}
+    /* div{border:1px solid black;} */
+    .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
     .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
 	.buttonShowAndHide{display:none;}
 
@@ -36,13 +35,13 @@
     #albumDataPanelFooter .container{width:1230px;background-color:white}
 
     /*图片组*/
-    #picturePage .container{width:1275px;}
-    #outerBorder{text-align: center;border:2px dashed #dedede;height:126px;}
+    #picturePage .container{width:1250px;}
+    #outerBorder{text-align:center;border:2px dashed #dedede;height:126px;width:19%;position:absolute;background-color:white}
     #innerBorder{margin-top: 14%;font-size: 20px;}
 
     /*循环显示图片*/
     .collectPictureButton{position:absolute;z-index:2}
-    .likePictureButton{position:absolute;z-index:2;margin-left:13.7%}
+    .likePictureButton{position:absolute;z-index:2;margin-left:83.5%}
 
 	/*选择相册模态框*/
 	#selectAlbumCol{height:314px}
@@ -64,6 +63,22 @@
   </style>
   <script type="text/javascript">
   		$(document).ready(function(){
+  			/* 图片懒加载与瀑布流变量 */
+  			window.index=0;		 
+   		var box = document.getElementById('box');
+     	   var images =box.children;  	  
+     	   var pageWidth=window.innerWidth;
+     	   var imageWidth=236;
+     	   var gap = 17;
+     	   var heightArray=[];
+     	   var widthArray=[];
+     	   widthArray.push(0);
+   		heightArray.push(document.getElementById('outerBorder').offsetHeight);
+   	 	var boxColum=parseInt(pageWidth / (imageWidth + gap));
+
+	  		/* 图片懒加载与瀑布流递归函数 */
+	   	recursionAndOnload(images.length,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray);
+   		
 		  	/*上传图片的FormDate变量*/
 		  	var formData;
 
@@ -183,7 +198,60 @@
 		  			var url="/album/addAlbumAtSelectAlbum?albumTitle="+albumTitle;
 				 $('#albumUl').load(url);
 			 });
+			 
+			/*  滚动条移动时触发图片懒加载与瀑布流 */
+			 window.onscroll=function(){   
+			   	scrollAndOnload(images.length,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray);
+			 }
   	 });
+  	
+  /* 	递归调用图片懒加载和瀑布流布局 */
+  	function recursionAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray){
+  		if(index<imagesLength){
+	  		pictureLoad(images);
+	  		images[index].children[2].children[0].onload=function(){
+	  			waterFall(pageWidth,images,imageWidth,boxColum,gap,heightArray,widthArray);
+	  			if(images[index].offsetTop<=($(window).height() + $(window).scrollTop())){			  				    
+	  				 	index++;
+	  					recursionAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray);
+	  			}
+	  		}
+  	   }
+  }
+	
+  /* 滚动滑动条后递归调用图片懒加载和瀑布流布局  */
+  function scrollAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray){
+  		if((index+1)<imagesLength){	
+				if(images[index].offsetTop<=($(window).height() + $(window).scrollTop())){
+					index++;
+  				pictureLoad(images);
+  				images[index].children[2].children[0].onload=function(){
+		  			waterFall(pageWidth,images,imageWidth,boxColum,gap,heightArray,widthArray);
+		  			scrollAndOnload(imagesLength,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray);	
+	  			}  			
+  			}
+  		}
+  }
+  /* 图片加载 */
+  function pictureLoad(images){ 
+  			console.log(index);
+			images[index].style.display='block';
+			images[index].children[2].children[0].setAttribute('src',images[0].children[2].children[0].getAttribute("data_src"));		
+  }
+ /* 瀑布流布局 */
+ function waterFall(pageWidth,images,imageWidth,boxColum,gap,heightArray,widthArray){
+		if(index<boxColum-1){		
+			images[index].style.top = 0;
+			images[index].style.left = (imageWidth+gap)*(index+1)+'px';
+			widthArray.push((imageWidth+gap)*(index+1));
+			heightArray.push(images[index].offsetHeight);
+		}else{
+			var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));
+			images[index].style.top = heightArray[minHeightIndex]+gap+'px';
+			images[index].style.left = widthArray[minHeightIndex]+'px';
+			heightArray[minHeightIndex] = heightArray[minHeightIndex]+images[index].offsetHeight+gap;
+		}
+	}
   	</script>
 </head>
 <body>
@@ -249,48 +317,55 @@
 <div class="tab-content">
     <div id="picturePage" class="tab-pane fade in active"> 
         <div class="container">
-            <div class="row">
+            <div class="row" style="position:relative"> 
 
-                <a data-toggle="modal" data-target="#uploadPictureModal">
-                    <div id="outerBorder" class="uploadPicturePanel">     
-                          <div id="innerBorder">
-                              <span class="glyphicon glyphicon-plus"></span>
-                              <p>添加图片</p>
-                          </div>    
-                    </div>  
-                </a>
+                <div id="outerBorder">  
+            		<a data-toggle="modal" data-target="#uploadPictureModal">   
+                  	<div id="innerBorder">
+                      	<span class="glyphicon glyphicon-plus"></span>
+                      	<p>添加图片</p>
+                  	</div>    
+                	</a>
+            	</div> 
 
-                <div class="uploadPicturePanel">
+               <div id="box">    
+                   
+                 <div class="uploadPicturePanel">
                 	<div class="buttonShowAndHide collectPictureButton">      		            		
-						<div class="btn-group">
-						    <a type="button" class="btn btn-default" >收藏</a>
-						    <a type="button" class="btn btn-default">
-						    	<span class="glyphicon glyphicon-flash"></span>
-						    </a>		    
+							<div class="btn-group">
+						    	<a type="button" class="btn btn-default" >收藏</a>
+						    	<a type="button" class="btn btn-default">
+						    		<span class="glyphicon glyphicon-flash"></span>
+						    	</a>		    
 						</div>
-					</div>
-					<div class="buttonShowAndHide likePictureButton">   
+					 </div>
+					 <div class="buttonShowAndHide likePictureButton">   
             			<a type="button" class="btn btn-default">
             				<span class="glyphicon glyphicon-heart"></span>
             			</a>	
             		</div> 
                 	<div>
-                		<img src="./../aa.jfif" style="width:226px;border-radius:5px 5px 0 0;">
+                		<img src="" data_src="./../aa.jfif" style="width:100%;border-radius:5px 5px 0 0;">
                 	</div>
-                	<div style="border-bottom:2px solid #f2f2f2;">
+                	<div style="border-bottom:2px solid #f2f2f2;padding:10px">
 	                	<span >
 	                		【直白摄影】吹风机+落地扇摄影|摄影|产品|Mugostudio - 原创作品 - 站酷 
 	                	</span>
                 	</div>
                 	<div style="border-radius:0 0 5px 5px;display:flex;height:70px">
                 		<div style="align-self:center;margin-left: 15px;">
-                			<img src="./../aa.jfif" class="img-circle" style="width:34px;height:34px;">
+                			<img src="" data_src="./../a.jfif" class="img-circle" style="width:34px;height:34px;">
                 		</div>
                 		<div style="align-self:center;margin-left: 15px;padding:0">
                 			<span >卢耿杰收藏到<br>工业设计</span>
                 		</div>
                 	</div>
-                </div>
+                </div> 
+                
+                
+                
+             </div>         
+
             </div>
         </div>
     </div>

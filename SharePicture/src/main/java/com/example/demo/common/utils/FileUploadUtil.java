@@ -48,8 +48,8 @@ public class FileUploadUtil
 	public static String upLoad(MultipartFile multipartFile,String localAbsolutePath)
 	{
 		int fileHashCode=Math.abs(multipartFile.hashCode());
-		String packageName=(fileHashCode%1000)+"";
-		localAbsolutePath+="/"+packageName;
+		String packageName="/"+(fileHashCode%1000);
+		localAbsolutePath+=packageName;
 		File newFilePath=new File(localAbsolutePath);
 		if(!newFilePath.exists())
 		{

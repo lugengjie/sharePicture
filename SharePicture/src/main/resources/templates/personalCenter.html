@@ -11,7 +11,13 @@
     {
         border:1px solid black;
     }  */
-    
+    /*防止打开模态框时页面抖动*/
+	.modal-open{
+       overflow-y: scroll;
+    }
+    body{
+        padding-right:1px!important;
+    }
     body
     {
       background-color:#f5f5f5;
@@ -54,10 +60,18 @@
     .coverPicture{height:65%;width:99%;margin-bottom:1.6%;border:1.5px solid #ededed;}
     .littlePicture{height:20%;width:32.34%;float:left;margin-right:1%;border:1.5px solid #ededed;}
     .albumEditButton{margin-top: 4%}
+    .albumCoverPicture{width:100%;height:100%;display:none}
+    .albumLittlePicture{width:100%;height:100%;display:none}
 
-
-     <!-- 添加相册模态框 -->
+    /* 添加相册模态框*/
      #addAlbum{margin-top:7%}
+     /* 修改相册模态框*/
+     #changeAlbumModal{margin-top:30px}
+     #changeAlbumModal .modal-body{height:220px;}
+     #changeAlbumModal .form-horizontal{width:520px;font-size:19px;}
+     #changeAlbumModal label{font-weight:normal;}
+     #deleteAlbumButton{float:left;font-size:20px;margin-left:40px;color:#616361}
+
 
   </style>
   <script type="text/javascript">
@@ -65,8 +79,56 @@
       	   /*上传图片*/
           $("#addAlbumButton").click(function(){ 
 	           $('#addAlbumForm').submit();
-          });    
+          });  
+      
+      /* 	 在相册组中，显示加载好的图片 */
+      $('.albumCoverPicture').each(function(){
+	    	  if($(this).attr('src')!=''){
+	    		  $(this).css('display','block');
+	    	  }; 
       });
+      
+      $('.albumLittlePicture').each(function(){
+	    	  if($(this).attr('src')!=''){
+	    		  $(this).css('display','block');
+	    	  }; 
+  		});
+      
+		/* 点击编辑按钮后，将相册信息加载到修改相册模态框中 */
+      $(".albumEditButton").on("click",null,function(){
+    	   var albumId=$(this).attr('albumId');
+    	  	$("#changeAlbumModelHideId").val(albumId);
+    	  	var albumTitle = $(this).attr('albumTitle');
+    	  	if(!(typeof(albumTitle)=="undefined")){
+    	  		$("#albumTitle").val(albumTitle);
+    	  	}
+    	  	var albumClassification = $(this).attr('albumClassification');
+    	  	if(!(typeof(albumClassification)=="undefined")){
+    	  		$("#albumClassification").val(albumClassification);
+    	  	}
+    	  	var albumDescribe = $(this).attr('albumDescribe');
+    	  	if(!(typeof(albumDescribe)=="undefined")){
+    	  		$("#albumDescribe").val(albumDescribe);
+    	  	}
+    		$('#changeAlbumModal').modal('show');
+    	}); 
+    	
+		/* 在修改相册模态框中，按下确定按钮后，提交修改数据 */
+		$('#changeAlbumButton').click(function(){
+				$('#changeAlbumForm').submit();
+		});
+		
+		/* 删除相册 */
+		$('#deleteAlbumButton').click(function(){
+				var albumId=$("#changeAlbumModelHideId").val();
+				var form = $("<form method='post' action='/album/deleteAlbum?id="+albumId+"'></form>");
+				var input = $("<input name='id' type='hidden'>");
+				input.val(albumId);
+				form.append(input);
+				form.appendTo(document.body);
+				form.submit();		
+		});
+   });
   </script>
 </head>
 <body>
@@ -161,21 +223,20 @@
 	                        </div>
 	                    </div>
                 	</div>
-                	<div th:each="album:${albums}">
-	                	<div class="myPanel" th:data-src='${album.albumTitle}'>
+           			
+           			<div id="albumsRefresh" th:fragment="albumsRefresh">
+	                	<div class="myPanel" th:each="album:${albums}">
 	                		<div class="coverPicture">
+	                			<img class="albumCoverPicture" th:src="@{${album.coverPictureName}}">
+	                		</div> 		
+	                		<div th:each="pictureName:${album.pictureNames}" class="littlePicture">
+	                			<img class="albumLittlePicture" th:src="@{${pictureName}}">
 	                		</div>
-	                		<div class="littlePicture">
-	                		</div>
-	                		<div class="littlePicture">
-	                		</div>
-	                		<div class="littlePicture">
-	                		</div>
-	                		<button class="btn albumEditButton" style="width:99%">编辑</button>
+	                		<button class="btn albumEditButton" style="width:99%" th:albumId="${album.id}" th:albumTitle="${album.albumTitle}" th:albumClassification="${album.albumClassification}" th:albumDescribe="${album.albumDescribe}">编辑</button>
 	                	</div>
                 	</div>
-
-                </div>
+                	
+               </div>
             </div>
         </div>
 
@@ -250,6 +311,77 @@
 	        </div>
 	    </div>
 	</div>
+	
+  <!-- 修改相册模态框 -->
+  <div class="modal fade" id="changeAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">修改相册</h4>
+              </div>
+              <div class="modal-body">
+                  <form id="changeAlbumForm" class="form-horizontal" role="form" action="/album/changeAlbum" method="post">
+                  	 <input id="changeAlbumModelHideId" name="id" style="display:none">
+                      <div class="form-group">
+                          <label  class="col-sm-2 control-label text-muted">标题</label>
+                          <div class="col-sm-10">
+                              <input id="albumTitle" name="albumTitle" type="text" class="form-control">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label text-muted">描述</label>
+                        <div class="col-sm-10">
+                            <textarea id="albumDescribe" name="albumDescribe" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-2 control-label text-muted">分类</label>
+                        <div class="col-sm-10">
+                            <select id="albumClassification"  name="albumClassification" class="form-control input-lg">
+                              <option>UI/UX</option>
+                              <option>平面</option>
+                              <option>插画/漫画</option>
+                              <option>家居/家装</option>
+                              <option>女装</option>
+                              <option>男士/风尚</option>
+                              <option>婚礼</option>
+                              <option>工业设计</option>
+                              <option>摄影</option>
+                              <option>造型/美妆</option>
+                              <option>美食</option>
+                              <option>旅游</option>
+                              <option>手工/布艺</option>
+                              <option>健身/舞蹈</option>
+                              <option>儿童</option>
+                              <option>美图</option>
+                              <option>明星</option>
+                              <option>美女</option>
+                              <option>礼物</option>
+                              <option>极客</option>
+                              <option>动漫</option>
+                              <option>建筑设计</option>
+                              <option>人文艺术</option>
+                              <option>数据图</option>
+                              <option>游戏</option>
+                              <option>汽车/摩托</option>
+                              <option>电影/图书</option>
+                              <option>生活百科</option>
+                              <option>教育</option>
+                              <option>运动</option>
+                          </select> 
+                        </div>
+                    </div>
+                  </form>                  
+              </div>
+              <div class="modal-footer">
+                  <p id="deleteAlbumButton">删除相册</p>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                  <button id="changeAlbumButton" type="button" class="btn btn-primary">确定</button>
+              </div>
+          </div>
+      </div>
+  </div>
 
 </body>
 </html>
