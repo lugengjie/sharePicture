@@ -20,15 +20,23 @@ import com.example.demo.picture.service.PictureService;
 @Controller
 public class PictureController
 {
-	
 	@Autowired
 	IPictureService pictureService;
 	@Autowired
 	IAlbumService albumService;
 	
+	/**
+	 * 展示相册中已有的图片或添加图片
+	 * @param albumDTO
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/addPicture")
-    public String addPicture(Model model){
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+    public String addPicture(AlbumDTO albumDTO,Model model){
+		albumDTO.setId(1L);
+		List<AlbumDTO> albums = albumService.showAlbum(1L);
+		AlbumDTO album = pictureService.showAllPictureOfAlbum(albumDTO);
+		model.addAttribute("pictures", album);
 		model.addAttribute("albums", albums);
         return "addPicture";
     }

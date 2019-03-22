@@ -19,4 +19,5 @@ public interface IAlbumService
 	//删除相册
 	public void deleteAlbum(Long albumId);
 	
+	
 }

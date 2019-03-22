@@ -56,6 +56,7 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbumAtSelectAlbum")
 	public String addAlbumAtSelectAlbum(HttpSession session, AlbumDTO albumDto,Model model)
 	{
+		System.out.println(albumDto);
 		albumService.addAlbum(1L, albumDto);
 		List<AlbumDTO> albums=albumService.showAlbum(1L);
 		model.addAttribute("albums", albums);

@@ -1,5 +1,6 @@
 package com.example.demo.picture.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.album.entity.Album;
+import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.service.AlbumService;
 import com.example.demo.common.utils.FileUploadUtil;
@@ -65,11 +67,26 @@ public class PictureService implements IPictureService
 	}
 	
 	/**
-	 * 根据相册Id查找图片
+	 * 展示相册中所有图片
 	 */
-	public List<Picture> findPictureByAlbumId(Long albumId)
+	public AlbumDTO showAllPictureOfAlbum(AlbumDTO albumDTO)
 	{
-		return pictureRepository.findPictureByUserId(albumId);
+		Long albumId=albumDTO.getId();
+		AlbumDTO temp=new AlbumDTO();
+		BeanUtils.copyProperties(albumDTO, temp);
+		if(albumId>0) 
+		{
+			List<Picture> pictures=pictureRepository.findPictureByAlbumId(albumId);
+			if (pictures != null && !pictures.isEmpty())
+			{
+				Collections.reverse(pictures);
+				for(Picture picture:pictures)
+				{
+					temp.getPictureNames().add(picture.getPictureName());
+				}
+			}
+		}
+		return temp;	
 	}
 
 }

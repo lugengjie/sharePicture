@@ -77,7 +77,7 @@ public class AlbumService implements IAlbumService
 			{
 				AlbumDTO albumDto=new AlbumDTO();
 				BeanUtils.copyProperties(album, albumDto);
-				List<Picture> pictures=pictureRepository.findPictureByUserId(album.getId());
+				List<Picture> pictures=pictureRepository.findPictureByAlbumId(album.getId());
 				albumDto.setCoverPictureName("");
 				for(int i=0;i<3;i++)
 				{
@@ -117,4 +117,5 @@ public class AlbumService implements IAlbumService
 	{
 		albumRepository.deleteAlbum(albumId);
 	}
+	
 }

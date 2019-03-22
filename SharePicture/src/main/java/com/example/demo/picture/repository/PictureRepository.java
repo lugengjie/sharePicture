@@ -11,5 +11,5 @@ import com.example.demo.picture.entity.Picture;
 public interface PictureRepository extends CrudRepository<Picture, Long>
 {
 	@Query("from Picture p where p.albumId=?1")
-	public List<Picture> findPictureByUserId(Long albumId);
+	public List<Picture> findPictureByAlbumId(Long albumId);
 }
