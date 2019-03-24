@@ -100,7 +100,7 @@ public class AccountService implements IAccountService
 		check.setUser(user);
 		checkRepository.save(check);
 		String subject = "图片共享网站设计与实现-注册激活";
-		StringBuffer content = new StringBuffer().append("<html><body><h3>你好，请点击以下网址激活账号，30分钟内有效</h3>")
+		StringBuffer content = new StringBuffer().append("<html><body><h3>你好，请点击以下链接激活账号，30分钟内有效</h3>")
 				.append("\n<a style=\"text-decoration:none\"").append("href=\"").append(getAddress()).append("account/")
 				.append("activate?activationCode=").append(uuidCode).append("&email=").append(user.getEmail())
 				.append("\"").append("<h3>账号激活_快来点我啊</h3></a></body></html>");
@@ -127,7 +127,8 @@ public class AccountService implements IAccountService
 	public boolean passwordIsRight(AccountDTO account)
 	{
 		User user = userRepository.findByEmial(account.getEmail());
-		if (account.getPassword().equals(user.getPassword()))
+		String password = Md5Util.getMd5(account.getPassword());
+		if (password.equals(user.getPassword()))
 		{
 			return true;
 		}
@@ -199,9 +200,9 @@ public class AccountService implements IAccountService
 		check.setUser(user);
 		checkRepository.save(check);
 		String subject = "图片共享网站设计与实现-修改密码";
-		StringBuffer content = new StringBuffer().append("<html><body><h3>你好，请点击以下网址修改密码，30分钟内有效</h3>")
+		StringBuffer content = new StringBuffer().append("<html><body><h3>你好，请点击以下链接修改密码，30分钟内有效</h3>")
 				.append("\n<a style=\"text-decoration:none\"").append("href=\"").append(getAddress()).append("account/")
-				.append("writePassword?activationCode=").append(uuidCode).append("&email=").append(user.getEmail())
+				.append("toChangePasswordPage?activationCode=").append(uuidCode).append("&email=").append(user.getEmail())
 				.append("\"").append("<h3>密码修改_快来点我啊</h3></a></body></html>");
 		SendEmailUtil.sendHtmlMail(user.getEmail(), subject, content.toString());
 	}

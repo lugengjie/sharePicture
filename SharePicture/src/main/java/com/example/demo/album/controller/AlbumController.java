@@ -28,7 +28,7 @@ public class AlbumController
 	public String toPersonalCenter(HttpSession session,Model model)
 	{
 		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
-		model.addAttribute("albums", albums);
+		model.addAttribute("ctivateInfomation", albums);
 		return "personalCenter";
 	}
 	
