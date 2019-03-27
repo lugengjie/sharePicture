@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"> 
+  <title>首页</title>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    div{border:1px solid black;}  
+    /*body*/
+    /*滑动条样式*/
+    #picturesOfAlbum::-webkit-scrollbar {width: 10px;  height:10px }  
+    #picturesOfAlbum::-webkit-scrollbar-thumb{ border-radius: 10px;  background-color: #aaaa; }  
+
+    body{background-repeat:no-repeat ;background-size:100% 100%;background-attachment: fixed;}
+    #whiteMask{position:fixed;z-index:2;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
+    #overWhiteMask{position:fixed;z-index:3;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
+
+    #picturesOfAlbum img{position:absolute;display:none;}
+  </style>
+  <script type="text/javascript">
+      /*document.getElementById('whiteMask').height;*/
+      /*  display:none;*/
+    $(document).ready(function(){
+         /*$('#').click(function(){*/
+              /*var whiteMask = document.getElementById('whiteMask');
+              whiteMask.style.height = document.documentElement.clientHeight+'px';
+              whiteMask.style.top = $(window).scrollTop()+'px';
+              whiteMask.style.display='block';*/
+             /* overWhiteMask.style.height = document.documentElement.clientHeight+'px';
+              overWhiteMask.style.top = $(window).scrollTop()+'px';*/
+              $(document.body).css({"overflow-y":"hidden"});
+       /*  });*/
+      $("#commentTextArea").bind('input propertychange',function () { 
+          var TextAreaContent = $("#commentTextArea").val();
+
+          if (TextAreaContent == "") {
+            $("#commentTextAreaButton").attr("disabled","disabled");
+          }else{
+            $("#commentTextAreaButton").removeAttr("disabled");
+          }
+      });
+
+      window.index=0;    
+      var box = document.getElementById('picturesOfAlbum');
+      var images =box.children;      
+      var imageWidth=83;
+      var gap = 2;
+      var heightArray=[];
+      var boxColum=3;
+      //在初始加载好图片前限制滚动条的触发事件
+      window.isAllowScroll= 0;
+     /* for(var i=0;i<images.length;i++){
+         waterFall(images,imageWidth,boxColum,gap,heightArray);
+         index++;
+      }*/
+      console.log(images.length);
+      recursionAndOnload(images.length,images,imageWidth,boxColum,gap,heightArray);
+
+      /*  节流滚动条移动时触发图片懒加载与瀑布流 */     
+       window.canRun = true;
+       document.getElementById('picturesOfAlbum').onscroll=function(){
+         if(isAllowScroll == 1){
+           if(!canRun){
+            return;
+           }
+           canRun = false;
+           setTimeout( function () {
+             scrollAndOnload(images.length,images,imageWidth,boxColum,gap,heightArray);
+             canRun = true;
+           },130);
+         }
+      } 
+
+  });
+
+   /*   递归调用图片懒加载和瀑布流布局 */
+   function recursionAndOnload(imagesLength,images,imageWidth,boxColum,gap,heightArray){
+    if(index<imagesLength){
+        console.log("qq");
+        pictureLoad(images);
+        images[index].onload=function(){
+          waterFall(images,imageWidth,boxColum,gap,heightArray);
+          if(images[index].offsetTop<=($("#picturesOfAlbum").height() + $("#picturesOfAlbum").scrollTop())){                    
+              index++;
+              recursionAndOnload(imagesLength,images,imageWidth,boxColum,gap,heightArray); 
+          }else{
+            isAllowScroll = 1;
+          }
+        }
+    }  
+  }
+  /* 图片加载 */
+ function pictureLoad(images){ 
+       console.log(index); 
+      images[index].style.display='block';
+      images[index].setAttribute('src',images[index].getAttribute("data_src"));
+  }
+
+  /* 滚动滑动条后递归调用图片懒加载和瀑布流布局  */
+  function scrollAndOnload(imagesLength,images,imageWidth,boxColum,gap,heightArray){
+      if((index+1)<imagesLength){ 
+        if(images[index].offsetTop<=($("#picturesOfAlbum").height() + $("#picturesOfAlbum").scrollTop())){
+          index++;
+          console.log("scroll");
+          pictureLoad(images);
+          images[index].onload=function(){
+            waterFall(images,imageWidth,boxColum,gap,heightArray);
+            scrollAndOnload(imagesLength,images,imageWidth,boxColum,gap,heightArray);  
+          }       
+        }
+      }
+  }
+
+ /* 瀑布流布局*/
+  function waterFall(images,imageWidth,boxColum,gap,heightArray){
+  if(index<boxColum){     
+    images[index].style.top = 0;
+    images[index].style.left = (imageWidth+gap)*index+'px';
+    heightArray.push(images[index].offsetHeight); 
+  }else{
+    var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));
+    images[index].style.top = heightArray[minHeightIndex]+gap+'px';
+    images[index].style.left = images[minHeightIndex].offsetLeft+'px';
+    heightArray[minHeightIndex] = heightArray[minHeightIndex]+images[index].offsetHeight+gap;
+  }
+}
+  </script>
+
+</head>
+<body background="index.jpg">
+   <div style="position:fixed;z-index:3;right:24px;color:;width:45px;top:10px"> <img src="close.png" style="width:100%;opacity:0.3;" ></div>
+   <div style="position:fixed;z-index:3;color:;width:60px;top:45%"> <img src="toLeft.png" style="width:100%;opacity:0.3;" ></div>
+   <div style="position:fixed;z-index:3;color:;width:60px;top:45%;right:18px"> <img src="toRight.png" style="width:100%;opacity:0.3;" ></div>
+   <div id="whiteMask"></div>
+      <div id="overWhiteMask">
+            <div class="container" style="width:77%;margin-top:4%;padding-left: 30px">
+                  <div class="row">
+                      <div class="col-md-8" style="padding-left:0">
+                          <div style="background-color:white;width:698px;padding:16px">
+                                <button type="button" class="btn btn-primary btn-danger">收藏</button>  
+                                <button type="button" class="btn btn-default" style="font-size:18px;height:35px">
+                                    <span class="glyphicon glyphicon-heart"></span>
+                                </button>
+                                 <button type="button" class="btn btn-default" style="float: right;font-size:20px;height:35px;margin-right:6px">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </button>
+                                <img src="aa.jfif" style="width:99%;margin-top:15px;">
+                          </div>
+                          <div style="background-color:white;margin-top:20px;width:698px;">
+                                <div style="padding:15px">
+                                    <img src="aa.jfif" style="width:50px;height: 50px">
+                                    <h4 style="display: inline-block;margin-top: -100px">皇甫铁牛</h4>
+                                </div>
+                                <div  style="padding-right: 15px;padding-left: 15px ">
+                                    <div style="display: inline-block;background-color:#fafafa;vertical-align:middle;line-height:46px;width:100%;padding-left:15px">
+                                          <span style=>今天天气很好</span>
+                                    </div>
+                                </div>
+                                <div style="margin-top:15px;padding:15px;">
+                                  <img src="aa.jfif" style="width:50px;height: 54px;float: left">
+                                  <textarea id="commentTextArea" class="form-control" style="display: inline-block;width:90.5%;margin-left: 12px;" placeholder="添加评论"></textarea>
+                                  <button id="commentTextAreaButton" style="margin-top:10px;margin-left:580px" type="button" class="btn btn-default" disabled="disabled">添加评论</button>
+                                </div>
+                          </div>
+
+                      </div>
+                      <div  class="col-md-4">
+                      <div style="width:300px;background-color: white;float: right;height:480px;padding:16px;margin-right:-5px">
+                          <img src="aa.jfif" style="width:38px;height: 38px;float: left">
+                          <div style="display: inline-block;margin-left: 6px">
+                              <span style="font-size:15px;">你好</span><br><span style="font-size:13px;color: #999">数数卢</span>
+                          </div>
+                          <div id="picturesOfAlbum" style="height:344px;width:103%;overflow-y:scroll;margin-top:14px;position: relative;" >
+                              <img src="" style="width:83px;" data_src="aa.jfif">
+                               <img src="" style="width:83px;" data_src="1.jfif">   
+                                <img src="" style="width:83px;" data_src="2.jfif"> 
+                                 <img src="" style="width:83px;" data_src="3.jfif"> 
+                                  <img src="" style="width:83px;" data_src="4.jfif"> 
+                                   <img src="" style="width:83px;" data_src="5.jfif"> 
+                                    <img src="" style="width:83px;" data_src="6.jfif"> 
+                                     <img src="" style="width:83px;" data_src="1.jfif"> 
+                                      <img src="" style="width:83px;" data_src="2.jfif"> 
+                                       <img src="" style="width:83px;" data_src="3.jfif"> 
+                                        <img src="" style="width:83px;" data_src="4.jfif"> 
+                                        <img src="" style="width:83px;" data_src="5.jfif">
+                               <img src="" style="width:83px;" data_src="6.jfif">   
+                                <img src="" style="width:83px;" data_src="1.jfif"> 
+                                 <img src="" style="width:83px;" data_src="2.jfif"> 
+                                  <img src="" style="width:83px;" data_src="3.jfif"> 
+                                   <img src="" style="width:83px;" data_src="4.jfif"> 
+                                    <img src="" style="width:83px;" data_src="5.jfif"> 
+                                     <img src="" style="width:83px;" data_src="6.jfif"> 
+                                      <img src="" style="width:83px;" data_src="1.jfif"> 
+                                       <img src="" style="width:83px;" data_src="2.jfif"> 
+                                        <img src="" style="width:83px;" data_src="3.jfif"> 
+                              
+                          </div>
+                           <button type="button" class="btn btn-primary btn-danger" style="margin-top: 10px;width: 99% ">关注相册</button>
+                      </div>   
+                      </div>
+                  </div>
+            </div>
+      </div>
+</body>
+</html>
