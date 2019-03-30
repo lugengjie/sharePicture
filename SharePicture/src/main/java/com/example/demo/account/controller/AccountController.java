@@ -1,5 +1,7 @@
 package com.example.demo.account.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +64,7 @@ public class AccountController
 	 * @return
 	 */
 	@RequestMapping(value = "/login")
-	public @ResponseBody String Login(AccountDTO accountDTO)
+	public @ResponseBody String Login(HttpSession session, AccountDTO accountDTO)
 	{
 		if (accountDTO.getEmail().equals("") || accountDTO.getPassword().equals(""))
 		{
@@ -75,6 +77,7 @@ public class AccountController
 			{
 				if (accountService.passwordIsRight(accountDTO))
 				{
+					session.setAttribute("isAllowPass", true);
 					return "登录成功";
 				} 
 				else

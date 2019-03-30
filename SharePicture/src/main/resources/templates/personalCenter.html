@@ -224,7 +224,7 @@
 	                    </div>
                 	</div>
            			
-           			<div id="albumsRefresh" th:fragment="albumsRefresh">
+           		<!-- 	<div id="albumsRefresh" th:fragment="albumsRefresh"> -->
 	                	<div class="myPanel" th:each="album:${albums}">
 	                		<div class="coverPicture">
 	                			<img class="albumCoverPicture" th:src="@{${album.coverPictureName}}">
@@ -234,7 +234,7 @@
 	                		</div>
 	                		<button class="btn albumEditButton" style="width:99%" th:albumId="${album.id}" th:albumTitle="${album.albumTitle}" th:albumClassification="${album.albumClassification}" th:albumDescribe="${album.albumDescribe}">编辑</button>
 	                	</div>
-                	</div>
+              <!--   	</div> -->
                 	
                </div>
             </div>
