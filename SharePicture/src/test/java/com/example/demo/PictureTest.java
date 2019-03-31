@@ -22,7 +22,7 @@ public class PictureTest
 	@Autowired
 	PictureRepository pictureRepository;
 	@Autowired
-	IPictureService PictureService;
+	IPictureService pictureService;
 	
 	@Test
 	public void findPictureByUserId()
@@ -40,11 +40,17 @@ public class PictureTest
 	{
 		AlbumDTO albumDTO = new AlbumDTO();
 		albumDTO.setId(1L);
-		AlbumDTO temp=PictureService.showAllPictureOfAlbum(albumDTO);
+		AlbumDTO temp=pictureService.showAllPictureOfAlbum(albumDTO);
 		for(String pictureName:temp.getPictureNames())
 		{
 			System.out.println(pictureName);
 		}
+	}
+	
+	@Test
+	public void pictureCarousel() 
+	{
+		pictureService.pictureCarousel("/132/5a2360515ec847fa8c85deba02d96881.jpeg");
 	}
 
 }

@@ -18,5 +18,8 @@ public interface IPictureService
 	
 	//展示相册中所有图片
 	public AlbumDTO showAllPictureOfAlbum(AlbumDTO albumDTO);
+	
+	//图片轮播
+	public AlbumDTO pictureCarousel(String pictureName);
 
 }

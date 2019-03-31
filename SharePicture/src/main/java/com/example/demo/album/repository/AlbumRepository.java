@@ -20,4 +20,7 @@ public interface AlbumRepository extends CrudRepository<Album, Long>
 	@Modifying
 	@Query("delete from Album a where a.id=?1")
 	public void deleteAlbum(Long albumId);
+	
+	@Query("from Album a where a.id=?1")
+	public Album findAlbumByAlbumId(Long albumId);
 }

@@ -19,7 +19,8 @@
     /* div{border:1px solid black;} */
     .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
     .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
-	.buttonShowAndHide{display:none;}
+	 .buttonShowAndHide{display:none;}
+	 .uploadPicturePanel img:hover{cursor:pointer}
 
 	/* 导航栏*/
     nav{background-color:white;}
@@ -48,6 +49,7 @@
     #picturePage .container{width:1250px;}
     #outerBorder{text-align:center;border:2px dashed #dedede;height:126px;width:19%;position:absolute;background-color:white}
     #innerBorder{margin-top: 14%;font-size: 20px;}
+    
 
     /*循环显示图片*/
     .collectPictureButton{position:absolute;z-index:2}
@@ -85,7 +87,8 @@
      	   var heightArray=[];
      	   var widthArray=[];
      	   widthArray.push(0);
-   		heightArray.push(document.getElementById('outerBorder').offsetHeight);
+   		heightArray.push(126);
+   		/* console.log(document.getElementById('outerBorder').offsetHeight); */
    	 	var boxColum=parseInt(pageWidth / (imageWidth + gap));
 
 	  		/* 图片懒加载与瀑布流递归函数 */
@@ -102,7 +105,7 @@
 					 setTimeout( function () {
 						 scrollAndOnload(images.length,images,pageWidth,imageWidth,boxColum,gap,heightArray,widthArray);
 						 canRun = true;
-					 },200);
+					 },250);
 				 }
 		 	} 
 		  	/*上传图片的FormDate变量*/
@@ -116,8 +119,8 @@
 		  			'height':'250px',
 		  			'margin-left':'0px'
 		  		});
-		  	}
-
+		  	}		  	
+		  	
 		  	/*在选择相册模态框中，搜索或创建相册*/
 		  	function searchOrBuildAlbum() {
     			var searchAlbumName = $("#searchOrBuildAlbum").val();    
@@ -294,7 +297,7 @@
 		if(index<boxColum-1){		
 			images[index].style.top = 0;
 			images[index].style.left = (imageWidth+gap)*(index+1)+'px';
-			widthArray.push((imageWidth+gap)*(index+1));
+			widthArray.push(images[index].offsetLeft);
 			heightArray.push(images[index].offsetHeight);
 		}else{
 			var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));

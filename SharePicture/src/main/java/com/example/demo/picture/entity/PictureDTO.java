@@ -2,7 +2,7 @@ package com.example.demo.picture.entity;
 
 
 public class PictureDTO
-{
+{	
 	// 标签
 	private String pictureLabel;
 	// 描述
@@ -11,6 +11,7 @@ public class PictureDTO
 	private String pictureName;
 	// 所属相册
 	private Long albumId;
+	
 	
 	public String getPictureLabel()
 	{
@@ -44,4 +45,11 @@ public class PictureDTO
 	{
 		this.albumId = albumId;
 	}
+	@Override
+	public String toString()
+	{
+		return "PictureDTO [pictureLabel=" + pictureLabel + ", pictureDescribe=" + pictureDescribe + ", pictureName="
+				+ pictureName + ", albumId=" + albumId + "]";
+	}		
+	
 }

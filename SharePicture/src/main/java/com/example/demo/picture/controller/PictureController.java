@@ -27,6 +27,8 @@ public class PictureController
 	
 	/**
 	 * 展示相册中已有的图片或添加图片
+	 * pictures为某个相册中的所有图片
+	 * albums为某个用户的所有相册
 	 * @param albumDTO
 	 * @param model
 	 * @return
@@ -59,5 +61,12 @@ public class PictureController
 			return "上传图片成功";
 		}
 		return "上传图片失败";
+	}
+	
+	@RequestMapping("/carouselPicture")
+	public AlbumDTO pictureCarousel(PictureDTO picture)
+	{
+		
+
 	}
 }

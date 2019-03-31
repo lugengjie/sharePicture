@@ -19,7 +19,7 @@ public class Album
 	private String albumClassification;
 	// 图片数
 	private int pictureNumber;
-	//用户Id
+	// 用户Id
 	private Long userId;
 	
 	@Id

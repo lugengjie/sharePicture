@@ -12,4 +12,7 @@ public interface PictureRepository extends CrudRepository<Picture, Long>
 {
 	@Query("from Picture p where p.albumId=?1")
 	public List<Picture> findPictureByAlbumId(Long albumId);
+	
+	@Query("from Picture p where p.pictureName=?1")
+	public Picture findPictureByPictureName(String pictureName);
 }

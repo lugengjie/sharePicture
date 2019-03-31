@@ -59,4 +59,14 @@ public class AlbumTest
 		albumDTO.setAlbumTitle("卡卡");
 		albumService.changeAlbum(albumDTO);
 	}
+	
+	@Test
+	public void pictureCarousel() 
+	{
+		AlbumDTO albumDTO=new AlbumDTO();
+		albumDTO.setId(1L);
+		albumDTO.setAlbumTitle("卡卡");
+		albumService.changeAlbum(albumDTO);
+	}
+
 }
