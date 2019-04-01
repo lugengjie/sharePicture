@@ -40,6 +40,7 @@ public class PictureController
 		AlbumDTO album = pictureService.showAllPictureOfAlbum(albumDTO);
 		model.addAttribute("pictures", album);
 		model.addAttribute("albums", albums);
+		model.addAttribute("littleAlbum", null);
         return "addPicture";
     }
 	
@@ -64,9 +65,10 @@ public class PictureController
 	}
 	
 	@RequestMapping("/carouselPicture")
-	public AlbumDTO pictureCarousel(PictureDTO picture)
+	public String pictureCarousel(PictureDTO picture ,Model model)
 	{
-		
-
+		AlbumDTO album=pictureService.pictureCarousel(picture.getPictureName());
+		model.addAttribute("littleAlbum", album);
+		return "addPicture::carouselMask";
 	}
 }

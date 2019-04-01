@@ -135,7 +135,6 @@ public class PictureService implements IPictureService
 				BeanUtils.copyProperties(pictures.get(j), pictureDTO);
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}
-			System.out.println(albumDTO);
 		}
 		return albumDTO;
 	}
