@@ -10,17 +10,17 @@ public class AlbumDTO
 {
 	private Long id;
 	// 标题
-	private String albumTitle;
+	private String albumTitle="";
 	// 类别
-	private String albumClassification;
+	private String albumClassification="";
 	// 描述
-	private String albumDescribe;
+	private String albumDescribe="";
 	//封面图片名字
-	private String coverPictureName;
+	private String coverPictureName="";
 	// 图片s
 	private List<String> pictureNames=new ArrayList<String>();
 	//相册所属用户名
-	private String userName;
+	private String userName="";
 	//轮播图片索引
 	private int pictureIndex;
 	//图片DTO

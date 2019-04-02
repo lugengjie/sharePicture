@@ -88,11 +88,15 @@ public class AlbumService implements IAlbumService
 					//将图片List的最后一张图片作为相册的封面
 					String coverPictureName=pictures.get(pictures.size()-1).getPictureName();
 					albumDto.setCoverPictureName(coverPictureName);
+					int j=0;
 					for(int i=pictures.size()-2;i>=0;i--)
 					{
-						int j=0;
 						String pictureName=pictures.get(i).getPictureName();
 						albumDto.getPictureNames().set(j++,pictureName);
+						if(j>2)
+						{
+							break;
+						}
 					}
 				}
 				albumDtos.add(albumDto);

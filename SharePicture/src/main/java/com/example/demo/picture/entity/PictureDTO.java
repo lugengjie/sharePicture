@@ -4,11 +4,11 @@ package com.example.demo.picture.entity;
 public class PictureDTO
 {	
 	// 标签
-	private String pictureLabel;
+	private String pictureLabel="";
 	// 描述
-	private String pictureDescribe;
+	private String pictureDescribe="";
 	// 图片名称
-	private String pictureName;
+	private String pictureName="";
 	// 所属相册
 	private Long albumId;
 	
