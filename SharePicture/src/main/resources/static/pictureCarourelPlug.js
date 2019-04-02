@@ -35,7 +35,7 @@
             pictureLoad(images);
             images[index].onload=function(){
               waterFall(images,imageWidth,boxColum,gap,heightArray); 
-              if(  (images[index].offsetTop<=($("#picturesOfAlbum").height() + $("#picturesOfAlbum").scrollTop()||index<pictureIndex))){                    
+              if((images[index].offsetTop<=($("#picturesOfAlbum").height() + $("#picturesOfAlbum").scrollTop()))||index<pictureIndex){                    
                   index++;
                   recursionAndOnload(imagesLength,images,imageWidth,boxColum,gap,heightArray); 
               }else{
@@ -127,7 +127,6 @@
             }
             rightButton.click(function(){     
                 
-                 console.log("索引"+pictureIndex)
 
                  picturesOfAlbum[pictureIndex].style.opacity = 0.3;
                  mainPicture.attr("src", picturesOfAlbum[(++pictureIndex)].getAttribute("data_src"));
@@ -155,7 +154,7 @@
                    leftButton.hide();
                 }
                 if(pictureIndex == picturesOfAlbum.length-1){
-                    right.hide();
+                    rightButton.hide();
                 }
                 $(this).css("opacity",1);
                 picturesOfAlbum[pictureIndex].style.opacity = 0.3;

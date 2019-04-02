@@ -21,10 +21,11 @@ public class AlbumDTO
 	private List<String> pictureNames=new ArrayList<String>();
 	//相册所属用户名
 	private String userName;
+	//轮播图片索引
+	private int pictureIndex;
 	//图片DTO
 	private List<PictureDTO> pictureDTOs = new ArrayList<PictureDTO>();
-	//轮播图片索引
-	private int index;
+	
 	
 	public Long getId()
 	{
@@ -109,14 +110,15 @@ public class AlbumDTO
 	}
 
 	
-	public int getIndex()
+	
+	public int getPictureIndex()
 	{
-		return index;
+		return pictureIndex;
 	}
 
-	public void setIndex(int index)
+	public void setPictureIndex(int pictureIndex)
 	{
-		this.index = index;
+		this.pictureIndex = pictureIndex;
 	}
 
 	@Override
@@ -124,6 +126,9 @@ public class AlbumDTO
 	{
 		return "AlbumDTO [id=" + id + ", albumTitle=" + albumTitle + ", albumClassification=" + albumClassification
 				+ ", albumDescribe=" + albumDescribe + ", coverPictureName=" + coverPictureName + ", pictureNames="
-				+ pictureNames + ", userName=" + userName + ", pictureDTOs=" + pictureDTOs + "]";
-	}	
+				+ pictureNames + ", userName=" + userName + ", pictureIndex=" + pictureIndex + ", pictureDTOs="
+				+ pictureDTOs + "]";
+	}
+
+	
 }

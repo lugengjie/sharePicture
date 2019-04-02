@@ -17,7 +17,7 @@
         padding-right:1px!important;
     }
 
-    /* div{border:1px solid black;} */
+   /*  div{border:1px solid black;} */
     .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
     .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
 	 .buttonShowAndHide{display:none;}
@@ -79,7 +79,7 @@
     #picturesOfAlbum::-webkit-scrollbar-thumb{ border-radius: 10px;  background-color: #aaaa; }  
     #whiteMask{position:fixed;z-index:2;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
     #overWhiteMask{position:fixed;z-index:3;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
-    #picturesOfAlbum img:hover{opacity:1;cursor:pointer}
+    #picturesOfAlbum img:hover{opacity:1!important;cursor:pointer}
     #picturesOfAlbum img{position:absolute;display:none;opacity:0.3;width:83px;}
     #RightButton:hover{background-color: black;cursor:pointer}
     #LeftButton:hover{background-color: black;cursor:pointer}
@@ -292,7 +292,6 @@
 			 
 			/*轮播模态框*/
 			$("#carouselMask").hide();
-			
 			$(".allPictureShow").click(function(){
 				var picSrc = $(this).attr('src');
 				$('#carouselMask').load("/picture/carouselPicture",{'pictureName':$(this).attr('src')},function(){
@@ -307,14 +306,20 @@
 				          }
 				      });
 				      var mainPictureIndex = $('#mainPicture').attr('mainPictureIndex');
-				     /*  $("#picturesOfAlbum").carouselPlugin({
+				      $(document.body).css({"overflow-y":"hidden"});
+				      $("#picturesOfAlbum").carouselPlugin({
 				           'mainPicture':'mainPicture',
 				           'leftButton':'LeftButton',
 				           'rightButton':'RightButton',
-				           'pictureIndex': mainPictureIndex;
-				      }); */
+				           'pictureIndex': mainPictureIndex
+				      }); 
 				      $("#picturesOfAlbum").myPlugin(mainPictureIndex);
-						$("#carouselMask").show();
+						$("#carouselMask").show();						
+						$("#closeButton").click(function(){
+							$("#carouselMask").hide();
+							$(document.body).css({"overflow-y":"scroll"});
+						});
+						   
 				});
 			});
 			 
@@ -377,7 +382,7 @@
 <body>
 
    <!-- 导航栏 -->
-    <nav class="navbar navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:2">
         <div class="container">
 	        <div class="row">
 	            <div class="col-md-5">
@@ -595,10 +600,10 @@
 
 <!-- 轮播模态框 -->
 <div id="carouselMask" th:fragment="carouselMask">
+	<div id="whiteMask"></div>
    <div id="closeButton"> <img src="./../close.png"></div>
    <div id="LeftButton"> <img src="./../toLeft.png"></div>
    <div id="RightButton"> <img src="./../toRight.png"></div>
-   <div id="whiteMask"></div>
       <div id="overWhiteMask">
             <div class="container">
                   <div class="row">
@@ -612,7 +617,7 @@
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                 </button>
                                 <div style="text-align:center"> 
-                                   <img  id="mainPicture" th:mainPictureIndex="${littleAlbum.index}" th:src="@{${littleAlbum.coverPictureName}}">                 
+                                   <img th:if="${littleAlbum!=null}"  id="mainPicture" th:mainPictureIndex="${littleAlbum.pictureIndex}" th:src="@{${littleAlbum.coverPictureName}}">                 
                                 </div>
                           </div>
                           <div id="underMainPicturePanel">
@@ -640,10 +645,8 @@
                               <span id="lanauAlbumName">你好</span><br><span id="lanauUserName">数数卢</span>
                           </div>
                         
-                          <div id="picturesOfAlbum">
-                          		<div th:each="picture:${littleAlbum.pictureDTOs}">
-                          		<img src=""  th:data_src="${picture.pictureName}">
-                          		</div>
+                          <div th:if="${littleAlbum!=null}" id="picturesOfAlbum"> 
+                          		<img  th:each="picture:${littleAlbum.pictureDTOs}" src=""  th:data_src="${picture.pictureName}">   		
                           </div>
                          
                            <button id="followPictureButton" type="button" class="btn btn-primary btn-danger">关注相册</button>

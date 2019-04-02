@@ -117,8 +117,9 @@ public class PictureService implements IPictureService
 			List<Picture> pictures=pictureRepository.findPictureByAlbumId(picture.getAlbumId());
 			Collections.reverse(pictures);
 			int index = pictures.indexOf(picture);	
-			for(int i=index;i>=0;i--)
-			{
+			int i=index;
+			for(;i>=0;i--)
+			{		
 				if(index-i>=8)
 				{
 					break;
@@ -128,13 +129,14 @@ public class PictureService implements IPictureService
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}
 			Collections.reverse(albumDTO.getPictureDTOs());
-			albumDTO.setIndex(albumDTO.getPictureDTOs().indexOf(picture));
+			albumDTO.setPictureIndex(index-i-1);
 			for(int j=index+1;j<pictures.size();j++)
 			{
 				PictureDTO pictureDTO = new PictureDTO();
 				BeanUtils.copyProperties(pictures.get(j), pictureDTO);
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}
+			
 		}
 		return albumDTO;
 	}
