@@ -18,8 +18,10 @@ import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.service.AlbumService;
 import com.example.demo.common.utils.FileUploadUtil;
+import com.example.demo.picture.entity.LikePicture;
 import com.example.demo.picture.entity.Picture;
 import com.example.demo.picture.entity.PictureDTO;
+import com.example.demo.picture.repository.LikePictureRepository;
 import com.example.demo.picture.repository.PictureRepository;
 
 @Service
@@ -33,6 +35,9 @@ public class PictureService implements IPictureService
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private LikePictureRepository likePictureRepository;
+	
 	@Value("${web.upload-path}")
 	String localAbsolutePath;
 	
@@ -43,8 +48,11 @@ public class PictureService implements IPictureService
 	{
 		Picture picture=new Picture();
 		BeanUtils.copyProperties(pictureDto, picture);
+		picture.setId(null);
 		pictureRepository.save(picture);		
 	}
+	
+	
 	
 	/**
 	 * 上传图片
@@ -139,6 +147,84 @@ public class PictureService implements IPictureService
 			
 		}
 		return albumDTO;
+	}
+	
+	/**
+	 * 喜欢图片
+	 * 检查该用户是否已喜欢该图片，是则结束
+	 * 将喜欢的图片id和用户id放入喜欢图片表中，并将图片表对应图片的likeNumber+1
+	 */
+	public void likePicture(Long pictureId,String email)
+	{
+		User user = userRepository.findByEmial(email);
+		if(user != null)
+		{
+			Picture picture=pictureRepository.findById(pictureId).get();
+			if(picture !=null)
+			{
+				LikePicture likePictureTemp = likePictureRepository.findLikePictureByUserIdAndPictureId(user.getId(), pictureId);
+				if (likePictureTemp != null)
+				{
+					return ;
+				}
+				LikePicture likePicture = new LikePicture();
+				int likeNumber = picture.getLikeNumber() + 1;
+				picture.setLikeNumber(likeNumber);
+				likePicture.setPictureId(pictureId);
+				likePicture.setUserId(user.getId());
+				likePictureRepository.save(likePicture);
+			}
+		}
+	}
+		
+	/**
+	 * 取消喜欢图片
+	 * 检查该用户是否已喜欢该图片，否则结束
+	 * 根据图片id和用户id删除喜欢图片表内的数据
+	 */
+	public void cancelLikePicture(Long pictureId,String email)
+	{
+		User user = userRepository.findByEmial(email);
+		if(user != null)
+		{
+			LikePicture likePictureTemp = likePictureRepository.findLikePictureByUserIdAndPictureId(user.getId(), pictureId);
+			if (likePictureTemp == null)
+			{
+				return ;
+			}
+			Picture picture=pictureRepository.findById(pictureId).get();
+			if(picture !=null)
+			{
+				Long userId = user.getId();
+				int likeNumber = picture.getLikeNumber() - 1;
+				pictureRepository.cancelLikePicture(pictureId, likeNumber);
+				likePictureRepository.deleteByPictureAndUser(pictureId, userId);
+			}
+		}
+	}
+		
+	/**
+	 * 收藏图片
+	 * 先检查该用户是否拥有该相册
+	 * 将收藏图片存入数据库，并将原来的图片的collecteNumber+1
+	 */
+	public void collectPicture(PictureDTO pictureDTO, String email)
+	{
+		User user = userRepository.findByEmial(email);
+		if(user != null)
+		{
+			Album album = albumRepository.findAlbumByAlbumIdAndUserId(pictureDTO.getAlbumId(), user.getId());
+			if(album != null)
+			{
+				Long pictureId = pictureDTO.getPictureId();
+				Picture picture=pictureRepository.findById(pictureId).get();
+				int collectNumber = picture.getCollectNumber();
+				picture.setCollectNumber(collectNumber+1);
+				pictureRepository.save(picture);
+				savePicture(pictureDTO);
+			}
+			
+		}
 	}
 
 }

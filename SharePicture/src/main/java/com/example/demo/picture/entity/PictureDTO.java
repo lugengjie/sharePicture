@@ -3,6 +3,8 @@ package com.example.demo.picture.entity;
 
 public class PictureDTO
 {	
+	//图片Id
+	private Long pictureId;
 	// 标签
 	private String pictureLabel="";
 	// 描述
@@ -13,6 +15,14 @@ public class PictureDTO
 	private Long albumId;
 	
 	
+	public Long getPictureId()
+	{
+		return pictureId;
+	}
+	public void setPictureId(Long pictureId)
+	{
+		this.pictureId = pictureId;
+	}
 	public String getPictureLabel()
 	{
 		return pictureLabel;
@@ -48,8 +58,7 @@ public class PictureDTO
 	@Override
 	public String toString()
 	{
-		return "PictureDTO [pictureLabel=" + pictureLabel + ", pictureDescribe=" + pictureDescribe + ", pictureName="
-				+ pictureName + ", albumId=" + albumId + "]";
-	}		
-	
+		return "PictureDTO [pictureId=" + pictureId + ", pictureLabel=" + pictureLabel + ", pictureDescribe="
+				+ pictureDescribe + ", pictureName=" + pictureName + ", albumId=" + albumId + "]";
+	}	
 }

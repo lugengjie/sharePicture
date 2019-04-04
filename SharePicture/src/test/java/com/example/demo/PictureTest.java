@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.picture.entity.Picture;
+import com.example.demo.picture.entity.PictureDTO;
 import com.example.demo.picture.repository.PictureRepository;
 import com.example.demo.picture.service.IPictureService;
 import com.example.demo.picture.service.PictureService;
@@ -52,5 +53,28 @@ public class PictureTest
 	{
 		pictureService.pictureCarousel("/132/5a2360515ec847fa8c85deba02d96881.jpeg");
 	}
+	
+	@Test
+	public void likePictureTest()
+	{
+		pictureService.likePicture(1L, "1923808485@qq.com");
+	}
+	
+	@Test
+	public void cancelLikePicture()
+	{
+		pictureService.cancelLikePicture(1L, "1923808485@qq.com");
+	}
+	
+	@Test
+	public void collectPicture()
+	{
+		PictureDTO pictureDTO = new PictureDTO();
+		pictureDTO.setAlbumId(1L);
+		pictureDTO.setPictureName("aa");
+		pictureDTO.setPictureId(1L);
+		pictureService.collectPicture(pictureDTO, "xueyuancpt@163.com");
+	}
+
 
 }

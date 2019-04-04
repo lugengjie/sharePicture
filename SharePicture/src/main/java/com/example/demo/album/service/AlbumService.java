@@ -12,8 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.account.entity.User;
-import com.example.demo.account.repository.UserRepository;
+
 import com.example.demo.album.entity.Album;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.repository.AlbumRepository;

@@ -20,6 +20,10 @@ public class Picture
 	private String pictureName;
 	// 所属相册
 	private Long albumId;
+	//被喜欢数
+	private int likeNumber = 0;
+	//被收藏数
+	private int collectNumber = 0;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +42,7 @@ public class Picture
 		return pictureDescribe;
 	}
 	
-	@Column(nullable=false)
+	
 	public String getPictureName()
 	{
 		return pictureName;
@@ -48,11 +52,24 @@ public class Picture
 	{
 		return albumId;
 	}
+	
+	
+	public int getLikeNumber()
+	{
+		return likeNumber;
+	}
+
+	public int getCollectNumber()
+	{
+		return collectNumber;
+	}
 
 	public void setAlbumId(Long albumId)
 	{
 		this.albumId = albumId;
 	}
+
+	
 
 	public void setId(Long id)
 	{
@@ -73,11 +90,24 @@ public class Picture
 	{
 		this.pictureName = pictureName;
 	}
+	
+	
+	public void setLikeNumber(int likeNumber)
+	{
+		this.likeNumber = likeNumber;
+	}
+
+	public void setCollectNumber(int collectNumber)
+	{
+		this.collectNumber = collectNumber;
+	}
 
 	@Override
 	public String toString()
 	{
 		return "Picture [id=" + id + ", pictureLabel=" + pictureLabel + ", pictureDescribe=" + pictureDescribe
-				+ ", pictureName=" + pictureName + ", albumId=" + albumId + "]";
+				+ ", pictureName=" + pictureName + ", albumId=" + albumId + ", likeNumber=" + likeNumber
+				+ ", collectNumber=" + collectNumber + "]";
 	}
+
 }

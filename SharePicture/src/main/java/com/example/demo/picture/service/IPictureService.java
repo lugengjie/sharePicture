@@ -1,7 +1,5 @@
 package com.example.demo.picture.service;
 
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.album.entity.AlbumDTO;
@@ -21,5 +19,14 @@ public interface IPictureService
 	
 	//图片轮播
 	public AlbumDTO pictureCarousel(String pictureName);
+	
+	//喜欢图片
+	public void likePicture(Long pictureId,String email);
+	
+	//取消喜欢图片
+	public void cancelLikePicture(Long pictureId, String email);
+	
+	//收藏图片
+	public void collectPicture(PictureDTO PictureDTO, String email);
 
 }
