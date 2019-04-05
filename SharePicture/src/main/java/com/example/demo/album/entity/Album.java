@@ -21,6 +21,8 @@ public class Album
 	private int pictureNumber;
 	// 用户Id
 	private Long userId;
+	// 被关注数
+	private int focusNumber;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +56,12 @@ public class Album
 		return userId;
 	}
 	
+	
+	public int getFocusNumber()
+	{
+		return focusNumber;
+	}
+
 	public void setId(Long id)
 	{
 		this.id = id;
@@ -84,12 +92,16 @@ public class Album
 		this.userId = userId;
 	}
 
+	public void setFocusNumber(int focusNumber)
+	{
+		this.focusNumber = focusNumber;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "Album [id=" + id + ", albumTitle=" + albumTitle + ", albumDescribe=" + albumDescribe
-				+ ", albumClassification=" + albumClassification + ", pictureNumber="
-				+ pictureNumber + ", userId=" + userId + "]";
+				+ ", albumClassification=" + albumClassification + ", pictureNumber=" + pictureNumber + ", userId="
+				+ userId + ", focusNumber=" + focusNumber + "]";
 	}
-	
 }

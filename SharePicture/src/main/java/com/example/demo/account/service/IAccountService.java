@@ -33,4 +33,5 @@ public interface IAccountService
 	public void sendEmailToChangePassword(AccountDTO accountDTO);
 
 	public void changePassword(AccountDTO accountDTO);
+
 }

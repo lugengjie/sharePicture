@@ -2,6 +2,8 @@ package com.example.demo.picture.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,6 +66,12 @@ public class PictureController
 		return "上传图片失败";
 	}
 	
+	/**
+	 * 轮播
+	 * @param picture
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/carouselPicture")
 	public String pictureCarousel(PictureDTO picture ,Model model)
 	{
@@ -71,4 +79,11 @@ public class PictureController
 		model.addAttribute("littleAlbum", album);
 		return "addPicture::carouselMask";
 	}
+	
+//	@RequestMapping("/toHomePage")
+//	public String toHomePage(HttpSession session, Model model)
+//	{
+//		
+//
+//	}
 }

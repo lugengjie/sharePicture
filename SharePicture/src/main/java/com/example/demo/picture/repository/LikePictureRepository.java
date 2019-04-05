@@ -3,10 +3,12 @@ package com.example.demo.picture.repository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import com.example.demo.picture.entity.LikePicture;
 import com.example.demo.picture.entity.Picture;
 
+@Repository
 public interface LikePictureRepository extends CrudRepository<LikePicture, Long>
 {
 	@Modifying

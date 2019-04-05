@@ -17,6 +17,7 @@ public class User
 	private String email;
 	private String name;
 	private String password;
+	private int followNumber = 0;
 	// 是否账号是否已经激活
 	private State state = State.NO;
 	
@@ -76,13 +77,22 @@ public class User
 		this.state = state;
 	}
 	
+	
+	public int getFollowNumber()
+	{
+		return followNumber;
+	}
+
+	public void setFollowNumber(int followNumber)
+	{
+		this.followNumber = followNumber;
+	}
+
 	@Override
 	public String toString()
 	{
-		return "User [id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", state=" + state;
+		return "User [id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", followNumber="
+				+ followNumber + ", state=" + state + "]";
 	}
-
-	
-	
 	
 }

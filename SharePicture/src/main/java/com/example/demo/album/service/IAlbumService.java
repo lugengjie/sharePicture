@@ -18,6 +18,9 @@ public interface IAlbumService
 	public void changeAlbum(AlbumDTO albumDTO);
 	//删除相册
 	public void deleteAlbum(Long albumId);
-	
+	//关注相册
+	public void focusOnAlbum(Long albumId, String email);
+	//取消关注相册
+	public void cancelFocusOnAlbum(Long albumId, String email);
 	
 }

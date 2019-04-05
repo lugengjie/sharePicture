@@ -11,6 +11,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.example.demo.account.repository.UserRepository;
 import com.example.demo.album.entity.Album;
 import com.example.demo.album.entity.AlbumDTO;
+import com.example.demo.album.entity.AlbumTesta;
+import com.example.demo.album.repository.AlbumRepository;
+import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.album.service.AlbumService;
 
 @RunWith(SpringRunner.class)
@@ -21,6 +24,9 @@ public class AlbumTest
 	private AlbumService albumService;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private FocusOnAlbumRepository focusOnAlbumRepository;
+
 	@Test
 	public void addAlbumTest(){
 		AlbumDTO albumDto=new AlbumDTO();
@@ -69,4 +75,23 @@ public class AlbumTest
 		albumService.changeAlbum(albumDTO);
 	}
 
+	@Test
+	public void focusOnAlbumTest()
+	{
+		albumService.focusOnAlbum(74L, "1923808485@qq.com");
+	}
+	
+	@Test
+	public void cancelFocusOnAlbumFocusOnAlbumTest()
+	{
+		albumService.cancelFocusOnAlbum(74L, "1923808485@qq.com");
+	}
+	
+	@Test
+	public void findTest()
+	{	
+		Object[] aa=(Object[])focusOnAlbumRepository.findTest(1L);
+		System.out.println(aa[1]);
+
+	}
 }

@@ -216,4 +216,5 @@ public class AccountService implements IAccountService
 		String email = accountDTO.getEmail();
 		userRepository.changePassword(Md5PassWord, email);
 	}
+	
 }

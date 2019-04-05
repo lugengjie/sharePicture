@@ -1,5 +1,7 @@
 package com.example.demo.picture.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.album.entity.AlbumDTO;

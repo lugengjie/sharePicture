@@ -13,6 +13,14 @@ public class PictureDTO
 	private String pictureName="";
 	// 所属相册
 	private Long albumId;
+	//相册名
+	private String albumName;
+	//用户名
+	private String userName;
+	//用户Id
+	private Long userId;
+	//用户头像
+	private String userPicture;
 	
 	
 	public Long getPictureId()
@@ -55,10 +63,47 @@ public class PictureDTO
 	{
 		this.albumId = albumId;
 	}
+	
+	
+	public String getAlbumName()
+	{
+		return albumName;
+	}
+	public void setAlbumName(String albumName)
+	{
+		this.albumName = albumName;
+	}
+	public String getUserName()
+	{
+		return userName;
+	}
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
+	}
+	public Long getUserId()
+	{
+		return userId;
+	}
+	public void setUserId(Long userId)
+	{
+		this.userId = userId;
+	}
+	public String getUserPicture()
+	{
+		return userPicture;
+	}
+	public void setUserPicture(String userPicture)
+	{
+		this.userPicture = userPicture;
+	}
+	
 	@Override
 	public String toString()
 	{
 		return "PictureDTO [pictureId=" + pictureId + ", pictureLabel=" + pictureLabel + ", pictureDescribe="
-				+ pictureDescribe + ", pictureName=" + pictureName + ", albumId=" + albumId + "]";
-	}	
+				+ pictureDescribe + ", pictureName=" + pictureName + ", albumId=" + albumId + ", albumName=" + albumName
+				+ ", userName=" + userName + ", userId=" + userId + ", userPicture=" + userPicture + "]";
+	}
+
 }

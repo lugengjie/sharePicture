@@ -12,10 +12,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.example.demo.account.entity.User;
+import com.example.demo.account.repository.UserRepository;
 import com.example.demo.album.entity.Album;
 import com.example.demo.album.entity.AlbumDTO;
+import com.example.demo.album.entity.FocusOnAlbum;
 import com.example.demo.album.repository.AlbumRepository;
+import com.example.demo.album.repository.FocusOnAlbumRepository;
+import com.example.demo.personalCenter.entity.Fans;
 import com.example.demo.picture.entity.Picture;
 import com.example.demo.picture.repository.PictureRepository;
 
@@ -27,6 +31,10 @@ public class AlbumService implements IAlbumService
 	private AlbumRepository albumRepository;
 	@Autowired
 	private PictureRepository pictureRepository;
+	@Autowired
+	private FocusOnAlbumRepository focusOnAlbumRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	/**
 	 * 添加相册
@@ -119,6 +127,57 @@ public class AlbumService implements IAlbumService
 	public void deleteAlbum(Long albumId)
 	{
 		albumRepository.deleteAlbum(albumId);
+	}
+	
+	/**
+	 * 关注相册
+	 * 1.判断相册是否为空
+	 * 2.判断关注关系是否已存在
+	 * 3.将相册的被关注数+1
+	 * 4.就关注关系存入数据库
+	 */
+	public void focusOnAlbum(Long albumId, String email)
+	{
+		Album album = albumRepository.findById(albumId).get();
+		Long userId = userRepository.findByEmial(email).getId();
+		if (album != null)
+		{
+			FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
+			if(focusOnAlbum == null)
+			{
+				int focusNumber = album.getFocusNumber()+1;
+				album.setFocusNumber(focusNumber);
+				albumRepository.save(album);
+				focusOnAlbum = new FocusOnAlbum();
+				focusOnAlbum.setAlbumId(albumId);
+				focusOnAlbum.setUserId(userId);
+				focusOnAlbumRepository.save(focusOnAlbum);		
+			}
+		}	
+	}
+	//取消关注相册
+	/**
+	 * 取消关注相册
+	 * 1.相册不能为空
+	 * 2.判断关注关系需已存在
+	 * 3.将相册的被关注数-1
+	 * 4.将关注关系删除
+	 */
+	public void cancelFocusOnAlbum(Long albumId, String email)
+	{
+		Album album = albumRepository.findById(albumId).get();
+		Long userId = userRepository.findByEmial(email).getId();
+		if (album != null)
+		{
+			FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
+			if(focusOnAlbum != null)
+			{
+				int focusNumber = album.getFocusNumber()-1;
+				album.setFocusNumber(focusNumber);
+				albumRepository.save(album);
+				focusOnAlbumRepository.delete(focusOnAlbum);	
+			}
+		}	
 	}
 	
 }
