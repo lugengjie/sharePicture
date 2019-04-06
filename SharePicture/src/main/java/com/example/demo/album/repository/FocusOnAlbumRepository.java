@@ -1,5 +1,7 @@
 package com.example.demo.album.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ public interface FocusOnAlbumRepository extends CrudRepository<FocusOnAlbum, Lon
 	@Query("from FocusOnAlbum f where f.albumId=?1 and f.userId=?2")
 	public FocusOnAlbum findFocusOnAlbumByAlbumIdAndUserId(Long albumId, Long userId);
 	
-	@Query("select a.albumTitle as albumTitle ,a.id as id from Album a where a.id=?1")
-	public Object findTest(Long albumId);
+	@Query("select f.albumId from FocusOnAlbum f where f.userId=?1")
+	public List<Long> findFocusOnAlbumIdsByUserId(Long userId);
+	
 }

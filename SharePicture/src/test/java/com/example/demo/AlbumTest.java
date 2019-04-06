@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -15,6 +16,7 @@ import com.example.demo.album.entity.AlbumTesta;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.album.service.AlbumService;
+import com.example.demo.personalCenter.repository.FansRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,6 +28,9 @@ public class AlbumTest
 	private UserRepository userRepository;
 	@Autowired
 	private FocusOnAlbumRepository focusOnAlbumRepository;
+	@Autowired
+	private AlbumRepository albumRepository;
+	
 
 	@Test
 	public void addAlbumTest(){
@@ -87,11 +92,17 @@ public class AlbumTest
 		albumService.cancelFocusOnAlbum(74L, "1923808485@qq.com");
 	}
 	
+	
 	@Test
-	public void findTest()
-	{	
-		Object[] aa=(Object[])focusOnAlbumRepository.findTest(1L);
-		System.out.println(aa[1]);
+	public void findAlbumByUserIds()
+	{
+		List<Long> ids= new ArrayList<Long>();
+		ids.add(1L);
+		ids.add(2L);
+		
+		System.out.println(albumRepository.findAllById(ids));
 
 	}
+	
+	
 }

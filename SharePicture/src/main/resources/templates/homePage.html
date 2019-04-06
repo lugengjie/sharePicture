@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"> 
+  <title>HomePage</title>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="./../pictureCarourelPlug.js"></script>
+  <style>
+     body{background-color:#f5f5f5;}
+     /*防止打开模态框时页面抖动*/
+    .modal-open{ overflow-y: scroll;}
+    body{ padding-right:1px!important;}
+
+   /*div{border:1px solid black;}*/
+   
+
+  /* 导航栏*/
+    nav{background-color:white;}
+    nav .container{width:1250px;}
+    .navbar-header{height:50px}
+    #navLogo{width:100px;height: 70px;margin-top:-8px}
+    #bellButton{font-size: 20px;color:#a6a6a6;margin-top: 8px}
+    #noticeIcon{border-left:1px solid #ddd;}
+    #noticeIcon p{font-size:17px;height:1px}
+    #navUserPicture{border-left:1px solid #ddd;border-right:1px solid #ddd;}
+    #navUserPicture img{height:20px;width:20px}
+    #navSearch{float:right;width:350px}
+    #navSearch button{height:35px}
+    #navSearchInput{height:35px;position:relative;}
+    #navSearchInput input{height:100%;width:300px}
+    #navSearchInput span {position:absolute;font-size:20px;color:#c8c8c8;margin-left:270px;margin-top: 5px}
+
+  
+
+    /*图片组*/
+    #picturePage .container{width:1250px;margin-top:70px;}
+    #outerBorder{height:170px;width:19%;position:absolute;background-color:white;padding:10px;}
+    .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
+    .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
+   .buttonShowAndHide{display:none;}
+   .uploadPicturePanel img:hover{cursor:pointer}
+    
+
+    /*图片面板*/
+    .collectPictureButton{position:absolute;z-index:2}
+    .likePictureButton{position:absolute;z-index:2;margin-left:83.5%}
+
+  
+
+ 
+  
+    /* 轮播模态框 */
+    #picturesOfAlbum::-webkit-scrollbar {width: 10px;  height:10px }  
+    #picturesOfAlbum::-webkit-scrollbar-thumb{ border-radius: 10px;  background-color: #aaaa; }  
+    #whiteMask{position:fixed;z-index:2;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
+    #overWhiteMask{position:fixed;z-index:3;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
+    #picturesOfAlbum img:hover{opacity:1!important;cursor:pointer}
+    #picturesOfAlbum img{position:absolute;display:none;opacity:0.3;width:83px;}
+    #RightButton:hover{background-color: black;cursor:pointer}
+    #LeftButton:hover{background-color: black;cursor:pointer}
+    #closeButton:hover{background-color: black;cursor:pointer}
+    #closeButton{position:fixed;z-index:4;right:24px;width:45px;top:10px;opacity:0.3;}
+    #closeButton img{width:100%;}
+    #LeftButton{position:fixed;z-index:4;width:60px;top:40%;;opacity:0.3;}
+    #LeftButton img{width:100%;}
+    #RightButton{position:fixed;z-index:4;width:60px;top:40%;right:18px;opacity:0.3;}
+    #RightButton img{width:100%;}
+    #overWhiteMask .container{width:77%;margin-top:4%;padding-left: 30px}
+    #wmLoveButton{font-size:18px;height:35px}
+    #wmEnlargeButton{float: right;font-size:20px;height:35px;margin-right:6px}
+    #mainPicture{max-width:99%;margin-top:15px;}
+    #underMainPicturePanel{background-color:white;margin-top:20px;width:698px;}
+    #umpUserName{display: inline-block;margin-top: -100px}
+    #umpLittlePicture{width:50px;height: 50px}
+    #pictureDescrible{display: inline-block;background-color:#fafafa;vertical-align:middle;line-height:46px;width:100%;padding-left:15px}
+    #commentTextArea{display: inline-block;width:90.5%;margin-left: 12px;}
+    #commentTextAreaButton{margin-top:10px;margin-left:580px}
+    #touristPicture{width:50px;height: 54px;float: left}
+    #laRightPanel{width:300px;background-color: white;float: right;height:480px;padding:16px;margin-right:-5px}
+    #larUserPicture{width:38px;height: 38px;float: left}
+    #larAlbumNameAndUserName{display: inline-block;margin-left: 6px}
+    #lanauAlbumName{font-size:15px;}
+    #lanauUserName{font-size:13px;color: #999}
+    #picturesOfAlbum{height:344px;width:103%;overflow-y:scroll;margin-top:14px;position: relative;}
+    #followPictureButton{margin-top: 10px;width: 99% }
+    
+  </style>
+  <script type="text/javascript">
+      $(document).ready(function(){           
+          /*轮播模态框*/
+          $("#carouselMask").hide();
+          $(".allPictureShow").click(function(){
+            var picSrc = $(this).attr('src');
+            $('#carouselMask').load("/picture/carouselPicture",{'pictureName':$(this).attr('src')},function(){
+               /*评论框无内容时禁止点击发送*/
+                  $("#commentTextArea").bind('input propertychange',function () { 
+                      var TextAreaContent = $("#commentTextArea").val();
+
+                      if (TextAreaContent == "") {
+                        $("#commentTextAreaButton").attr("disabled","disabled");
+                      }else{
+                        $("#commentTextAreaButton").removeAttr("disabled");
+                      }
+                  });
+                  var mainPictureIndex = $('#mainPicture').attr('mainPictureIndex');
+                  $(document.body).css({"overflow-y":"hidden"});
+                  $("#picturesOfAlbum").carouselPlugin({
+                       'mainPicture':'mainPicture',
+                       'leftButton':'LeftButton',
+                       'rightButton':'RightButton',
+                       'pictureIndex': mainPictureIndex
+                  }); 
+                  $("#picturesOfAlbum").myPlugin(mainPictureIndex);
+                $("#carouselMask").show();            
+                $("#closeButton").click(function(){
+                  $("#carouselMask").hide();
+                  $(document.body).css({"overflow-y":"scroll"});
+                });
+                   
+            });
+          });   
+    });
+  </script>
+</head>
+<body>
+
+   <!-- 导航栏 -->
+    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:2">
+        <div class="container">
+          <div class="row">
+              <div class="col-md-5">
+                  <div class="navbar-header">
+                      <img id="navLogo" src="logo2.png">
+                  </div>
+                  <ul class="nav navbar-nav">
+                      <li><a class="navbar-brand" href="#">SharePicture</a></li>
+                      <li><a href="#">首页</a></li>
+                      <li><a href="#">推荐</a></li> 
+                      <li><a href="#">●●●</a></li> 
+                        
+                  </ul>
+              </div>
+              <div class="col-md-6 col-md-offset-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="noticeIcon">
+                          <a  href="#"> 
+                            <p class="glyphicon glyphicon-bullhorn">    
+                            </p>
+                          </a>
+                        </li>
+                        <li id="navUserPicture">
+                          <a href="#"><img  src="aa.jfif"></a>
+                        </li>
+                   </ul>      
+          <div id="navSearch" class="input-group navbar-form">
+             <div class="input-group-btn">
+              <button type="button" class="btn btn-default 
+              dropdown-toggle" data-toggle="dropdown">相册
+              <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">收藏</a></li>
+                <li><a href="#">用户</a></li>
+              </ul>
+            </div>
+            <div id="navSearchInput">         
+              <input type="text">
+              <span class="glyphicon glyphicon-search"></span>
+            </div>
+            </div>      
+          </div>
+
+        </div>
+    </nav>
+
+
+
+
+    <div id="picturePage"> 
+        <div class="container">
+            <div class="row" style="position:relative"> 
+
+              <div id="outerBorder"> 
+                  <div style="margin-left:10px;margin-top: 8px">
+                    <img  src="aa.jfif" style="height:70px;width:70px"> 
+                    <span style="font-size: 20px">&nbsp;&nbsp;<strong>卢耿杰</strong></span>
+                  </div> 
+                   <ul class="nav navbar-nav" style="width:100%;text-align: center;margin-top: 10px">
+                      <li  style="width:33%;"><a href="#">30<br>收藏</a></li>
+                      <li style="width:33%;"><a href="#">30<br>相册</a></li> 
+                      <li style="width:33%;"> <a href="#">30<br>粉丝</a></li> 
+                  </ul>       
+              </div> 
+
+                 <div id="box">                 
+                     <div class="uploadPicturePanel" th:each="picture:${pictures.pictureNames}">
+                        <div class="buttonShowAndHide collectPictureButton">                          
+                            <div class="btn-group">
+                                <a type="button" class="btn btn-default" >收藏</a>
+                                  <a type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-flash"></span>
+                                  </a>        
+                            </div>
+                         </div>
+                         <div class="buttonShowAndHide likePictureButton">   
+                              <a type="button" class="btn btn-default">
+                                  <span class="glyphicon glyphicon-heart"></span>
+                              </a>  
+                        </div> 
+                        <div>
+                             <img class="allPictureShow" src="" th:data_src="${picture}" style="width:100%;border-radius:5px 5px 0 0;">
+                        </div>
+                        <div style="border-bottom:2px solid #f2f2f2;padding:10px">
+                            <span >
+                              【直白摄影】吹风机+落地扇摄影|摄影|产品|Mugostudio - 原创作品 - 站酷 
+                            </span>
+                        </div>
+                        <div style="border-radius:0 0 5px 5px;display:flex;height:70px">
+                           <div style="align-self:center;margin-left: 15px;">
+                               <img src="" data_src="a.jfif" class="img-circle" style="width:34px;height:34px;">
+                           </div>
+                          <div style="align-self:center;margin-left: 15px;padding:0">
+                              <span >卢耿杰收藏到<br>工业设计</span>
+                          </div>
+                        </div>
+                    </div> 
+                 </div>         
+
+            </div>
+        </div>
+    </div>
+   
+  
+
+
+
+
+
+
+<!-- 轮播模态框 -->
+<div id="carouselMask" th:fragment="carouselMask">
+  <div id="whiteMask"></div>
+   <div id="closeButton"> <img src="./../close.png"></div>
+   <div id="LeftButton"> <img src="./../toLeft.png"></div>
+   <div id="RightButton"> <img src="./../toRight.png"></div>
+      <div id="overWhiteMask">
+            <div class="container">
+                  <div class="row">
+                      <div class="col-md-8" style="padding-left:0">
+                          <div style="background-color:white;width:698px;padding:16px;">
+                                <button id="wmCollectionButton" type="button" class="btn btn-primary btn-danger">收藏</button>  
+                                <button id="wmLoveButton" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-heart"></span>
+                                </button>
+                                 <button id="wmEnlargeButton" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </button>
+                                <div style="text-align:center"> 
+                                   <img th:if="${littleAlbum!=null}"  id="mainPicture" th:mainPictureIndex="${littleAlbum.pictureIndex}" th:src="@{${littleAlbum.coverPictureName}}">                 
+                                </div>
+                          </div>
+                          <div id="underMainPicturePanel">
+                                <div style="padding:15px">
+                                    <img id="umpLittlePicture" src="./../aa.jfif">
+                                    <h4 id="umpUserName">皇甫铁牛</h4>
+                                </div>
+                                <div  style="padding-right: 15px;padding-left: 15px">
+                                    <div id="pictureDescrible">
+                                          <span>今天天气很好</span>
+                                    </div>
+                                </div>
+                                <div style="margin-top:15px;padding:15px;">
+                                  <img id="touristPicture" src="./../aa.jfif">
+                                  <textarea id="commentTextArea" class="form-control" placeholder="添加评论"></textarea>
+                                  <button id="commentTextAreaButton" type="button" class="btn btn-default" disabled="disabled">添加评论</button>
+                                </div>
+                          </div>
+
+                      </div>
+                      <div  class="col-md-4">
+                      <div id="laRightPanel">
+                          <img id="larUserPicture" src="./../aa.jfif">
+                          <div id="larAlbumNameAndUserName">
+                              <span id="lanauAlbumName">你好</span><br><span id="lanauUserName">数数卢</span>
+                          </div>
+                        
+                          <div th:if="${littleAlbum!=null}" id="picturesOfAlbum"> 
+                              <img  th:each="picture:${littleAlbum.pictureDTOs}" src=""  th:data_src="${picture.pictureName}">      
+                          </div>
+                         
+                           <button id="followPictureButton" type="button" class="btn btn-primary btn-danger">关注相册</button>
+                      </div>   
+                      </div>
+                  </div>
+            </div>
+      </div>
+</div>
+  
+    
+    
+
+</body>
+</html>
