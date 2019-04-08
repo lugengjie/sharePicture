@@ -11,6 +11,10 @@ public class PictureDTO
 	private String pictureDescribe="";
 	// 图片名称
 	private String pictureName="";
+	//被喜欢数
+	private int likeNumber = 0;
+	//被收藏数
+	private int collectNumber = 0;
 	// 所属相册
 	private Long albumId;
 	//相册名
@@ -98,12 +102,29 @@ public class PictureDTO
 		this.userPicture = userPicture;
 	}
 	
+	public int getLikeNumber()
+	{
+		return likeNumber;
+	}
+	public void setLikeNumber(int likeNumber)
+	{
+		this.likeNumber = likeNumber;
+	}
+	public int getCollectNumber()
+	{
+		return collectNumber;
+	}
+	public void setCollectNumber(int collectNumber)
+	{
+		this.collectNumber = collectNumber;
+	}
 	@Override
 	public String toString()
 	{
 		return "PictureDTO [pictureId=" + pictureId + ", pictureLabel=" + pictureLabel + ", pictureDescribe="
-				+ pictureDescribe + ", pictureName=" + pictureName + ", albumId=" + albumId + ", albumName=" + albumName
-				+ ", userName=" + userName + ", userId=" + userId + ", userPicture=" + userPicture + "]";
+				+ pictureDescribe + ", pictureName=" + pictureName + ", likeNumber=" + likeNumber + ", collectNumber="
+				+ collectNumber + ", albumId=" + albumId + ", albumName=" + albumName + ", userName=" + userName
+				+ ", userId=" + userId + ", userPicture=" + userPicture + "]";
 	}
 
 }

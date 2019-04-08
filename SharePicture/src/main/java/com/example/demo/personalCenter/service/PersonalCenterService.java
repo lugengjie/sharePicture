@@ -10,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.account.entity.User;
+import com.example.demo.account.entity.UserDTO;
 import com.example.demo.account.repository.UserRepository;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.personalCenter.entity.Fans;
 import com.example.demo.personalCenter.repository.FansRepository;
 import com.example.demo.picture.entity.PictureDTO;
+import com.example.demo.picture.repository.PictureRepository;
 
 @Service
 @Transactional
@@ -29,6 +31,8 @@ public class PersonalCenterService implements IPersonalCenterService
 	AlbumRepository albumRepository;
 	@Autowired
 	FocusOnAlbumRepository focusOnAlbumRepository;
+	@Autowired
+	PictureRepository pictureRepository;
 	
 	/**
 	 * 关注用户:1.将用户的被关注属性+1， 2.就关注关系存入数据库
@@ -93,10 +97,14 @@ public class PersonalCenterService implements IPersonalCenterService
 					pictureDTO.setPictureId((Long)pictureDTOTemp[0]);
 					pictureDTO.setPictureDescribe((String)pictureDTOTemp[1]);
 					pictureDTO.setPictureName((String)pictureDTOTemp[2]);
-					pictureDTO.setAlbumId((Long)pictureDTOTemp[3]);
-					pictureDTO.setAlbumName((String)pictureDTOTemp[4]);
-					pictureDTO.setUserId((Long)pictureDTOTemp[5]);
-					pictureDTO.setUserName((String)pictureDTOTemp[6]);
+					pictureDTO.setLikeNumber((int)pictureDTOTemp[3]);
+					pictureDTO.setCollectNumber((int)pictureDTOTemp[4]);
+					pictureDTO.setPictureLabel((String)pictureDTOTemp[5]);
+					pictureDTO.setAlbumId((Long)pictureDTOTemp[6]);
+					pictureDTO.setAlbumName((String)pictureDTOTemp[7]);
+					pictureDTO.setUserId((Long)pictureDTOTemp[8]);
+					pictureDTO.setUserName((String)pictureDTOTemp[9]);
+					pictureDTO.setUserPicture((String)pictureDTOTemp[10]);
 					pictureDTOs.add(pictureDTO);
 				}
 			}
@@ -109,7 +117,7 @@ public class PersonalCenterService implements IPersonalCenterService
 	 * 1.查询用户的相册id,关注的人的相册id,关注的相册的id
 	 * 2.将相册id查询的数据封装成PictureDTOs
 	 */
-	public List<PictureDTO> HomePageOfPictureDTOs(String email)
+	public List<PictureDTO> homePageOfPictureDTOs(String email)
 	{
 		User user = userRepository.findByEmial(email);
 		List<PictureDTO> pictureDTOs = null;
@@ -135,5 +143,27 @@ public class PersonalCenterService implements IPersonalCenterService
 			pictureDTOs = findPictureDTOsOfUserByAlbumIds(albumIds);
 		}
 		return pictureDTOs;
+	}
+	
+	
+	//封装到HomePage的UserDTO
+	public UserDTO homePageOfUserDTOs(String email)
+	{
+		User user = userRepository.findByEmial(email);
+		UserDTO userDTO = null;
+		if(user!=null)
+		{
+			userDTO = new UserDTO();
+			Long userId = user.getId();
+			int albumNumber = albumRepository.findAlbumNumberByUserId(userId);
+			int fansNumber = fansRepository.findFansNumberByUserId(userId);
+			int findPictureNumber =pictureRepository.findPictureNumberByUserId(userId);
+			userDTO.setAlbumNumber(albumNumber);
+			userDTO.setCollectionNumber(findPictureNumber);
+			userDTO.setFansNumber(fansNumber);
+			userDTO.setUserName(user.getName());
+			userDTO.setUserPicture(user.getUserPicture());
+		}
+		return userDTO;
 	}
 }

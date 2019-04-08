@@ -17,6 +17,7 @@ public class User
 	private String email;
 	private String name;
 	private String password;
+	private String userPicture;
 	private int followNumber = 0;
 	// 是否账号是否已经激活
 	private State state = State.NO;
@@ -52,6 +53,16 @@ public class User
 	}
 	
 	
+	public String getUserPicture()
+	{
+		return userPicture;
+	}
+
+	public void setUserPicture(String userPicture)
+	{
+		this.userPicture = userPicture;
+	}
+
 	public void setId(Long id)
 	{
 		this.id = id;
@@ -91,8 +102,7 @@ public class User
 	@Override
 	public String toString()
 	{
-		return "User [id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", followNumber="
-				+ followNumber + ", state=" + state + "]";
+		return "User [id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", userPicture="
+				+ userPicture + ", followNumber=" + followNumber + ", state=" + state + "]";
 	}
-	
 }

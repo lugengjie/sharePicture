@@ -48,11 +48,11 @@ public class PictureTest
 		}
 	}
 	
-	@Test
-	public void pictureCarousel() 
-	{
-		pictureService.pictureCarousel("/132/5a2360515ec847fa8c85deba02d96881.jpeg");
-	}
+//	@Test
+//	public void pictureCarousel() 
+//	{
+//		pictureService.pictureCarousel("/132/5a2360515ec847fa8c85deba02d96881.jpeg");
+//	}
 	
 	@Test
 	public void likePictureTest()
@@ -74,6 +74,12 @@ public class PictureTest
 		pictureDTO.setPictureName("aa");
 		pictureDTO.setPictureId(1L);
 		pictureService.collectPicture(pictureDTO, "xueyuancpt@163.com");
+	}
+	
+	@Test
+	public void findPictureNumberByUserIdTest()
+	{
+		System.out.println(pictureRepository.findPictureNumberByUserId(1L));
 	}
 
 

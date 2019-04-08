@@ -68,6 +68,7 @@ public class PictureController
 	
 	/**
 	 * 轮播
+	 * 不同页面的轮播要返回不同的：：*
 	 * @param picture
 	 * @param model
 	 * @return
@@ -75,15 +76,11 @@ public class PictureController
 	@RequestMapping("/carouselPicture")
 	public String pictureCarousel(PictureDTO picture ,Model model)
 	{
-		AlbumDTO album=pictureService.pictureCarousel(picture.getPictureName());
+		AlbumDTO album=pictureService.pictureCarousel(picture.getPictureId());
+		System.out.println(album);
 		model.addAttribute("littleAlbum", album);
-		return "addPicture::carouselMask";
+		return "homePage::carouselMask";
 	}
 	
-//	@RequestMapping("/toHomePage")
-//	public String toHomePage(HttpSession session, Model model)
-//	{
-//		
-//
-//	}
+
 }

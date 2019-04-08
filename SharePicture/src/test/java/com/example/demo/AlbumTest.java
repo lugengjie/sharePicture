@@ -104,5 +104,11 @@ public class AlbumTest
 
 	}
 	
+	@Test
+	public void findAlbumNumberByUserId()
+	{
+		System.out.println(albumRepository.findAlbumNumberByUserId(3L));
+	
+	}
 	
 }

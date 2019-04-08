@@ -20,7 +20,7 @@ public interface IPictureService
 	public AlbumDTO showAllPictureOfAlbum(AlbumDTO albumDTO);
 	
 	//图片轮播
-	public AlbumDTO pictureCarousel(String pictureName);
+	public AlbumDTO pictureCarousel(Long pictureId);
 	
 	//喜欢图片
 	public void likePicture(Long pictureId,String email);

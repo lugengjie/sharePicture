@@ -22,5 +22,8 @@ public interface PictureRepository extends CrudRepository<Picture, Long>
 	@Modifying
 	@Query("update Picture p set p.likeNumber=?2 where p.id=?1")
 	public void cancelLikePicture(Long pictureId, int likeNumber);
+	
+	@Query("select count(*) from Picture p,Album a,User u where u.id=a.userId and a.id=p.albumId and u.id=?1")
+	public int findPictureNumberByUserId(Long userId);
 
 }

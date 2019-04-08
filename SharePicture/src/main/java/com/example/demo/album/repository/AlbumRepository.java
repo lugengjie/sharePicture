@@ -34,4 +34,7 @@ public interface AlbumRepository extends CrudRepository<Album, Long>
 	
 	@Query("select a.id from Album a where a.userId=?1")
 	public List<Long> findAlbumIdsByUserId(Long id);
+	
+	@Query("select count(*) from Album a where a.userId=?1")
+	public int findAlbumNumberByUserId(Long userId);
 }

@@ -2,6 +2,7 @@ package com.example.demo.personalCenter.service;
 
 import java.util.List;
 
+import com.example.demo.account.entity.UserDTO;
 import com.example.demo.picture.entity.PictureDTO;
 
 public interface IPersonalCenterService
@@ -15,6 +16,9 @@ public interface IPersonalCenterService
 	//根据AlbumIds封装PictureDTOs
 	public List<PictureDTO> findPictureDTOsOfUserByAlbumIds(List<Long> albumIds);
 	
-	//跳转到首页
-	public List<PictureDTO> HomePageOfPictureDTOs(String email);
+	// 封装发送到HomePage的PictureDTOs
+	public List<PictureDTO> homePageOfPictureDTOs(String email);
+	
+	//封装发送到HomePage的UserDTO
+	public UserDTO homePageOfUserDTOs(String email);
 }

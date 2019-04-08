@@ -6,14 +6,14 @@
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="./../pictureCarourelPlug.js"></script>
+  <script src="./../homePagePlug.js"></script>
   <style>
      body{background-color:#f5f5f5;}
      /*防止打开模态框时页面抖动*/
     .modal-open{ overflow-y: scroll;}
     body{ padding-right:1px!important;}
 
-   /*div{border:1px solid black;}*/
+  /*  div{border:1px solid black;}  */
    
 
   /* 导航栏*/
@@ -39,6 +39,7 @@
     #outerBorder{height:170px;width:19%;position:absolute;background-color:white;padding:10px;}
     .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
     .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
+    .uploadPicturePanel:hover{-webkit-box-shadow:0px 3px 3px #c8c8c8 ;-moz-box-shadow:0px 3px 3px #c8c8c8 ;box-shadow:0px 3px 3px #c8c8c8 ;}
    .buttonShowAndHide{display:none;}
    .uploadPicturePanel img:hover{cursor:pointer}
     
@@ -54,18 +55,18 @@
     /* 轮播模态框 */
     #picturesOfAlbum::-webkit-scrollbar {width: 10px;  height:10px }  
     #picturesOfAlbum::-webkit-scrollbar-thumb{ border-radius: 10px;  background-color: #aaaa; }  
-    #whiteMask{position:fixed;z-index:2;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
-    #overWhiteMask{position:fixed;z-index:3;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
+    #whiteMask{position:fixed;z-index:3;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
+    #overWhiteMask{position:fixed;z-index:4;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
     #picturesOfAlbum img:hover{opacity:1!important;cursor:pointer}
     #picturesOfAlbum img{position:absolute;display:none;opacity:0.3;width:83px;}
     #RightButton:hover{background-color: black;cursor:pointer}
     #LeftButton:hover{background-color: black;cursor:pointer}
     #closeButton:hover{background-color: black;cursor:pointer}
-    #closeButton{position:fixed;z-index:4;right:24px;width:45px;top:10px;opacity:0.3;}
+    #closeButton{position:fixed;z-index:5;right:24px;width:45px;top:10px;opacity:0.3;}
     #closeButton img{width:100%;}
-    #LeftButton{position:fixed;z-index:4;width:60px;top:40%;;opacity:0.3;}
+    #LeftButton{position:fixed;z-index:5;width:60px;top:40%;;opacity:0.3;}
     #LeftButton img{width:100%;}
-    #RightButton{position:fixed;z-index:4;width:60px;top:40%;right:18px;opacity:0.3;}
+    #RightButton{position:fixed;z-index:5;width:60px;top:40%;right:18px;opacity:0.3;}
     #RightButton img{width:100%;}
     #overWhiteMask .container{width:77%;margin-top:4%;padding-left: 30px}
     #wmLoveButton{font-size:18px;height:35px}
@@ -74,7 +75,7 @@
     #underMainPicturePanel{background-color:white;margin-top:20px;width:698px;}
     #umpUserName{display: inline-block;margin-top: -100px}
     #umpLittlePicture{width:50px;height: 50px}
-    #pictureDescrible{display: inline-block;background-color:#fafafa;vertical-align:middle;line-height:46px;width:100%;padding-left:15px}
+    #pictureDescrible{width:95%;text-align:left;display: inline-block;background-color:#fafafa;line-height:46px;padding-left:15px;margin-bottom:15px}
     #commentTextArea{display: inline-block;width:90.5%;margin-left: 12px;}
     #commentTextAreaButton{margin-top:10px;margin-left:580px}
     #touristPicture{width:50px;height: 54px;float: left}
@@ -86,15 +87,83 @@
     #picturesOfAlbum{height:344px;width:103%;overflow-y:scroll;margin-top:14px;position: relative;}
     #followPictureButton{margin-top: 10px;width: 99% }
     
+    
+    /*选择相册模态框*/
+	#selectAlbumCol{height:314px}
+	#selectAlbumModal .container{width:100%;height: 100%}
+	#selectAlbumModal{margin-top:3%;}
+	#inputPictureData{width:200px;}
+	#createAlbumButton{width:100%;display:none;margin-right:10px}
+	.uploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
+	#albumUl li:hover .uploadPictureButton{display:block;}
+	#uploadPictureSize{width:200px;height:220px}
+	
   </style>
   <script type="text/javascript">
-      $(document).ready(function(){           
+      $(document).ready(function(){   
+    	    /*收藏图片*/
+		    	  /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
+				  	var albumNuber=$('#albumUl li').length;
+				  	if(albumNuber>6){
+				  		$("#dropDownBar").addClass("row pre-scrollable");
+				  		$('#dropDownBar').css({
+				  			'height':'250px',
+				  			'margin-left':'0px'
+				  		});
+				  	}	
+				  	
+				  	/*在选择相册模态框中，搜索或创建相册*/
+				  	function searchOrBuildAlbum() {
+		    			var searchAlbumName = $("#searchOrBuildAlbum").val();    
+		    			if (searchAlbumName == "") {
+		     			 	$("#albumUl li").show();
+		     			 	$('#createAlbumButton').hide();
+		    			}
+		    			else
+		    			{
+		    				$('#createAlbumButton').show();
+		      				$("#albumUl li").each(function() {
+		            			var albumName = $(this).text();                       
+		            			if (albumName.indexOf(searchAlbumName) != -1) {
+		              				$(this).show();
+		            			} else {
+		              				$(this).hide();
+		            			}
+		          			});
+		    			}
+		  			}
+				  	
+				  	/*	在选择相册模态框中，当'搜索或创建相册'有输入时触发事件*/
+					$("#searchOrBuildAlbum").bind('input propertychange',function () {	
+							searchOrBuildAlbum();
+					});
+				  	
+				  	$('.uppcollectionButton').click(function(){	  		
+				  			var pictureId=$(this).attr('pictureId');
+				  			var pictureDescribe=$(this).attr('pictureDescribe');
+				  			var pictureName=$(this).attr('pictureName');
+				  			var pictureDescribe=$(this).attr('pictureDescribe'); 
+				  			
+				  	});
+				  	
+				  	
+    	    /*收藏图片*/
+    	  
+    	  
+    	  
+    	    /* 懒加载和瀑布流布局插件 */
+	  		 $('#box').lazyLoadAndWaterFall({
+	  			 'mainPicture':'.mainPictureOfPanel',
+	  			 'userPicture':'.userPictureOfPanel',
+	  			 'firstPanelHeight':170
+	  		 });
+    	  
           /*轮播模态框*/
           $("#carouselMask").hide();
-          $(".allPictureShow").click(function(){
-            var picSrc = $(this).attr('src');
-            $('#carouselMask').load("/picture/carouselPicture",{'pictureName':$(this).attr('src')},function(){
-               /*评论框无内容时禁止点击发送*/
+          $(".mainPictureOfPanel").click(function(){
+            var picSrc = $(this).attr('pictureIdofPanel');
+            $('#carouselMask').load("/picture/carouselPicture",{'pictureId':picSrc},function(){  
+                  /*评论框无内容时禁止点击发送*/
                   $("#commentTextArea").bind('input propertychange',function () { 
                       var TextAreaContent = $("#commentTextArea").val();
 
@@ -110,7 +179,8 @@
                        'mainPicture':'mainPicture',
                        'leftButton':'LeftButton',
                        'rightButton':'RightButton',
-                       'pictureIndex': mainPictureIndex
+                       'pictureIndex': mainPictureIndex,
+                       'pictureDescribleDiv':'#pictureDescribleDiv'
                   }); 
                   $("#picturesOfAlbum").myPlugin(mainPictureIndex);
                 $("#carouselMask").show();            
@@ -127,12 +197,12 @@
 <body>
 
    <!-- 导航栏 -->
-    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:2">
+    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:3">
         <div class="container">
-          <div class="row">
-              <div class="col-md-5">
+          <div class="row" style="margin-left:-53px">
+              <div class="col-md-5" >
                   <div class="navbar-header">
-                      <img id="navLogo" src="logo2.png">
+                      <img id="navLogo" src="./../logo2.png">
                   </div>
                   <ul class="nav navbar-nav">
                       <li><a class="navbar-brand" href="#">SharePicture</a></li>
@@ -151,7 +221,7 @@
                           </a>
                         </li>
                         <li id="navUserPicture">
-                          <a href="#"><img  src="aa.jfif"></a>
+                          <a href="#"><img  src="./../aa.jfif"></a>
                         </li>
                    </ul>      
           <div id="navSearch" class="input-group navbar-form">
@@ -184,45 +254,50 @@
 
               <div id="outerBorder"> 
                   <div style="margin-left:10px;margin-top: 8px">
-                    <img  src="aa.jfif" style="height:70px;width:70px"> 
-                    <span style="font-size: 20px">&nbsp;&nbsp;<strong>卢耿杰</strong></span>
+                    <img  th:src="${userDTO.userPicture}" style="height:70px;width:70px"> 
+                    <span style="font-size: 17px">&nbsp;<strong th:text="${userDTO.userName}"></strong></span>
                   </div> 
                    <ul class="nav navbar-nav" style="width:100%;text-align: center;margin-top: 10px">
-                      <li  style="width:33%;"><a href="#">30<br>收藏</a></li>
-                      <li style="width:33%;"><a href="#">30<br>相册</a></li> 
-                      <li style="width:33%;"> <a href="#">30<br>粉丝</a></li> 
+                      <li  style="width:33%;"><a href="#" ><span th:text="${userDTO.collectionNumber}">30</span><br><span>收藏</span></a></li>
+                      <li style="width:33%;"><a href="#"><span th:text="${userDTO.albumNumber}">30</span><br><span>相册</span></a></li> 
+                      <li style="width:33%;"> <a href="#"><span th:text="${userDTO.fansNumber}">30</span><br><span>粉丝</span></a></li> 
                   </ul>       
               </div> 
 
                  <div id="box">                 
-                     <div class="uploadPicturePanel" th:each="picture:${pictures.pictureNames}">
+                     <div class="uploadPicturePanel" th:each="pictureDTO:${pictureDTOs}">
                         <div class="buttonShowAndHide collectPictureButton">                          
                             <div class="btn-group">
-                                <a type="button" class="btn btn-default" >收藏</a>
-                                  <a type="button" class="btn btn-default">
+                                <a type="button" class="uppcollectionButton btn btn-default btn-danger" th:pictureId="${pictureDTO.pictureId}" th:pictureName="${pictureDTO.pictureName}" th:pictureLabel="${pictureDTO.pictureLabel}" th:pictureDescribe="${pictureDTO.pictureDescribe}">收藏</a>
+                                  <a type="button" class="btn btn-default btn-danger">
                                     <span class="glyphicon glyphicon-flash"></span>
                                   </a>        
                             </div>
                          </div>
                          <div class="buttonShowAndHide likePictureButton">   
                               <a type="button" class="btn btn-default">
-                                  <span class="glyphicon glyphicon-heart"></span>
+                                  <span class="glyphicon glyphicon-heart" style='color:#d43f3a'></span>
                               </a>  
                         </div> 
                         <div>
-                             <img class="allPictureShow" src="" th:data_src="${picture}" style="width:100%;border-radius:5px 5px 0 0;">
+                             <img class="mainPictureOfPanel" src="" th:data_src="${pictureDTO.pictureName}" th:pictureIdofPanel="${pictureDTO.pictureId}" style="width:100%;border-radius:5px 5px 0 0;">
                         </div>
-                        <div style="border-bottom:2px solid #f2f2f2;padding:10px">
-                            <span >
-                              【直白摄影】吹风机+落地扇摄影|摄影|产品|Mugostudio - 原创作品 - 站酷 
-                            </span>
+                        <div th:if="${pictureDTO.pictureDescribe!=''||pictureDTO.collectNumber!=0||pictureDTO.likeNumber!=0}" style="padding:10px;color:#a6a6a6;">
+                            <p th:if="${pictureDTO.pictureDescribe!=''}" th:text="${pictureDTO.pictureDescribe}"> 
+                            </p>
+                            <div th:if=${pictureDTO.collectNumber!=0||pictureDTO.likeNumber!=0}>
+                            		<span class="glyphicon glyphicon-retweet" ></span>
+                            		<span th:text="${pictureDTO.collectNumber}"></span>
+                            		<span class="glyphicon glyphicon-heart"></span>
+                            		<span th:text="${pictureDTO.likeNumber}"></span>
+                            </div>
                         </div>
-                        <div style="border-radius:0 0 5px 5px;display:flex;height:70px">
+                        <div style="border-top:2px solid #f2f2f2;border-radius:0 0 5px 5px;display:flex;height:70px">
                            <div style="align-self:center;margin-left: 15px;">
-                               <img src="" data_src="a.jfif" class="img-circle" style="width:34px;height:34px;">
+                               <img src="" th:data_src="${pictureDTO.userPicture}" class="userPictureOfPanel img-circle" style="width:34px;height:34px;">
                            </div>
                           <div style="align-self:center;margin-left: 15px;padding:0">
-                              <span >卢耿杰收藏到<br>工业设计</span>
+                              <span th:text="${pictureDTO.userName}"></span><span>收藏到<br></span><span th:text="${pictureDTO.albumName}"></span>
                           </div>
                         </div>
                     </div> 
@@ -245,7 +320,7 @@
    <div id="closeButton"> <img src="./../close.png"></div>
    <div id="LeftButton"> <img src="./../toLeft.png"></div>
    <div id="RightButton"> <img src="./../toRight.png"></div>
-      <div id="overWhiteMask">
+      <div id="overWhiteMask" th:if="${littleAlbum!=null}" >
             <div class="container">
                   <div class="row">
                       <div class="col-md-8" style="padding-left:0">
@@ -258,20 +333,20 @@
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                 </button>
                                 <div style="text-align:center"> 
-                                   <img th:if="${littleAlbum!=null}"  id="mainPicture" th:mainPictureIndex="${littleAlbum.pictureIndex}" th:src="@{${littleAlbum.coverPictureName}}">                 
+                                   <img id="mainPicture" th:mainPictureIndex="${littleAlbum.pictureIndex}" th:src="@{${littleAlbum.coverPictureName}}">                 
                                 </div>
                           </div>
                           <div id="underMainPicturePanel">
                                 <div style="padding:15px">
                                     <img id="umpLittlePicture" src="./../aa.jfif">
-                                    <h4 id="umpUserName">皇甫铁牛</h4>
+                                    <h4 id="umpUserName" th:text="${littleAlbum.userName}"></h4>
                                 </div>
-                                <div  style="padding-right: 15px;padding-left: 15px">
-                                    <div id="pictureDescrible">
-                                          <span>今天天气很好</span>
+                                <div id="pictureDescribleDiv" style="text-align:center" >
+                                    <div id="pictureDescrible" th:if="${littleAlbum!=null&&littleAlbum.mainPictureDescribe!=''}">
+                                          <span th:text="${littleAlbum.mainPictureDescribe}"></span>
                                     </div>
                                 </div>
-                                <div style="margin-top:15px;padding:15px;">
+                                <div style="padding:15px;border-top:1px solid #f5f2f2;">
                                   <img id="touristPicture" src="./../aa.jfif">
                                   <textarea id="commentTextArea" class="form-control" placeholder="添加评论"></textarea>
                                   <button id="commentTextAreaButton" type="button" class="btn btn-default" disabled="disabled">添加评论</button>
@@ -281,13 +356,13 @@
                       </div>
                       <div  class="col-md-4">
                       <div id="laRightPanel">
-                          <img id="larUserPicture" src="./../aa.jfif">
+                          <img id="larUserPicture" th:src="${littleAlbum.userPicture}">
                           <div id="larAlbumNameAndUserName">
-                              <span id="lanauAlbumName">你好</span><br><span id="lanauUserName">数数卢</span>
+                              <span   id="lanauAlbumName" th:text="${littleAlbum.albumTitle}"></span><br><span  id="lanauUserName" th:text="${littleAlbum.userName}"></span>
                           </div>
                         
-                          <div th:if="${littleAlbum!=null}" id="picturesOfAlbum"> 
-                              <img  th:each="picture:${littleAlbum.pictureDTOs}" src=""  th:data_src="${picture.pictureName}">      
+                          <div   id="picturesOfAlbum"> 
+                              <img th:each="picture:${littleAlbum.pictureDTOs}" src=""  th:data_src="${picture.pictureName}" th:littlePictureId="${picture.pictureId}" th:littlePictureIdDescribe="${picture.pictureDescribe}">      
                           </div>
                          
                            <button id="followPictureButton" type="button" class="btn btn-primary btn-danger">关注相册</button>
@@ -298,7 +373,50 @@
       </div>
 </div>
   
-    
+
+<!-- 选择相册模态框 --> 
+<div class="modal fade" id="selectAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">收藏图片</h4>
+            </div>
+            <div class="modal-body">
+             	 <div class="container">
+             	 	<div class="row">
+             	 		<div class="col-md-5">
+             	 			<img id="uploadPictureSize" src="">
+             	 			<div id="inputPictureData" class="form-group">
+             	 				<br>
+             	 				<textarea id="pictureDescribeOfAlbum" class="form-control" placeholder="输入描述" ></textarea>
+             	 				<br>
+             	 				<input id="pictureLabelOfAlbum" type="text" class="form-control" placeholder="输入标签">
+						  	</div>
+             	 		</div>
+             	 		<div class="col-md-7"> 
+             	 			<div id="selectAlbumCol" class="row">     	 	
+             	 			<input id="searchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
+             	 			<br>
+             	 			<div id="dropDownBar">
+             	 				<ul id="albumUl" class="list-group" th:fragment="albumUl">
+								    <li class="list-group-item"  th:each="albums : ${albums}">
+								    	<span th:text="${albums.albumTitle}" th:albumId="${albums.id}"></span>
+								    	<button class="btn btn-danger uploadPictureButton" >收藏</button>
+								    </li>  						       
+								</ul>
+							</div>
+							</div>
+							<div class="row">	
+								<button id="createAlbumButton" class="btn btn-default">创建相册</button>
+							</div>
+             	 		</div>
+             	 	</div>
+             	 </div>
+            </div> 
+        </div>
+    </div>
+</div>
     
 
 </body>

@@ -106,22 +106,25 @@ public class PictureService implements IPictureService
 	
 	/**
 	 * 图片轮播
-	 * 1.根据图片路径查询图片所在的相册，相册所在用户
+	 * 1.根据图片id查询图片所在的相册，相册所在用户
 	 * 2.把请求中的图片所在相册的位置的前的不超过8张图片（包括该图片）加该图片后的所有图片放在PictureDTO中
 	 * 3.将所有信息放在AlbumDTO中返回
 	 */
-	public AlbumDTO pictureCarousel(String pictureName)
+	public AlbumDTO pictureCarousel(Long pictureId)
 	{
-		Picture picture=pictureRepository.findPictureByPictureName(pictureName);	
+		Picture picture=pictureRepository.findById(pictureId).get();	
 		AlbumDTO albumDTO=new AlbumDTO();
 		if(picture != null)
 		{		
-			albumDTO.setCoverPictureName(pictureName);
+			albumDTO.setCoverPictureName(picture.getPictureName());
 			albumDTO.setId(picture.getAlbumId());
+			albumDTO.setMainPictureDescribe(picture.getPictureDescribe());
 			Album album = albumRepository.findAlbumByAlbumId(picture.getAlbumId());		
 			albumDTO.setAlbumTitle(album.getAlbumTitle());
 			User user = userRepository.findUserByUserId(album.getUserId());		
 			albumDTO.setUserName(user.getName());
+			albumDTO.setUserPicture(user.getUserPicture());
+			albumDTO.setUserId(user.getId());
 			List<Picture> pictures=pictureRepository.findPictureByAlbumId(picture.getAlbumId());
 			Collections.reverse(pictures);
 			int index = pictures.indexOf(picture);	
@@ -134,6 +137,7 @@ public class PictureService implements IPictureService
 				}
 				PictureDTO pictureDTO = new PictureDTO();
 				BeanUtils.copyProperties(pictures.get(i), pictureDTO);
+				pictureDTO.setPictureId(pictures.get(i).getId());
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}
 			Collections.reverse(albumDTO.getPictureDTOs());
@@ -142,6 +146,7 @@ public class PictureService implements IPictureService
 			{
 				PictureDTO pictureDTO = new PictureDTO();
 				BeanUtils.copyProperties(pictures.get(j), pictureDTO);
+				pictureDTO.setPictureId(pictures.get(j).getId());
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}
 			
