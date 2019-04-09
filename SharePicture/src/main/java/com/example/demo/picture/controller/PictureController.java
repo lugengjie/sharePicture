@@ -82,5 +82,30 @@ public class PictureController
 		return "homePage::carouselMask";
 	}
 	
+	/**
+	 * 收藏图片
+	 */
+	@RequestMapping("/collectPicture")
+	public @ResponseBody String collectPicture(HttpSession session,PictureDTO pictureDTO)
+	{
+		String email = "xueyuancpt@163.com";
+		if(pictureService.collectPicture(session, pictureDTO, email)) {
+			return "收藏图片成功";
+		}
+		return "收藏图片失败";
+	}
+	
+	/**
+	 * 快速收藏图片
+	 */
+	@RequestMapping("/quickCollectPicture")
+	public @ResponseBody String quickCollectPicture(HttpSession session,PictureDTO pictureDTO)
+	{
+		if(pictureService.quickCollectPicture(session, pictureDTO))
+		{
+			return "收藏图片成功";
+		}
+		return "收藏图片失败";
+	}
 
 }

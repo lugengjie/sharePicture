@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.account.entity.UserDTO;
+import com.example.demo.album.entity.AlbumDTO;
+import com.example.demo.album.service.IAlbumService;
 import com.example.demo.personalCenter.service.PersonalCenterService;
 import com.example.demo.picture.entity.PictureDTO;
 
@@ -19,6 +21,8 @@ public class personalCenterController
 {
 	@Autowired
 	PersonalCenterService personalCenterService;
+	@Autowired
+	IAlbumService albumService;
 	
 	/**
 	 * 跳转到homePage
@@ -31,8 +35,10 @@ public class personalCenterController
 	{
 		List<PictureDTO> pictureDTOs = personalCenterService.homePageOfPictureDTOs("xueyuancpt@163.com");
 		UserDTO userDTO = personalCenterService.homePageOfUserDTOs("xueyuancpt@163.com");
+		List<AlbumDTO> albums=albumService.showAlbum(1L);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("pictureDTOs", pictureDTOs);
+		model.addAttribute("albums", albums);
 		return "homepage";
 	}
 }

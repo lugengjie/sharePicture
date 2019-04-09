@@ -66,16 +66,16 @@ public class PictureTest
 		pictureService.cancelLikePicture(1L, "1923808485@qq.com");
 	}
 	
-	@Test
-	public void collectPicture()
-	{
-		PictureDTO pictureDTO = new PictureDTO();
-		pictureDTO.setAlbumId(1L);
-		pictureDTO.setPictureName("aa");
-		pictureDTO.setPictureId(1L);
-		pictureService.collectPicture(pictureDTO, "xueyuancpt@163.com");
-	}
-	
+//	@Test
+//	public void collectPicture()
+//	{
+//		PictureDTO pictureDTO = new PictureDTO();
+//		pictureDTO.setAlbumId(1L);
+//		pictureDTO.setPictureName("aa");
+//		pictureDTO.setPictureId(1L);
+//		pictureService.collectPicture(pictureDTO, "xueyuancpt@163.com");
+//	}
+//	
 	@Test
 	public void findPictureNumberByUserIdTest()
 	{

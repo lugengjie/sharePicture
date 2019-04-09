@@ -48,10 +48,6 @@
     .collectPictureButton{position:absolute;z-index:2}
     .likePictureButton{position:absolute;z-index:2;margin-left:83.5%}
 
-  
-
- 
-  
     /* 轮播模态框 */
     #picturesOfAlbum::-webkit-scrollbar {width: 10px;  height:10px }  
     #picturesOfAlbum::-webkit-scrollbar-thumb{ border-radius: 10px;  background-color: #aaaa; }  
@@ -102,6 +98,8 @@
   <script type="text/javascript">
       $(document).ready(function(){   
     	    /*收藏图片*/
+    	    		/*收藏图片的FormDate变量*/
+    	    		var formData;
 		    	  /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
 				  	var albumNuber=$('#albumUl li').length;
 				  	if(albumNuber>6){
@@ -138,16 +136,115 @@
 							searchOrBuildAlbum();
 					});
 				  	
+				  	/* 点击图片上的收藏按钮的触发事件 */
 				  	$('.uppcollectionButton').click(function(){	  		
 				  			var pictureId=$(this).attr('pictureId');
-				  			var pictureDescribe=$(this).attr('pictureDescribe');
+				  			var pictureLabel=$(this).attr('pictureLabel');
 				  			var pictureName=$(this).attr('pictureName');
 				  			var pictureDescribe=$(this).attr('pictureDescribe'); 
+				  		   
+				  			formData = new FormData();
+				   		formData.append('pictureName',pictureName);
+				  			formData.append('pictureId',pictureId);
 				  			
+				  			$('#uploadPictureSize').attr('src',pictureName);
+				  			if(pictureLabel!=null&&pictureLabel!=''){
+				  				$('#pictureLabelOfAlbum').val(pictureLabel);
+				  			}else{
+				  				$('#pictureLabelOfAlbum').val("");
+				  			}
+				  			if(pictureDescribe!=null&&pictureDescribe!=''){
+				  				$('#pictureDescribeOfAlbum').val(pictureDescribe);
+				  			}else{
+				  				$('#pictureDescribeOfAlbum').val("");
+				  			}
+				  			$('#selectAlbumModal').modal('show');
+	  			
 				  	});
 				  	
+				 /*  点击相册上的收藏按钮的触发事件 */
+				 $(".uploadPictureButton").click(function(){
+			        	var albumId=$(this).siblings().attr("albumId");
+			        	formData.append('albumId',albumId);
+			        	formData.append('pictureLabel',$('#pictureLabelOfAlbum').val());
+			        	formData.append('pictureDescribe',$('#pictureDescribeOfAlbum').val());
+			        	$.ajax({
+						  url: "/picture/collectPicture",
+						  type: "POST",
+						  data: formData,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  location.reload();
+		              }
+			  			});	      	
+				 });
 				  	
-    	    /*收藏图片*/
+			  
+				 $("#createAlbumButton").click(function(){
+					 	var albumTitle=$("#searchOrBuildAlbum").val();
+			  		   var url="/album/addAlbumAtSelectAlbumOfHomePage?albumTitle="+albumTitle;
+			  		   $('#albumUl').load(url,function(){
+			  			 /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
+			  			  	var albumNuber=$('#albumUl li').length;
+			  			  	if(albumNuber>6){
+			  			  		$("#dropDownBar").addClass("row pre-scrollable");
+			  			  		$('#dropDownBar').css({
+			  			  			'height':'250px',
+			  			  			'margin-left':'0px'
+			  			  		});
+			  			  	}
+			  			  /*  点击相册上的收藏按钮的触发事件 */
+						 $(".uploadPictureButton").click(function(){
+					        	var albumId=$(this).siblings().attr("albumId");
+					        	formData.append('albumId',albumId);
+					        	formData.append('pictureLabel',$('#pictureLabelOfAlbum').val());
+					        	formData.append('pictureDescribe',$('#pictureDescribeOfAlbum').val());
+					        	$.ajax({
+								  url: "/picture/collectPicture",
+								  type: "POST",
+								  data: formData,
+								  processData: false,	
+								  contentType: false ,
+								  success: function(data){	
+									  location.reload();
+				              }
+					  			});	      	
+						 });
+			  			  
+		  			  }); 
+			  	 }); 
+				 
+				 /*  快速收藏图片 */
+				 $('.uppquickCollectionButton').click(function(){
+					  var collectButtonValue = $(this).siblings(".uppcollectionButton");
+					  var pictureId = collectButtonValue.attr('pictureId');
+			  		  var pictureLabel = collectButtonValue.attr('pictureLabel');
+			  		  var pictureName = collectButtonValue.attr('pictureName');
+			  		  var pictureDescribe = collectButtonValue.attr('pictureDescribe');
+			  		  var formDataTemp = new FormData();
+			  		  formDataTemp.append('pictureId',pictureId);
+			  		  formDataTemp.append('pictureName',pictureName);
+			  		  if(pictureLabel!=null&&pictureLabel!=''){
+			  			  formDataTemp.append('pictureLabel',pictureLabel);
+			  		  }
+			  		  if(pictureDescribe!=null&&pictureDescribe!=''){
+			  			  formDataTemp.append('pictureDescribe',pictureDescribe);
+			  		  }
+			  		  
+			  		  $.ajax({
+						  url: "/picture/quickCollectPicture",
+						  type: "POST",
+						  data: formDataTemp,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  location.reload();
+		              }
+			  		 });
+				});
+    	  /*收藏图片*/
+    	    
     	  
     	  
     	  
@@ -269,7 +366,7 @@
                         <div class="buttonShowAndHide collectPictureButton">                          
                             <div class="btn-group">
                                 <a type="button" class="uppcollectionButton btn btn-default btn-danger" th:pictureId="${pictureDTO.pictureId}" th:pictureName="${pictureDTO.pictureName}" th:pictureLabel="${pictureDTO.pictureLabel}" th:pictureDescribe="${pictureDTO.pictureDescribe}">收藏</a>
-                                  <a type="button" class="btn btn-default btn-danger">
+                                  <a type="button" class="uppquickCollectionButton btn btn-default btn-danger">
                                     <span class="glyphicon glyphicon-flash"></span>
                                   </a>        
                             </div>

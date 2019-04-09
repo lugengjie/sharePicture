@@ -3,6 +3,7 @@ package com.example.demo.picture.service;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
@@ -213,7 +214,7 @@ public class PictureService implements IPictureService
 	 * 先检查该用户是否拥有该相册
 	 * 将收藏图片存入数据库，并将原来的图片的collecteNumber+1
 	 */
-	public void collectPicture(PictureDTO pictureDTO, String email)
+	public boolean collectPicture(HttpSession session, PictureDTO pictureDTO, String email)
 	{
 		User user = userRepository.findByEmial(email);
 		if(user != null)
@@ -221,15 +222,63 @@ public class PictureService implements IPictureService
 			Album album = albumRepository.findAlbumByAlbumIdAndUserId(pictureDTO.getAlbumId(), user.getId());
 			if(album != null)
 			{
+				session.setAttribute("albumId", album.getId());
 				Long pictureId = pictureDTO.getPictureId();
 				Picture picture=pictureRepository.findById(pictureId).get();
 				int collectNumber = picture.getCollectNumber();
 				picture.setCollectNumber(collectNumber+1);
 				pictureRepository.save(picture);
 				savePicture(pictureDTO);
+				return true;
 			}
 			
 		}
+		return false;
+	}
+	
+	/**
+	 * 快速收藏图片：收藏图片到最近有收藏图片的相册或最新新建的相册,同时被收藏图片被收藏数+1
+	 * 1.从session中查看是否有albumId(需判断session中的albumId是否在相册中存在)
+	 * 2.若1.无则查看最新新建的相册
+	 * 3.若都无则快速收藏失败
+	 * 4.最后要判断相册是否存在，若相册不存在，则创建相册失败
+	 * 
+	 */
+	public boolean quickCollectPicture(HttpSession session,PictureDTO pictureDTO)
+	{
+
+		Long albumId =0L;
+		Long userId = 1L;
+		if(session.getAttribute("albumId")!=null)
+		{
+			albumId =(Long) session.getAttribute("albumId");
+		}
+		else
+		{
+			List<Album> albums = albumRepository.findAlbumsByUserId(userId);
+			Collections.reverse(albums);
+			if(albums != null && !albums.isEmpty())
+			{
+				albumId = albums.get(0).getId();
+			}
+		}
+		
+		if(albumId != 0)
+		{
+			Album album =albumRepository.findById(albumId).get();
+			if(album != null)
+			{
+				Long pictureId = pictureDTO.getPictureId();
+				Picture picture=pictureRepository.findById(pictureId).get();
+				int collectNumber = picture.getCollectNumber();
+				picture.setCollectNumber(collectNumber+1);
+				pictureRepository.save(picture);
+				pictureDTO.setAlbumId(albumId);
+				savePicture(pictureDTO);
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

@@ -97,7 +97,6 @@
     }
      /* 图片加载 */
      function pictureLoad(images){
-    	  console.log(index);
     	  var userPictureStr = $(images[index]).find(userPicture).attr('data_src'); 
 		  $(images[index]).find(userPicture).attr('src',userPictureStr);
     	  var data_src = $(images[index]).find(mainPicture).attr('data_src');

@@ -2,6 +2,8 @@ package com.example.demo.picture.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.album.entity.AlbumDTO;
@@ -29,6 +31,9 @@ public interface IPictureService
 	public void cancelLikePicture(Long pictureId, String email);
 	
 	//收藏图片
-	public void collectPicture(PictureDTO PictureDTO, String email);
+	public boolean collectPicture(HttpSession session,PictureDTO pictureDTO, String email);
+	
+	//快速收藏图片
+	public boolean quickCollectPicture(HttpSession session,PictureDTO pictureDTO);
 
 }

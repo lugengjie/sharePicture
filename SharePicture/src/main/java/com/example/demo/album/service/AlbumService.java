@@ -155,7 +155,7 @@ public class AlbumService implements IAlbumService
 			}
 		}	
 	}
-	//取消关注相册
+
 	/**
 	 * 取消关注相册
 	 * 1.相册不能为空
