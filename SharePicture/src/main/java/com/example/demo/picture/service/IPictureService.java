@@ -25,10 +25,10 @@ public interface IPictureService
 	public AlbumDTO pictureCarousel(Long pictureId);
 	
 	//喜欢图片
-	public void likePicture(Long pictureId,String email);
+	public boolean likePicture(Long pictureId, String email);
 	
 	//取消喜欢图片
-	public void cancelLikePicture(Long pictureId, String email);
+	public boolean cancelLikePicture(Long pictureId, String email);
 	
 	//收藏图片
 	public boolean collectPicture(HttpSession session,PictureDTO pictureDTO, String email);

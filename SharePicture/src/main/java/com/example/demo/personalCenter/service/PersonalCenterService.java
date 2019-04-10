@@ -17,6 +17,7 @@ import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.personalCenter.entity.Fans;
 import com.example.demo.personalCenter.repository.FansRepository;
 import com.example.demo.picture.entity.PictureDTO;
+import com.example.demo.picture.repository.LikePictureRepository;
 import com.example.demo.picture.repository.PictureRepository;
 
 @Service
@@ -33,6 +34,8 @@ public class PersonalCenterService implements IPersonalCenterService
 	FocusOnAlbumRepository focusOnAlbumRepository;
 	@Autowired
 	PictureRepository pictureRepository;
+	@Autowired
+	LikePictureRepository likePictureRepository;
 	
 	/**
 	 * 关注用户:1.将用户的被关注属性+1， 2.就关注关系存入数据库
@@ -43,7 +46,7 @@ public class PersonalCenterService implements IPersonalCenterService
 	public void focusOnUser(Long userId, String email)
 	{
 		User user = userRepository.findById(userId).get();
-		Long fansId = userRepository.findByEmial(email).getId();
+		Long fansId = userRepository.findByEmial(email).getId(); 
 		if (user != null && fansId !=user.getId())
 		{
 			Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
@@ -81,7 +84,7 @@ public class PersonalCenterService implements IPersonalCenterService
 	/**
 	 * 根据albumIds封装PicttureDTO
 	 */
-	public List<PictureDTO> findPictureDTOsOfUserByAlbumIds(List<Long> albumIds)
+	public List<PictureDTO> findPictureDTOsOfUserByAlbumIds(List<Long> albumIds, Long userId)
 	{
 		List<PictureDTO> pictureDTOs = null;
 		if(albumIds!=null && !albumIds.isEmpty())
@@ -103,10 +106,35 @@ public class PersonalCenterService implements IPersonalCenterService
 					pictureDTO.setAlbumId((Long)pictureDTOTemp[6]);
 					pictureDTO.setAlbumName((String)pictureDTOTemp[7]);
 					pictureDTO.setUserId((Long)pictureDTOTemp[8]);
+					pictureDTO.setIsLike(0);
+					if(pictureDTO.getUserId() == userId)
+					{
+						//该图片是用户自己的
+						pictureDTO.setIsMine(1);
+					}
+					else
+					{
+						//该图片不是用户自己的
+						pictureDTO.setIsMine(0);
+					}
 					pictureDTO.setUserName((String)pictureDTOTemp[9]);
 					pictureDTO.setUserPicture((String)pictureDTOTemp[10]);
 					pictureDTOs.add(pictureDTO);
 				}
+				
+				//pictureDTO中id在用户喜欢的图片id中，则将改pictureDTO的isLike属性设为1，否则设为0
+				List<Long> likePictureIds = likePictureRepository.findLikePictureIdsByUserId(userId);
+				if(likePictureIds !=null && !likePictureIds.isEmpty())
+				{
+					for(PictureDTO pictureDTO : pictureDTOs)
+					{
+						if(likePictureIds.contains(pictureDTO.getPictureId()))
+						{
+							pictureDTO.setIsLike(1);
+						}
+					}
+				}
+				
 			}
 		}
 		return pictureDTOs; 
@@ -140,7 +168,7 @@ public class PersonalCenterService implements IPersonalCenterService
 			{
 				albumIds.addAll(albumIdsOfFocusedAlbum);
 			}
-			pictureDTOs = findPictureDTOsOfUserByAlbumIds(albumIds);
+			pictureDTOs = findPictureDTOsOfUserByAlbumIds(albumIds, userId);
 		}
 		return pictureDTOs;
 	}

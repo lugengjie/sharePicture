@@ -25,5 +25,8 @@ public interface PictureRepository extends CrudRepository<Picture, Long>
 	
 	@Query("select count(*) from Picture p,Album a,User u where u.id=a.userId and a.id=p.albumId and u.id=?1")
 	public int findPictureNumberByUserId(Long userId);
+	
+	@Query("select count(*) from Picture p,Album a,User u where u.id=a.userId and a.id=p.albumId and u.id=?1 and p.id=?2")
+	public int isPictureOfUser(Long userId, Long pictureId);
 
 }

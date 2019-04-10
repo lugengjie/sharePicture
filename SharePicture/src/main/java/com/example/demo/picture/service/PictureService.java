@@ -157,21 +157,26 @@ public class PictureService implements IPictureService
 	
 	/**
 	 * 喜欢图片
+	 * 用户喜欢的图片不能是用户自己的图片
 	 * 检查该用户是否已喜欢该图片，是则结束
 	 * 将喜欢的图片id和用户id放入喜欢图片表中，并将图片表对应图片的likeNumber+1
 	 */
-	public void likePicture(Long pictureId,String email)
+	public boolean likePicture(Long pictureId,String email)
 	{
 		User user = userRepository.findByEmial(email);
 		if(user != null)
 		{
+			if(pictureRepository.isPictureOfUser(user.getId(),pictureId)>0)
+			{
+				return false;
+			}
 			Picture picture=pictureRepository.findById(pictureId).get();
 			if(picture !=null)
 			{
 				LikePicture likePictureTemp = likePictureRepository.findLikePictureByUserIdAndPictureId(user.getId(), pictureId);
 				if (likePictureTemp != null)
 				{
-					return ;
+					return false;
 				}
 				LikePicture likePicture = new LikePicture();
 				int likeNumber = picture.getLikeNumber() + 1;
@@ -179,8 +184,10 @@ public class PictureService implements IPictureService
 				likePicture.setPictureId(pictureId);
 				likePicture.setUserId(user.getId());
 				likePictureRepository.save(likePicture);
+				return true;
 			}
 		}
+		return false;
 	}
 		
 	/**
@@ -188,7 +195,7 @@ public class PictureService implements IPictureService
 	 * 检查该用户是否已喜欢该图片，否则结束
 	 * 根据图片id和用户id删除喜欢图片表内的数据
 	 */
-	public void cancelLikePicture(Long pictureId,String email)
+	public boolean cancelLikePicture(Long pictureId,String email)
 	{
 		User user = userRepository.findByEmial(email);
 		if(user != null)
@@ -196,17 +203,19 @@ public class PictureService implements IPictureService
 			LikePicture likePictureTemp = likePictureRepository.findLikePictureByUserIdAndPictureId(user.getId(), pictureId);
 			if (likePictureTemp == null)
 			{
-				return ;
+				return false;
 			}
 			Picture picture=pictureRepository.findById(pictureId).get();
-			if(picture !=null)
+			if(picture != null)
 			{
 				Long userId = user.getId();
 				int likeNumber = picture.getLikeNumber() - 1;
 				pictureRepository.cancelLikePicture(pictureId, likeNumber);
 				likePictureRepository.deleteByPictureAndUser(pictureId, userId);
+				return true;
 			}
 		}
+		return false;
 	}
 		
 	/**

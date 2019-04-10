@@ -14,7 +14,7 @@ public interface IPersonalCenterService
 	public void cancelFocusOnUser(Long userId, String email);
 	
 	//根据AlbumIds封装PictureDTOs
-	public List<PictureDTO> findPictureDTOsOfUserByAlbumIds(List<Long> albumIds);
+	public List<PictureDTO> findPictureDTOsOfUserByAlbumIds(List<Long> albumIds, Long userId);
 	
 	// 封装发送到HomePage的PictureDTOs
 	public List<PictureDTO> homePageOfPictureDTOs(String email);

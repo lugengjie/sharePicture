@@ -25,6 +25,10 @@ public class PictureDTO
 	private Long userId;
 	//用户头像
 	private String userPicture;
+	//权限 1_是  0_不是
+	private int isMine;
+	//是否喜欢 1_是  0_不是
+	private int isLike;
 	
 	
 	public Long getPictureId()
@@ -118,13 +122,33 @@ public class PictureDTO
 	{
 		this.collectNumber = collectNumber;
 	}
+	
+	public int getIsMine()
+	{
+		return isMine;
+	}
+	public void setIsMine(int isMine)
+	{
+		this.isMine = isMine;
+	}
+	
+	
+	public int getIsLike()
+	{
+		return isLike;
+	}
+	public void setIsLike(int isLike)
+	{
+		this.isLike = isLike;
+	}
 	@Override
 	public String toString()
 	{
 		return "PictureDTO [pictureId=" + pictureId + ", pictureLabel=" + pictureLabel + ", pictureDescribe="
 				+ pictureDescribe + ", pictureName=" + pictureName + ", likeNumber=" + likeNumber + ", collectNumber="
 				+ collectNumber + ", albumId=" + albumId + ", albumName=" + albumName + ", userName=" + userName
-				+ ", userId=" + userId + ", userPicture=" + userPicture + "]";
+				+ ", userId=" + userId + ", userPicture=" + userPicture + ", isMine=" + isMine + ", isLike=" + isLike
+				+ "]";
 	}
-
+	
 }

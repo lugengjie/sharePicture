@@ -42,6 +42,7 @@
     .uploadPicturePanel:hover{-webkit-box-shadow:0px 3px 3px #c8c8c8 ;-moz-box-shadow:0px 3px 3px #c8c8c8 ;box-shadow:0px 3px 3px #c8c8c8 ;}
    .buttonShowAndHide{display:none;}
    .uploadPicturePanel img:hover{cursor:pointer}
+   .redHeardClass{color:#d43f3a}
     
 
     /*图片面板*/
@@ -244,7 +245,39 @@
 			  		 });
 				});
     	  /*收藏图片*/
-    	    
+    	  /*喜欢图片*/
+  	  		$('.likeOrCancelLike').click(function(){
+  	  		    var pictureId = $(this).attr('pictureId'); 
+  	  		    console.log(pictureId );
+  	  		 	 var heardButton = $(this).find('span'); 
+  	  		    var formDataTemp = new FormData();
+  	  		    formDataTemp.append('pictureId',pictureId); 
+  	  			 if(heardButton.hasClass("redHeardClass")){
+	  	  			 $.ajax({
+						  url: "/picture/cancelLikePicture",
+						  type: "POST",
+						  data: formDataTemp,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  heardButton.removeClass("redHeardClass");
+		              }
+			  		 });
+	 	  			 
+  	  			}else{
+	  	  			$.ajax({
+						  url: "/picture/likePicture",
+						  type: "POST",
+						  data: formDataTemp,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  heardButton.addClass("redHeardClass");
+		              }
+			  		 });
+  	  			}  
+  	  		});
+    	  /*喜欢图片*/  
     	  
     	  
     	  
@@ -371,9 +404,10 @@
                                   </a>        
                             </div>
                          </div>
-                         <div class="buttonShowAndHide likePictureButton">   
-                              <a type="button" class="btn btn-default">
-                                  <span class="glyphicon glyphicon-heart" style='color:#d43f3a'></span>
+                         <div class="buttonShowAndHide likePictureButton"> 
+                         		<a th:if="${pictureDTO.isMine == 1}" type="button" class="btn btn-default"  style="margin-left:-14px">编辑</a>
+                              <a th:if="${pictureDTO.isMine == 0}" type="button" class="likeOrCancelLike btn btn-default" th:pictureId="${pictureDTO.pictureId}">
+                                  <span class="glyphicon glyphicon-heart"  th:classappend="${pictureDTO.isLike==1}?'redHeardClass'"></span>
                               </a>  
                         </div> 
                         <div>

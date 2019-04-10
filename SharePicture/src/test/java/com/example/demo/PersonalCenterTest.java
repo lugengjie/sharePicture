@@ -40,16 +40,16 @@ public class PersonalCenterTest
 		System.out.println(fansRepository.findAlbumIdsOfUsersByFansId(7L));
 	}
 	
-	@Test
-	public void findPictureDTOsOfUserByAlbumIds()
-	{
-		List<Long> albumIds=new ArrayList<Long>();
-		albumIds.add(1L);
-		albumIds.add(74L);
-		System.out.println(personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds));
-//		System.out.println(fansRepository.findPictureDTOsOfUserByAlbumIds(albumIds));
-		
-	}
+//	@Test
+//	public void findPictureDTOsOfUserByAlbumIds()
+//	{
+//		List<Long> albumIds=new ArrayList<Long>();
+//		albumIds.add(1L);
+//		albumIds.add(74L);
+//		System.out.println(personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds));
+////		System.out.println(fansRepository.findPictureDTOsOfUserByAlbumIds(albumIds));
+//		
+//	}
 	
 	
 }

@@ -107,5 +107,42 @@ public class PictureController
 		}
 		return "收藏图片失败";
 	}
+	
+	/**
+	 * 快速收藏图片
+	 */
+	@RequestMapping("/likePicture")
+	public @ResponseBody String likePicture(HttpSession session,PictureDTO pictureDTO)
+	{
+		String email = "xueyuancpt@163.com";
+		Long pictureId = pictureDTO.getPictureId();
+		if(pictureId != null && pictureId != 0) 
+		{
+			if(pictureService.likePicture(pictureId, email))
+			{
+				return "喜欢图片成功";
+			}
+		}
+		return "喜欢图片失败";
+	}
+	
+	/**
+	 * 取消喜欢图片
+	 */
+	@RequestMapping("/cancelLikePicture")
+	public @ResponseBody String cancelLikePicture(HttpSession session,PictureDTO pictureDTO)
+	{
+		System.out.println(pictureDTO);
+		String email = "xueyuancpt@163.com";
+		Long pictureId = pictureDTO.getPictureId();
+		if(pictureId != null && pictureId != 0) 
+		{
+			if(pictureService.cancelLikePicture(pictureId, email))
+			{
+				return "取消喜欢图片成功";
+			}
+		}
+		return "取消喜欢图片失败";
+	}
 
 }
