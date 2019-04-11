@@ -35,5 +35,11 @@ public interface IPictureService
 	
 	//快速收藏图片
 	public boolean quickCollectPicture(HttpSession session,PictureDTO pictureDTO);
+	
+	//编辑图片
+	public boolean editPicture(Long userId, PictureDTO pictureDTO);
+	
+	//删除图片
+	public boolean deletePicture(Long userId, PictureDTO pictureDTO);
 
 }

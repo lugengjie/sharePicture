@@ -289,5 +289,41 @@ public class PictureService implements IPictureService
 		}
 		return false;
 	}
-
+	
+	/**
+	 * 编辑图片
+	 */
+	public boolean editPicture(Long userId, PictureDTO pictureDTO)
+	{
+		Long pictureId = pictureDTO.getPictureId();
+		if(pictureId != null && pictureId != 0)
+		{
+			if(pictureRepository.isPictureOfUser(userId, pictureId)>0)
+			{
+				Picture picture = pictureRepository.findById(pictureId).get();
+				picture.setAlbumId(pictureDTO.getAlbumId());
+				picture.setPictureDescribe(pictureDTO.getPictureDescribe());
+				picture.setPictureLabel(pictureDTO.getPictureLabel());
+				pictureRepository.save(picture);
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * 删除照片
+	 */
+	public boolean deletePicture(Long userId, PictureDTO pictureDTO)
+	{
+		Long pictureId = pictureDTO.getPictureId();
+		if(pictureId != null && pictureId != 0)
+		{
+			if(pictureRepository.isPictureOfUser(userId, pictureId)>0)
+			{
+				pictureRepository.deleteById(pictureId);
+				return true;
+			}
+		}
+		return false;
+	}
 }

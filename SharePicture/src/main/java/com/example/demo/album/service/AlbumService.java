@@ -179,5 +179,42 @@ public class AlbumService implements IAlbumService
 			}
 		}	
 	}
+	/**
+	 * 封装到showPictureOfAlbum的AlbumDTO
+	 */
+	public AlbumDTO findAlbumDtoByUserIdAndAlbumId(Long userId, Long albumId)
+	{
+		AlbumDTO albumDTO = null;
+		if(albumId!=null && albumId !=0)
+		{
+			Album album = albumRepository.findById(albumId).get();
+			if(album !=null)
+			{
+				BeanUtils.copyProperties(album, albumDTO);
+				Long userIdTemp = album.getUserId();
+				User user = userRepository.findById(userIdTemp).get();
+				if(user.getId()!=userId)
+				{
+					albumDTO.setIsMyAlbum(0);
+				}
+				else
+				{
+					albumDTO.setIsMyAlbum(1);
+				}
+				albumDTO.setUserName(user.getName());
+				albumDTO.setUserPicture(user.getUserPicture());
+				int pictureNumber = 0;
+				List<Picture> pictures = pictureRepository.findPictureByAlbumId(albumId);
+				if(pictures!=null && !pictures.isEmpty())
+				{
+					pictureNumber = pictures.size();
+				}
+				albumDTO.setPictureNumber(pictureNumber);
+				return albumDTO;
+			}
+			
+		}
+		return albumDTO;
+	}
 	
 }

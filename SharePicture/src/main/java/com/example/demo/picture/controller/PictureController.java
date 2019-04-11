@@ -1,5 +1,6 @@
 package com.example.demo.picture.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -14,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.service.AlbumService;
 import com.example.demo.album.service.IAlbumService;
+import com.example.demo.personalCenter.service.IPersonalCenterService;
+import com.example.demo.personalCenter.service.PersonalCenterService;
 import com.example.demo.picture.entity.PictureDTO;
 import com.example.demo.picture.service.IPictureService;
 import com.example.demo.picture.service.PictureService;
@@ -26,6 +29,8 @@ public class PictureController
 	IPictureService pictureService;
 	@Autowired
 	IAlbumService albumService;
+	@Autowired
+	IPersonalCenterService personalCenterService;
 	
 	/**
 	 * 展示相册中已有的图片或添加图片
@@ -35,15 +40,24 @@ public class PictureController
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/addPicture")
-    public String addPicture(AlbumDTO albumDTO,Model model){
+	@RequestMapping("/showPictureOfAlbum")
+    public String showPictureOfAlbum(HttpSession session,AlbumDTO albumDTO,Model model)
+	{
 		albumDTO.setId(1L);
+		Long userId = 1L;
+		Long albumId = albumDTO.getId();
+		List<Long> albumIds = new ArrayList<Long>();
+		if(albumId!=null && albumId!=0) 
+		{
+			albumIds.add(albumId);	
+		}
+		AlbumDTO albumDTOTemp = albumService.findAlbumDtoByUserIdAndAlbumId(userId, albumId);
+		List<PictureDTO> pictureDTOs = personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds, userId);
 		List<AlbumDTO> albums = albumService.showAlbum(1L);
-		AlbumDTO album = pictureService.showAllPictureOfAlbum(albumDTO);
-		model.addAttribute("pictures", album);
+		model.addAttribute("pictureDTOs", pictureDTOs);
+		model.addAttribute("albumDTO", albumDTOTemp);
 		model.addAttribute("albums", albums);
-		model.addAttribute("littleAlbum", null);
-        return "addPicture";
+        return "showPictureOfAlbum";
     }
 	
 	/**
@@ -143,6 +157,41 @@ public class PictureController
 			}
 		}
 		return "取消喜欢图片失败";
+	}
+	
+	/**
+	 * 编辑图片
+	 * @param session
+	 * @param pictureDTO
+	 * @return
+	 */
+	@RequestMapping("/editPicture")
+	public @ResponseBody String editPicture(HttpSession session, PictureDTO pictureDTO)
+	{
+		
+		Long userId =1L;
+		if(pictureService.editPicture(userId, pictureDTO))
+		{
+			return "编辑图片成功";
+		}
+		return "编辑图片失败";
+	}
+	
+	/**
+	 * 删除图片
+	 * @param session
+	 * @param pictureDTO
+	 * @return
+	 */
+	@RequestMapping("/deletePicture")
+	public @ResponseBody String deletePicture(HttpSession session, PictureDTO pictureDTO)
+	{
+		Long userId =1L;
+		if(pictureService.deletePicture(userId, pictureDTO))
+		{
+			return "删除图片成功";
+		}
+		return "删除图片失败";
 	}
 
 }

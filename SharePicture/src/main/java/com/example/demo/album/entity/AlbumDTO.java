@@ -29,8 +29,14 @@ public class AlbumDTO
 	private int pictureIndex;
 	//轮播图片描述
 	private String mainPictureDescribe;
+	//是否是自己的相册 1_是   0_不是
+	private int isMyAlbum;
+	//被关注数
+	private int focusNumber;
 	//图片DTO
 	private List<PictureDTO> pictureDTOs = new ArrayList<PictureDTO>();
+	// 图片数
+	private int pictureNumber;
 	
 	
 	public Long getUserId()
@@ -159,14 +165,48 @@ public class AlbumDTO
 		this.mainPictureDescribe = mainPictureDescribe;
 	}
 
+	
+	public int getIsMyAlbum()
+	{
+		return isMyAlbum;
+	}
+
+	public void setIsMyAlbum(int isMyAlbum)
+	{
+		this.isMyAlbum = isMyAlbum;
+	}
+
+	
+	public int getFocusNumber()
+	{
+		return focusNumber;
+	}
+
+	public void setFocusNumber(int focusNumber)
+	{
+		this.focusNumber = focusNumber;
+	}
+
+	
+	public int getPictureNumber()
+	{
+		return pictureNumber;
+	}
+
+	public void setPictureNumber(int pictureNumber)
+	{
+		this.pictureNumber = pictureNumber;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "AlbumDTO [id=" + id + ", albumTitle=" + albumTitle + ", albumClassification=" + albumClassification
 				+ ", albumDescribe=" + albumDescribe + ", coverPictureName=" + coverPictureName + ", pictureNames="
 				+ pictureNames + ", userName=" + userName + ", userPicture=" + userPicture + ", userId=" + userId
-				+ ", pictureIndex=" + pictureIndex + ", mainPictureDescribe=" + mainPictureDescribe + ", pictureDTOs="
-				+ pictureDTOs + "]";
+				+ ", pictureIndex=" + pictureIndex + ", mainPictureDescribe=" + mainPictureDescribe + ", isMyAlbum="
+				+ isMyAlbum + ", focusNumber=" + focusNumber + ", pictureDTOs=" + pictureDTOs + ", pictureNumber="
+				+ pictureNumber + "]";
 	}
 
 }

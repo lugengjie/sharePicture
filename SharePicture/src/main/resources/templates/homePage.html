@@ -16,7 +16,7 @@
   /*  div{border:1px solid black;}  */
    
 
-  /* 导航栏*/
+    /* 导航栏*/
     nav{background-color:white;}
     nav .container{width:1250px;}
     .navbar-header{height:50px}
@@ -94,6 +94,12 @@
 	.uploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
 	#albumUl li:hover .uploadPictureButton{display:block;}
 	#uploadPictureSize{width:200px;height:220px}
+	
+	 /* 编辑图片css */
+	 #epmContainer{width:650px;margin-left: -10px}
+    #epmPicture{width:180px;height:170px}
+    #epmDelectPictureButton{float:left;font-size:20px;margin-left:10px;color:#616361}
+    #epmDelectPictureButton:hover {cursor:pointer}
 	
   </style>
   <script type="text/javascript">
@@ -248,7 +254,7 @@
     	  /*喜欢图片*/
   	  		$('.likeOrCancelLike').click(function(){
   	  		    var pictureId = $(this).attr('pictureId'); 
-  	  		    console.log(pictureId );
+  	  		    /* console.log(pictureId ); */
   	  		 	 var heardButton = $(this).find('span'); 
   	  		    var formDataTemp = new FormData();
   	  		    formDataTemp.append('pictureId',pictureId); 
@@ -277,7 +283,59 @@
 			  		 });
   	  			}  
   	  		});
-    	  /*喜欢图片*/  
+    	  /*喜欢图片*/ 
+    	  /*编辑图片*/
+    	  	$('.editPictureButton').click(function(){
+    	  		$('#editPictureModal').modal('show');
+    	  		var editPictureData = $(this).parent().parent().find('.uppcollectionButton');
+    	  		var pictureId = editPictureData.attr('pictureId');
+		  		var pictureLabel = editPictureData.attr('pictureLabel');
+		  		var pictureName = editPictureData.attr('pictureName');
+		  		var pictureDescribe = editPictureData.attr('pictureDescribe');
+		  		var albumId = editPictureData.attr('albumId');
+		  		var albumName = editPictureData.attr('albumName');
+		  		$('#epmPictureLabel').val(pictureLabel);
+		  		$('#epmPicture').attr('src',pictureName);
+		  		$('#epmPictureDescribe').val(pictureDescribe);	
+		  		$('#epmAlbumName').val(albumName);
+		  		//获取下拉框中的值
+	    	   $("#epmAlbumName").change(function(){
+	    		   albumId = $("#epmAlbumName").find("option:selected").attr("albumId");
+	    	   });
+	    	   /*编辑相册 */
+	    	   $('#epmDelectPictureButton').click(function(){
+	    		   var formDataTemp = new FormData();
+	    		   formDataTemp.append('pictureId',pictureId);
+	    		   $.ajax({
+						  url: "/picture/deletePicture",
+						  type: "POST",
+						  data: formDataTemp,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  location.reload();
+		              }
+			  		 });
+	    	   });
+		  		$('#epmEditPictureButton').click(function(){
+		  			var formDataTemp = new FormData();
+		  			formDataTemp.append('pictureLabel',$('#epmPictureLabel').val());
+			  		formDataTemp.append('pictureDescribe',$('#epmPictureDescribe').val());	
+			  		formDataTemp.append('pictureId',pictureId);
+		  			formDataTemp.append('albumId',albumId);
+		  			$.ajax({
+						  url: "/picture/editPicture",
+						  type: "POST",
+						  data: formDataTemp,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  location.reload();
+		              }
+			  		 });
+		  		});
+    	  	});
+    	  /*编辑相册 */
     	  
     	  
     	  
@@ -398,14 +456,14 @@
                      <div class="uploadPicturePanel" th:each="pictureDTO:${pictureDTOs}">
                         <div class="buttonShowAndHide collectPictureButton">                          
                             <div class="btn-group">
-                                <a type="button" class="uppcollectionButton btn btn-default btn-danger" th:pictureId="${pictureDTO.pictureId}" th:pictureName="${pictureDTO.pictureName}" th:pictureLabel="${pictureDTO.pictureLabel}" th:pictureDescribe="${pictureDTO.pictureDescribe}">收藏</a>
+                                <a type="button" class="uppcollectionButton btn btn-default btn-danger" th:pictureId="${pictureDTO.pictureId}" th:pictureName="${pictureDTO.pictureName}" th:pictureLabel="${pictureDTO.pictureLabel}" th:pictureDescribe="${pictureDTO.pictureDescribe}"  th:albumName="${pictureDTO.albumName}" th:albumId="${pictureDTO.albumId}">收藏</a>
                                   <a type="button" class="uppquickCollectionButton btn btn-default btn-danger">
                                     <span class="glyphicon glyphicon-flash"></span>
                                   </a>        
                             </div>
                          </div>
                          <div class="buttonShowAndHide likePictureButton"> 
-                         		<a th:if="${pictureDTO.isMine == 1}" type="button" class="btn btn-default"  style="margin-left:-14px">编辑</a>
+                         		<a th:if="${pictureDTO.isMine == 1}" type="button" class="editPictureButton btn btn-default"  style="margin-left:-14px">编辑</a>
                               <a th:if="${pictureDTO.isMine == 0}" type="button" class="likeOrCancelLike btn btn-default" th:pictureId="${pictureDTO.pictureId}">
                                   <span class="glyphicon glyphicon-heart"  th:classappend="${pictureDTO.isLike==1}?'redHeardClass'"></span>
                               </a>  
@@ -545,6 +603,57 @@
              	 	</div>
              	 </div>
             </div> 
+        </div>
+    </div>
+</div>
+
+
+ <!--  编辑图片模态框 -->
+  <div class="modal fade" id="editPictureModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">编辑图片</h4>
+            </div>
+            <div class="modal-body">
+                <div id="epmContainer" class="container">
+                    <div class="row">
+                        <div class="col-md-7">
+                             <form id="epmForm" class="form-horizontal" role="form">
+                                  <div class="form-group">
+                                     <label  class="col-sm-2 control-label text-muted" >标签</label>
+                                     <div class="col-sm-10">
+                                          <input id="epmPictureLabel" name="pictureLabel" type="text" class="form-control" placeholder="输入标签">
+                                     </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label text-muted" >描述</label>
+                                  <div class="col-sm-10">
+                                      <textarea id="epmPictureDescribe" name="pictureDescribe" class="form-control" rows="3" placeholder="输入描述"></textarea>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label text-muted">相册</label>
+                                    <div class="col-sm-10">
+                                    <select id="epmAlbumName" name="AlbumName" class="form-control">
+                                        <option th:if="${albums != null}" th:each="albums : ${albums}" th:text="${albums.albumTitle}" th:albumId="${albums.id}"></option>   
+                                    </select> 
+                                  </div>
+                              </div>   
+                           </form>
+                        </div>
+                        <div class="col-md-5">
+                            <img id="epmPicture" src="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p id="epmDelectPictureButton">删除图片</p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="epmEditPictureButton" type="button" class="btn btn-primary btn-danger">确定</button>
+            </div>
         </div>
     </div>
 </div>

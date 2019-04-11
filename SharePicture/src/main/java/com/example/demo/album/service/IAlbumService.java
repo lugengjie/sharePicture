@@ -22,5 +22,7 @@ public interface IAlbumService
 	public void focusOnAlbum(Long albumId, String email);
 	//取消关注相册
 	public void cancelFocusOnAlbum(Long albumId, String email);
+	//封装到showPictureOfAlbum的DTO
+	public AlbumDTO findAlbumDtoByUserIdAndAlbumId(Long userId, Long albumId);
 	
 }

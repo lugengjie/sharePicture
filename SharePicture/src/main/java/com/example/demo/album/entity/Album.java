@@ -17,8 +17,7 @@ public class Album
 	private String albumDescribe;
 	// 类别
 	private String albumClassification;
-	// 图片数
-	private int pictureNumber;
+	
 	// 用户Id
 	private Long userId;
 	// 被关注数
@@ -45,11 +44,7 @@ public class Album
 	{
 		return albumClassification;
 	}
-	
-	public int getPictureNumber()
-	{
-		return pictureNumber;
-	}
+
 	
 	public Long getUserId()
 	{
@@ -82,11 +77,7 @@ public class Album
 		this.albumClassification = albumClassification;
 	}	
 	
-	public void setPictureNumber(int pictureNumber)
-	{
-		this.pictureNumber = pictureNumber;
-	}
-	
+
 	public void setUserId(Long userId)
 	{
 		this.userId = userId;
@@ -101,7 +92,7 @@ public class Album
 	public String toString()
 	{
 		return "Album [id=" + id + ", albumTitle=" + albumTitle + ", albumDescribe=" + albumDescribe
-				+ ", albumClassification=" + albumClassification + ", pictureNumber=" + pictureNumber + ", userId="
+				+ ", albumClassification=" + albumClassification + ", userId="
 				+ userId + ", focusNumber=" + focusNumber + "]";
 	}
 }
