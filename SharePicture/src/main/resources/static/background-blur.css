@@ -1,0 +1,29 @@
+.avatar-holder {
+		overflow: hidden;
+		height: 160px;
+		width:240px;
+		text-align: center;
+		position: relative;
+	}
+
+	.avatar-container {
+		padding-top: 50px;
+	}
+
+	.avatar {
+		display: inline-block;
+		position: relative;
+	}
+
+	.avatar img {
+		width: 100px;
+		height: 100px;
+		margin-top: -30px;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		border-radius: 50%;
+		border: 5px solid rgba(255,255,255,0.8);
+		transition: 0.3s;
+		cursor: pointer;
+	}
+	.avatar-blur {z-index: -3;position: absolute;min-height: 100%;height: auto;display: block;top: 0;max-height: none;left: -10%;width: 120%;}

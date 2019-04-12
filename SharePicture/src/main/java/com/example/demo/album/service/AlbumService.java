@@ -190,9 +190,12 @@ public class AlbumService implements IAlbumService
 			Album album = albumRepository.findById(albumId).get();
 			if(album !=null)
 			{
+
+				albumDTO = new AlbumDTO();
 				BeanUtils.copyProperties(album, albumDTO);
 				Long userIdTemp = album.getUserId();
 				User user = userRepository.findById(userIdTemp).get();
+				//判断是否是用户的相册
 				if(user.getId()!=userId)
 				{
 					albumDTO.setIsMyAlbum(0);
@@ -203,6 +206,16 @@ public class AlbumService implements IAlbumService
 				}
 				albumDTO.setUserName(user.getName());
 				albumDTO.setUserPicture(user.getUserPicture());
+				FocusOnAlbum focusOnAlbum =focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userIdTemp);
+				if(focusOnAlbum == null)
+				{
+					albumDTO.setIsFocusOn(0);
+				}
+				else
+				{
+					albumDTO.setIsFocusOn(1);
+				}
+				//相册中的图片数
 				int pictureNumber = 0;
 				List<Picture> pictures = pictureRepository.findPictureByAlbumId(albumId);
 				if(pictures!=null && !pictures.isEmpty())

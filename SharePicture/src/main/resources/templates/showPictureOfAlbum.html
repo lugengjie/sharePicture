@@ -2,29 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"> 
-  <title>上传图片</title>
+  <title>showPicture</title>
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./../background-blur.css">
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="./../pictureCarourelPlug.js"></script>
+  <script src="./../homePagePlug.js"></script>
+  <script src="./../background-blur.min.js"></script>
+    <script src="./../index.js"></script>
   <style>
     body{background-color:#f5f5f5;}
     /*防止打开模态框时页面抖动*/
-	.modal-open{
-       overflow-y: scroll;
-    }
-    body{
-        padding-right:1px!important;
-    }
+	.modal-open{overflow-y: scroll;}
+    body{padding-right:1px!important;}
 
-   /*  div{border:1px solid black;} */
+    /*  div{border:1px solid black;} */
     .uploadPicturePanel{width:19%;background-color:white;position:absolute;}
     .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
 	 .buttonShowAndHide{display:none;}
 	 .uploadPicturePanel img:hover{cursor:pointer}
 
 	/* 导航栏*/
-     nav{background-color:white;}
+    nav{background-color:white;}
     nav .container{width:1250px;}
     .navbar-header{height:50px}
     #navLogo{width:100px;height: 70px;margin-top:-8px}
@@ -48,13 +47,23 @@
 
     /*图片组*/
     #picturePage .container{width:1250px;}
-    #outerBorder{text-align:center;border:2px dashed #dedede;height:126px;width:19%;position:absolute;background-color:white}
+    #outerBorder{text-align:center;border:2px dashed #dedede;width:19%;position:absolute;background-color:white}
     #innerBorder{margin-top: 14%;font-size: 20px;}
+    .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
+    .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
+    .uploadPicturePanel:hover{-webkit-box-shadow:0px 3px 3px #c8c8c8 ;-moz-box-shadow:0px 3px 3px #c8c8c8 ;box-shadow:0px 3px 3px #c8c8c8 ;}
+    .buttonShowAndHide{display:none;}
+    .uploadPicturePanel img:hover{cursor:pointer}
+    .redHeardClass{color:#d43f3a}
     
-
-    /*循环显示图片*/
+    /* 用户面板 */
+    .userPanel {width:19%; height:326px;text-align: center;margin:5.4px;float:left;z-index:-3}
+    .underUserPicture{background-color:white;height:165px;margin-top:-10px;padding-top:13px}
+	 .focusOnUserButton{margin-top:10px;width:94%;background-color:#ededed}
+    /*图片面板*/
     .collectPictureButton{position:absolute;z-index:2}
     .likePictureButton{position:absolute;z-index:2;margin-left:83.5%}
+    
 
 	/*选择相册模态框*/
 	#selectAlbumCol{height:314px}
@@ -65,6 +74,22 @@
 	.uploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
 	#albumUl li:hover .uploadPictureButton{display:block;}
 	#uploadPictureSize{width:200px;height:220px}
+	
+	 /*在收藏中选择相册模态框*/
+	#cpselectAlbumCol{height:314px}
+	#cpselectAlbumModal .container{width:100%;height: 100%}
+	#cpselectAlbumModal{margin-top:3%;}
+	#cpinputPictureData{width:200px;}
+	#cpcreateAlbumButton{width:100%;display:none;margin-right:10px}
+	.cpuploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
+	#cpalbumUl li:hover .cpuploadPictureButton{display:block;}
+	#cpuploadPictureSize{width:200px;height:220px}
+	
+	/* 编辑图片css */
+	 #epmContainer{width:650px;margin-left: -10px}
+    #epmPicture{width:180px;height:170px}
+    #epmDelectPictureButton{float:left;font-size:20px;margin-left:10px;color:#616361}
+    #epmDelectPictureButton:hover {cursor:pointer}
 
 	/*上传图片模态框*/
 	#uploadPictureModal{margin-top:7%}
@@ -75,20 +100,20 @@
 	#uploadPictureInput{display:none;}
 	
 	/* 轮播模态框 */
-	#picturesOfAlbum::-webkit-scrollbar {width: 10px;  height:10px }  
+    #picturesOfAlbum::-webkit-scrollbar {width: 10px;  height:10px }  
     #picturesOfAlbum::-webkit-scrollbar-thumb{ border-radius: 10px;  background-color: #aaaa; }  
-    #whiteMask{position:fixed;z-index:2;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
-    #overWhiteMask{position:fixed;z-index:3;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
+    #whiteMask{position:fixed;z-index:3;background:rgba(229,229,229,.95);opacity:0.9;left: 0;right: 0;top: 0;bottom: 0;}
+    #overWhiteMask{position:fixed;z-index:4;width:100%;overflow-y:scroll;left: 0;right: 0;top: 0;bottom: 0;}
     #picturesOfAlbum img:hover{opacity:1!important;cursor:pointer}
     #picturesOfAlbum img{position:absolute;display:none;opacity:0.3;width:83px;}
     #RightButton:hover{background-color: black;cursor:pointer}
     #LeftButton:hover{background-color: black;cursor:pointer}
     #closeButton:hover{background-color: black;cursor:pointer}
-    #closeButton{position:fixed;z-index:4;right:24px;width:45px;top:10px;opacity:0.3;}
+    #closeButton{position:fixed;z-index:5;right:24px;width:45px;top:10px;opacity:0.3;}
     #closeButton img{width:100%;}
-    #LeftButton{position:fixed;z-index:4;width:60px;top:40%;;opacity:0.3;}
+    #LeftButton{position:fixed;z-index:5;width:60px;top:40%;;opacity:0.3;}
     #LeftButton img{width:100%;}
-    #RightButton{position:fixed;z-index:4;width:60px;top:40%;right:18px;opacity:0.3;}
+    #RightButton{position:fixed;z-index:5;width:60px;top:40%;right:18px;opacity:0.3;}
     #RightButton img{width:100%;}
     #overWhiteMask .container{width:77%;margin-top:4%;padding-left: 30px}
     #wmLoveButton{font-size:18px;height:35px}
@@ -97,7 +122,7 @@
     #underMainPicturePanel{background-color:white;margin-top:20px;width:698px;}
     #umpUserName{display: inline-block;margin-top: -100px}
     #umpLittlePicture{width:50px;height: 50px}
-    #pictureDescrible{display: inline-block;background-color:#fafafa;vertical-align:middle;line-height:46px;width:100%;padding-left:15px}
+    #pictureDescrible{width:95%;text-align:left;display: inline-block;background-color:#fafafa;line-height:46px;padding-left:15px;margin-bottom:15px}
     #commentTextArea{display: inline-block;width:90.5%;margin-left: 12px;}
     #commentTextAreaButton{margin-top:10px;margin-left:580px}
     #touristPicture{width:50px;height: 54px;float: left}
@@ -113,13 +138,244 @@
   </style>
   <script type="text/javascript">
   		$(document).ready(function(){
-  		
-   		/* 懒加载和瀑布流布局插件 */
-	  		$('#box').lazyLoadAndWaterFall('.mainPictureOfPanel');
+  			/*收藏图片*/
+    		/*收藏图片的FormDate变量*/
+    		var cpformData;
+    	  /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
+		  	var cpalbumNuber=$('#cpalbumUl li').length;
+		  	if(cpalbumNuber>6){
+		  		$("#cpdropDownBar").addClass("row pre-scrollable");
+		  		$('#cpdropDownBar').css({
+		  			'height':'250px',
+		  			'margin-left':'0px'
+		  		});
+		  	}	
+		  	
+		  	/*在选择相册模态框中，搜索或创建相册*/
+		  	function cpsearchOrBuildAlbum() {
+    			var searchAlbumName = $("#cpsearchOrBuildAlbum").val();    
+    			if (searchAlbumName == "") {
+     			 	$("#cpalbumUl li").show();
+     			 	$('#cpcreateAlbumButton').hide();
+    			}
+    			else
+    			{
+    				$('#cpcreateAlbumButton').show();
+      				$("#cpalbumUl li").each(function() {
+            			var albumName = $(this).text();                       
+            			if (albumName.indexOf(searchAlbumName) != -1) {
+              				$(this).show();
+            			} else {
+              				$(this).hide();
+            			}
+          			});
+    			}
+  			}
+		  	
+		  	/*	在选择相册模态框中，当'搜索或创建相册'有输入时触发事件*/
+			$("#cpsearchOrBuildAlbum").bind('input propertychange',function () {	
+					cpsearchOrBuildAlbum();
+			}); 
+		  	
+		  	/* 点击图片上的收藏按钮的触发事件 */
+		  	$('.uppcollectionButton').click(function(){	  		
+		  			var pictureId=$(this).attr('pictureId');
+		  			var pictureLabel=$(this).attr('pictureLabel');
+		  			var pictureName=$(this).attr('pictureName');
+		  			var pictureDescribe=$(this).attr('pictureDescribe'); 
+		  		   
+		  			cpformData = new FormData();
+		   		cpformData.append('pictureName',pictureName);
+		  			cpformData.append('pictureId',pictureId);
+		  			
+		  			$('#cpuploadPictureSize').attr('src',pictureName);
+		  			if(pictureLabel!=null&&pictureLabel!=''){
+		  				$('#cppictureLabelOfAlbum').val(pictureLabel);
+		  			}else{
+		  				$('#cppictureLabelOfAlbum').val("");
+		  			}
+		  			if(pictureDescribe!=null&&pictureDescribe!=''){
+		  				$('#cppictureDescribeOfAlbum').val(pictureDescribe);
+		  			}else{
+		  				$('#cppictureDescribeOfAlbum').val("");
+		  			}
+		  			$('#cpselectAlbumModal').modal('show');
+			
+		  	});
+		  	
+		 /*  点击相册上的收藏按钮的触发事件 */
+		 $(".cpuploadPictureButton").click(function(){
+	        	var albumId=$(this).siblings().attr("albumId");
+	        	cpformData.append('albumId',albumId);
+	        	cpformData.append('pictureLabel',$('#cppictureLabelOfAlbum').val());
+	        	cpformData.append('pictureDescribe',$('#cppictureDescribeOfAlbum').val());
+	        	$.ajax({
+				  url: "/picture/collectPicture",
+				  type: "POST",
+				  data: cpformData,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					  location.reload();
+              }
+	  			});	      	
+		 });
+		  	
+	  
+		 $("#cpcreateAlbumButton").click(function(){
+			 	var albumTitle=$("#cpsearchOrBuildAlbum").val();
+			 	console.log(albumTitle);
+	  		   var url="/album/addAlbumAtSelectAlbumOfHomePage?albumTitle="+albumTitle;
+	  		   $('#cpalbumUl').load(url,function(){
+	  			 /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
+	  			  	var albumNuber=$('#cpalbumUl li').length;
+	  			  	if(albumNuber>6){
+	  			  		$("#cpdropDownBar").addClass("row pre-scrollable");
+	  			  		$('#cpdropDownBar').css({
+	  			  			'height':'250px',
+	  			  			'margin-left':'0px'
+	  			  		});
+	  			  	}
+	  			  /*  点击相册上的收藏按钮的触发事件 */
+				 $(".cpuploadPictureButton").click(function(){
+			        	var albumId=$(this).siblings().attr("albumId");
+			        	cpformData.append('albumId',albumId);
+			        	cpformData.append('pictureLabel',$('#cppictureLabelOfAlbum').val());
+			        	cpformData.append('pictureDescribe',$('#cppictureDescribeOfAlbum').val());
+			        	$.ajax({
+						  url: "/picture/collectPicture",
+						  type: "POST",
+						  data: cpformData,
+						  processData: false,	
+						  contentType: false ,
+						  success: function(data){	
+							  location.reload();
+		              }
+			  			});	      	
+				 });
+	  			  
+  			  }); 
+	  	 }); 
+		 
+		 /*  快速收藏图片 */
+		 $('.uppquickCollectionButton').click(function(){
+			  var collectButtonValue = $(this).siblings(".uppcollectionButton");
+			  var pictureId = collectButtonValue.attr('pictureId');
+	  		  var pictureLabel = collectButtonValue.attr('pictureLabel');
+	  		  var pictureName = collectButtonValue.attr('pictureName');
+	  		  var pictureDescribe = collectButtonValue.attr('pictureDescribe');
+	  		  console.log(collectButtonValue);
+	  		  var formDataTemp = new FormData();
+	  		  formDataTemp.append('pictureId',pictureId);
+	  		  formDataTemp.append('pictureName',pictureName);
+	  		  if(pictureLabel!=null&&pictureLabel!=''){
+	  			  formDataTemp.append('pictureLabel',pictureLabel);
+	  		  }
+	  		  if(pictureDescribe!=null&&pictureDescribe!=''){
+	  			  formDataTemp.append('pictureDescribe',pictureDescribe);
+	  		  }
+	  		  
+	  		  $.ajax({
+				  url: "/picture/quickCollectPicture",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					  location.reload();
+              }
+	  		 });
+		});
+  /*收藏图片*/
+  /*喜欢图片*/
+		$('.likeOrCancelLike').click(function(){
+		    var pictureId = $(this).attr('pictureId'); 
+		    /* console.log(pictureId ); */
+		 	 var heardButton = $(this).find('span'); 
+		    var formDataTemp = new FormData();
+		    formDataTemp.append('pictureId',pictureId); 
+			 if(heardButton.hasClass("redHeardClass")){
+	  			 $.ajax({
+				  url: "/picture/cancelLikePicture",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					  heardButton.removeClass("redHeardClass");
+              }
+	  		 });
+	  			 
+			}else{
+	  			$.ajax({
+				  url: "/picture/likePicture",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					  heardButton.addClass("redHeardClass");
+              }
+	  		 });
+			}  
+		});
+  /*喜欢图片*/ 
+  /*编辑图片*/
+  	$('.editPictureButton').click(function(){
+  		$('#editPictureModal').modal('show');
+  		var editPictureData = $(this).parent().parent().find('.uppcollectionButton');
+  		var pictureId = editPictureData.attr('pictureId');
+  		var pictureLabel = editPictureData.attr('pictureLabel');
+  		var pictureName = editPictureData.attr('pictureName');
+  		var pictureDescribe = editPictureData.attr('pictureDescribe');
+  		var albumId = editPictureData.attr('albumId');
+  		var albumName = editPictureData.attr('albumName');
+  		$('#epmPictureLabel').val(pictureLabel);
+  		$('#epmPicture').attr('src',pictureName);
+  		$('#epmPictureDescribe').val(pictureDescribe);	
+  		$('#epmAlbumName').val(albumName);
+  		//获取下拉框中的值
+	   $("#epmAlbumName").change(function(){
+		   albumId = $("#epmAlbumName").find("option:selected").attr("albumId");
+	   });
+	   /*编辑相册 */
+	   $('#epmDelectPictureButton').click(function(){
+		   var formDataTemp = new FormData();
+		   formDataTemp.append('pictureId',pictureId);
+		   $.ajax({
+				  url: "/picture/deletePicture",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					  location.reload();
+              }
+	  		 });
+	   });
+  		$('#epmEditPictureButton').click(function(){
+  			var formDataTemp = new FormData();
+  			formDataTemp.append('pictureLabel',$('#epmPictureLabel').val());
+	  		formDataTemp.append('pictureDescribe',$('#epmPictureDescribe').val());	
+	  		formDataTemp.append('pictureId',pictureId);
+  			formDataTemp.append('albumId',albumId);
+  			$.ajax({
+				  url: "/picture/editPicture",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					  location.reload();
+              }
+	  		 });
+  		});
+  	});
+  /*编辑图片 */
+   		
 	 
 		  	/*上传图片的FormDate变量*/
-		  	var formData;
-
+		  	var ulformData;
 		  /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
 		  	var albumNuber=$('#albumUl li').length;
 		  	if(albumNuber>6){
@@ -129,7 +385,6 @@
 		  			'margin-left':'0px'
 		  		});
 		  	}		  	
-		  	
 		  	/*在选择相册模态框中，搜索或创建相册*/
 		  	function searchOrBuildAlbum() {
     			var searchAlbumName = $("#searchOrBuildAlbum").val();    
@@ -150,12 +405,10 @@
           			});
     			}
   			}
-
 			/*	在选择相册模态框中，当'搜索或创建相册'有输入时触发事件*/
 			$("#searchOrBuildAlbum").bind('input propertychange',function () {	
 					searchOrBuildAlbum();
 			});
-
 			/*	在上传图片模态框中，点击特定区域触发提交文件*/
 			$("#uploadPictureInnerBorder").click(function(){
  				$("#uploadPictureInput").trigger("click");
@@ -179,7 +432,6 @@
 				    }   
 				};
 	  		});
-
 			/*文件压缩*/
 			function compressImage(image){
 		  		var canvas=document.createElement('canvas');
@@ -198,10 +450,10 @@
 
 				// 绘制图片
 	  			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-	  			//将canvas上的图片转为二进制大文件同时添加到FormData
+	  			//将canvas上的图片转为二进制大文件同时添加到ulformData
 	  			canvas.toBlob(function(blob){
-	  				formData = new FormData();
-	  	  			formData.append('multipartFile',blob);
+	  				ulformData = new FormData();
+	  	  			ulformData.append('multipartFile',blob);
 	  	  			$('#selectAlbumModal').modal('show');
 	  	  			$('#uploadPictureModal').modal('hide');
 	  			},'image/jpeg', pictureQuality);		
@@ -210,13 +462,13 @@
 			 /*  提交压缩后图片按钮的触发事件 */
 			 $(".uploadPictureButton").click(function(){
 		        	var albumId=$(this).siblings().attr("albumId");
-		        	formData.append('albumId',albumId);
-		        	formData.append('pictureLabel',$(pictureLabel).val());
-		        	formData.append('pictureDescribe',$(pictureDescribe).val());
+		        	ulformData.append('albumId',albumId);
+		        	ulformData.append('pictureLabel',$(pictureLabel).val());
+		        	ulformData.append('pictureDescribe',$(pictureDescribe).val());
 		        	$.ajax({
 					  url: "/picture/uploadPicture",
 					  type: "POST",
-					  data: formData,
+					  data: ulformData,
 					  processData: false,	
 					  contentType: false ,
 					  success: function(data){
@@ -225,7 +477,7 @@
 	              }
 		  			});	      	
 			  });
-			 
+			 /*创建相册按钮*/
 			 $("#createAlbumButton").click(function(){
 				 	var albumTitle=$("#searchOrBuildAlbum").val();
 		  		   var url="/album/addAlbumAtSelectAlbum?albumTitle="+albumTitle;
@@ -243,13 +495,13 @@
 		  			  /*  提交压缩后图片按钮的触发事件 */
 		  				 $(".uploadPictureButton").click(function(){
 		  			        	var albumId=$(this).siblings().attr("albumId");
-		  			        	formData.append('albumId',albumId);
-		  			        	formData.append('pictureLabel',$(pictureLabel).val());
-		  			        	formData.append('pictureDescribe',$(pictureDescribe).val());
+		  			        	ulformData.append('albumId',albumId);
+		  			        	ulformData.append('pictureLabel',$(pictureLabel).val());
+		  			        	ulformData.append('pictureDescribe',$(pictureDescribe).val());
 		  			        	$.ajax({
 		  						  url: "/picture/uploadPicture",
 		  						  type: "POST",
-		  						  data: formData,
+		  						  data: ulformData,
 		  						  processData: false,	
 		  						  contentType: false ,
 		  						  success: function(data){
@@ -261,39 +513,49 @@
 		  		   });			 		
 			 });
 			 
-			/*轮播模态框*/
-			$("#carouselMask").hide();
-			$(".mainPictureOfPanel").click(function(){
-				var picSrc = $(this).attr('src');
-				$('#carouselMask').load("/picture/carouselPicture",{'pictureName':$(this).attr('src')},function(){
-					 /*评论框无内容时禁止点击发送*/
-				      $("#commentTextArea").bind('input propertychange',function () { 
-				          var TextAreaContent = $("#commentTextArea").val();
+			
+			 /* 懒加载和瀑布流布局插件 */
+	  		 $('#box').lazyLoadAndWaterFall({
+	  			 'mainPicture':'.mainPictureOfPanel',
+	  			 'userPicture':'.userPictureOfPanel',
+	  			 'firstPanelHeight':$('#outerBorder').height()
+	  		 });
+	  		/* 懒加载和瀑布流布局插件 */
+    	  
+          /*轮播模态框*/
+          $("#carouselMask").hide();
+          $(".mainPictureOfPanel").click(function(){
+            var picSrc = $(this).attr('pictureIdofPanel');
+            $('#carouselMask').load("/picture/carouselPicture",{'pictureId':picSrc},function(){  
+                  /*评论框无内容时禁止点击发送*/
+                  $("#commentTextArea").bind('input propertychange',function () { 
+                      var TextAreaContent = $("#commentTextArea").val();
 
-				          if (TextAreaContent == "") {
-				            $("#commentTextAreaButton").attr("disabled","disabled");
-				          }else{
-				            $("#commentTextAreaButton").removeAttr("disabled");
-				          }
-				      });
-				      var mainPictureIndex = $('#mainPicture').attr('mainPictureIndex');
-				      $(document.body).css({"overflow-y":"hidden"});
-				      $("#picturesOfAlbum").carouselPlugin({
-				           'mainPicture':'mainPicture',
-				           'leftButton':'LeftButton',
-				           'rightButton':'RightButton',
-				           'pictureIndex': mainPictureIndex
-				      }); 
-				      $("#picturesOfAlbum").myPlugin(mainPictureIndex);
-						$("#carouselMask").show();						
-						$("#closeButton").click(function(){
-							$("#carouselMask").hide();
-							$(document.body).css({"overflow-y":"scroll"});
-						});
-						   
-				});
-			});
-			 
+                      if (TextAreaContent == "") {
+                        $("#commentTextAreaButton").attr("disabled","disabled");
+                      }else{
+                        $("#commentTextAreaButton").removeAttr("disabled");
+                      }
+                  });
+                  var mainPictureIndex = $('#mainPicture').attr('mainPictureIndex');
+                  $(document.body).css({"overflow-y":"hidden"});
+                  $("#picturesOfAlbum").carouselPlugin({
+                       'mainPicture':'mainPicture',
+                       'leftButton':'LeftButton',
+                       'rightButton':'RightButton',
+                       'pictureIndex': mainPictureIndex,
+                       'pictureDescribleDiv':'#pictureDescribleDiv'
+                  }); 
+                  $("#picturesOfAlbum").myPlugin(mainPictureIndex);
+                $("#carouselMask").show();            
+                $("#closeButton").click(function(){
+                  $("#carouselMask").hide();
+                  $(document.body).css({"overflow-y":"scroll"});
+                });
+                   
+            });
+          }); 
+         /*轮播模态框*/
 			 
 			 
 			 
@@ -355,25 +617,31 @@
 <!--  相册相关数据   -->
 <div id="albumDataPanel" class="panel panel-default">
     <div class="panel-body">
-        <div class="container">
+        <div class="container" th:if="${albumDTO!=null}">
             <div class="row">
                 <div class="col-md-6" >
-                    <h3><strong>海贼王打赏</strong>&nbsp;<span style="color: #ddd">|</span>&nbsp;<small>所属分类:<span style="color: #9e7e6b">UI/UX</span> </small></h3>
+                    <h3><strong th:text="${albumDTO.albumTitle}">海贼王打赏</strong>&nbsp;<span style="color: #ddd">|</span>&nbsp;<small>所属分类:<span style="color: #9e7e6b" th:text="${albumDTO.albumClassification}">UI/UX</span> </small></h3>
                 </div>
+               <div id="setting" class="col-md-1 col-md-offset-5">          	
+                  <a th:if="${albumDTO.isMyAlbum == 0}"  type="button" class="btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px" th:text="${albumDTO.isFocusOn}==1?'关注相册':'取消关注'">关注相册</a>
+                  <a th:if="${albumDTO.isMyAlbum == 1}" type="button" class="btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px">批量管理</a>
+              </div>
             </div>
             <div class="row">
                 <div class="col-md-5">
                     <br>
-                    <span id="albumDescribeSpan">这是一个画板测试</span>
+                    <span id="albumDescribeSpan" th:text="${albumDTO.albumDescribe}">这是一个画板测试</span>
                 </div>
             </div>
         </div>    
     </div>
     <div id="albumDataPanelFooter" class="panel-footer">
          <div class="container">
+         	  <img th:src="${albumDTO.userPicture}" style="height:40px;width:40px">&nbsp;&nbsp;
+         	  <span th:text="${albumDTO.userName}">我是小米</span>
               <ul class="nav nav-tabs navbar-right">
-                  <li class="active"><a data-toggle="tab" href="#picturePage">1收藏</a></li>
-                  <li><a data-toggle="tab" href="#menu2">被1人关注</a></li>
+                  <li class="active"><a data-toggle="tab" href="#picturePage"><span th:text="${albumDTO.pictureNumber}"></span>收藏</a></li>
+                  <li th:if="${albumDTO!=null}"><a data-toggle="tab" href="#menu2">被<span th:text="${albumDTO.focusNumber}"></span>人关注</a></li>
               </ul>
          </div>  
     </div>
@@ -384,8 +652,8 @@
         <div class="container">
             <div class="row" style="position:relative"> 
 
-                <div id="outerBorder">  
-            		<a data-toggle="modal" data-target="#uploadPictureModal">   
+                <div id="outerBorder" th:style="${albumDTO.isMyAlbum}==1?'height:126px':'height:5px'">  
+            		<a data-toggle="modal" data-target="#uploadPictureModal" th:if="${albumDTO.isMyAlbum==1}">   
                   	<div id="innerBorder">
                       	<span class="glyphicon glyphicon-plus"></span>
                       	<p>添加图片</p>
@@ -393,51 +661,73 @@
                 	</a>
             	</div> 
 
-               <div id="box">    
-                   
-                 <div class="uploadPicturePanel" th:each="picture:${pictures.pictureNames}">
-                	<div class="buttonShowAndHide collectPictureButton">      		            		
-							<div class="btn-group">
-						    	<a type="button" class="btn btn-default" >收藏</a>
-						    	<a type="button" class="btn btn-default">
-						    		<span class="glyphicon glyphicon-flash"></span>
-						    	</a>		    
-						</div>
-					   </div>
-					   <div class="buttonShowAndHide likePictureButton">   
-            			<a type="button" class="btn btn-default">
-            				<span class="glyphicon glyphicon-heart"></span>
-            			</a>	
-            		</div> 
-                	<div>
-                		<img class="mainPictureOfPanel" src="" th:data_src="${picture}" style="width:100%;border-radius:5px 5px 0 0;">
-                	</div>
-                	<div style="border-bottom:2px solid #f2f2f2;padding:10px">
-	                	<span >
-	                		【直白摄影】吹风机+落地扇摄影|摄影|产品|Mugostudio - 原创作品 - 站酷 
-	                	</span>
-                	</div>
-                	<div style="border-radius:0 0 5px 5px;display:flex;height:70px">
-                		<div style="align-self:center;margin-left: 15px;">
-                			<img src="" data_src="./../a.jfif" class="img-circle" style="width:34px;height:34px;">
-                		</div>
-                		<div style="align-self:center;margin-left: 15px;padding:0">
-                			<span >卢耿杰收藏到<br>工业设计</span>
-                		</div>
-                	</div>
-                </div> 
-                
-                
-                
-             </div>         
+                 <div id="box">                 
+                     <div class="uploadPicturePanel" th:each="pictureDTO:${pictureDTOs}">
+                        <div class="buttonShowAndHide collectPictureButton">                          
+                            <div class="btn-group">
+                                <a type="button" class="uppcollectionButton btn btn-default btn-danger" th:pictureId="${pictureDTO.pictureId}" th:pictureName="${pictureDTO.pictureName}" th:pictureLabel="${pictureDTO.pictureLabel}" th:pictureDescribe="${pictureDTO.pictureDescribe}"  th:albumName="${pictureDTO.albumName}" th:albumId="${pictureDTO.albumId}">收藏</a>
+                                  <a type="button" class="uppquickCollectionButton btn btn-default btn-danger">
+                                    <span class="glyphicon glyphicon-flash"></span>
+                                  </a>        
+                            </div>
+                         </div>
+                         <div class="buttonShowAndHide likePictureButton"> 
+                         		<a th:if="${pictureDTO.isMine == 1}" type="button" class="editPictureButton btn btn-default"  style="margin-left:-14px">编辑</a>
+                              <a th:if="${pictureDTO.isMine == 0}" type="button" class="likeOrCancelLike btn btn-default" th:pictureId="${pictureDTO.pictureId}">
+                                  <span class="glyphicon glyphicon-heart"  th:classappend="${pictureDTO.isLike==1}?'redHeardClass'"></span>
+                              </a>  
+                        </div> 
+                        <div>
+                             <img class="mainPictureOfPanel" src="" th:data_src="${pictureDTO.pictureName}" th:pictureIdofPanel="${pictureDTO.pictureId}" style="width:100%;border-radius:5px 5px 0 0;">
+                        </div>
+                        <div th:if="${pictureDTO.pictureDescribe!=''||pictureDTO.collectNumber!=0||pictureDTO.likeNumber!=0}" style="padding:10px;color:#a6a6a6;">
+                            <p th:if="${pictureDTO.pictureDescribe!=''}" th:text="${pictureDTO.pictureDescribe}"> 
+                            </p>
+                            <div th:if=${pictureDTO.collectNumber!=0||pictureDTO.likeNumber!=0}>
+                            		<span class="glyphicon glyphicon-retweet" ></span>
+                            		<span th:text="${pictureDTO.collectNumber}"></span>
+                            		<span class="glyphicon glyphicon-heart"></span>
+                            		<span th:text="${pictureDTO.likeNumber}"></span>
+                            </div>
+                        </div>
+                        <div style="border-top:2px solid #f2f2f2;border-radius:0 0 5px 5px;display:flex;height:70px">
+                           <div style="align-self:center;margin-left: 15px;">
+                               <img src="" th:data_src="${pictureDTO.userPicture}" class="userPictureOfPanel img-circle" style="width:34px;height:34px;">
+                           </div>
+                          <div style="align-self:center;margin-left: 15px;padding:0">
+                              <span th:text="${pictureDTO.userName}"></span><span>收藏到<br></span><span th:text="${pictureDTO.albumName}"></span>
+                          </div>
+                        </div>
+                    </div> 
+                 </div>         
 
             </div>
         </div>
     </div>
    
     <div id="menu2" class="tab-pane fade"> 
-         <div class="container" style="width:1230px;min-height:400px ">
-            <div class="row">
+         <div class="container" style="width:1270px;min-height:400px;margin-left:45px">
+            <div class="row" th:if="${userDTOs!=null}">
+            
+            		<div class="userPanel" th:each="userDTO:${userDTOs}">
+            		   <div class="avatar-holder">
+	                       <div class="avatar-container" >
+		                      <div class="avatar">
+			                      <img th:src="${userDTO.userPicture}">
+		                      </div>
+	                        </div>
+                     </div>
+                     <div class="underUserPicture">
+                        <h4><strong th:text="${userDTO.userName}">路过年过节</strong></h4>
+                         <hr style="border:1px solid #ededed;width:100px"/>
+                        <div style="color:#a5a5a5;font-size:15px">                 
+                        	<span th:text="${userDTO.fansNumber}">111</span><span>粉丝</span>&nbsp;
+                           <span th:text="${userDTO.collectionNumber}">111</span><span>收藏</span>
+                        </div>
+                        <button class="focusOnUserButton btn btn-default" type="button" th:text="${userDTO.isFocusOn} == 0?'关注用户':'取消关注'">关注用户</button>
+                     </div>
+            		</div>
+            		
             </div>
          </div>
     </div>
@@ -476,7 +766,7 @@
     </div>
 </div>
 
-<!-- 选择相册模态框 -->
+<!-- 压缩上传中选择相册模态框 -->
 <div class="modal fade" id="selectAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -578,9 +868,102 @@
             </div>
       </div>
 </div>
-  
-    
-    
 
+
+<!-- 收藏图片中选择相册模态框 --> 
+<div class="modal fade" id="cpselectAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">收藏图片</h4>
+            </div>
+            <div class="modal-body">
+             	 <div class="container">
+             	 	<div class="row">
+             	 		<div class="col-md-5">
+             	 			<img id="cpuploadPictureSize" src="">
+             	 			<div id="cpinputPictureData" class="form-group">
+             	 				<br>
+             	 				<textarea id="cppictureDescribeOfAlbum" class="form-control" placeholder="输入描述" ></textarea>
+             	 				<br>
+             	 				<input id="cppictureLabelOfAlbum" type="text" class="form-control" placeholder="输入标签">
+						  	</div>
+             	 		</div>
+             	 		<div class="col-md-7"> 
+             	 			<div id="cpselectAlbumCol" class="row">     	 	
+             	 			<input id="cpsearchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
+             	 			<br>
+             	 			<div id="cpdropDownBar">
+             	 				<ul id="cpalbumUl" class="list-group" th:fragment="albumUl">
+								    <li class="list-group-item"  th:each="albums : ${albums}">
+								    	<span th:text="${albums.albumTitle}" th:albumId="${albums.id}"></span>
+								    	<button class="btn btn-danger cpuploadPictureButton" >收藏</button>
+								    </li>  						       
+								</ul>
+							</div>
+							</div>
+							<div class="row">	
+								<button id="cpcreateAlbumButton" class="btn btn-default">创建相册</button>
+							</div>
+             	 		</div>
+             	 	</div>
+             	 </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+
+ <!--  编辑图片模态框 -->
+  <div class="modal fade" id="editPictureModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">编辑图片</h4>
+            </div>
+            <div class="modal-body">
+                <div id="epmContainer" class="container">
+                    <div class="row">
+                        <div class="col-md-7">
+                             <form id="epmForm" class="form-horizontal" role="form">
+                                  <div class="form-group">
+                                     <label  class="col-sm-2 control-label text-muted" >标签</label>
+                                     <div class="col-sm-10">
+                                          <input id="epmPictureLabel" name="pictureLabel" type="text" class="form-control" placeholder="输入标签">
+                                     </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label text-muted" >描述</label>
+                                  <div class="col-sm-10">
+                                      <textarea id="epmPictureDescribe" name="pictureDescribe" class="form-control" rows="3" placeholder="输入描述"></textarea>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                    <label class="col-sm-2 control-label text-muted">相册</label>
+                                    <div class="col-sm-10">
+                                    <select id="epmAlbumName" name="AlbumName" class="form-control">
+                                        <option th:if="${albums != null}" th:each="albums : ${albums}" th:text="${albums.albumTitle}" th:albumId="${albums.id}"></option>   
+                                    </select> 
+                                  </div>
+                              </div>   
+                           </form>
+                        </div>
+                        <div class="col-md-5">
+                            <img id="epmPicture" src="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p id="epmDelectPictureButton">删除图片</p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="epmEditPictureButton" type="button" class="btn btn-primary btn-danger">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+        
 </body>
 </html>

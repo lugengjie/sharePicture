@@ -85,15 +85,15 @@
     #followPictureButton{margin-top: 10px;width: 99% }
     
     
-    /*选择相册模态框*/
-	#selectAlbumCol{height:314px}
-	#selectAlbumModal .container{width:100%;height: 100%}
-	#selectAlbumModal{margin-top:3%;}
-	#inputPictureData{width:200px;}
-	#createAlbumButton{width:100%;display:none;margin-right:10px}
-	.uploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
-	#albumUl li:hover .uploadPictureButton{display:block;}
-	#uploadPictureSize{width:200px;height:220px}
+    /*在收藏中选择相册模态框*/
+	#cpselectAlbumCol{height:314px}
+	#cpselectAlbumModal .container{width:100%;height: 100%}
+	#cpselectAlbumModal{margin-top:3%;}
+	#cpinputPictureData{width:200px;}
+	#cpcreateAlbumButton{width:100%;display:none;margin-right:10px}
+	.cpuploadPictureButton{float:right;margin-top:-7px;margin-right:-15px;display:none;}
+	#cpalbumUl li:hover .cpuploadPictureButton{display:block;}
+	#cpuploadPictureSize{width:200px;height:220px}
 	
 	 /* 编辑图片css */
 	 #epmContainer{width:650px;margin-left: -10px}
@@ -106,28 +106,28 @@
       $(document).ready(function(){   
     	    /*收藏图片*/
     	    		/*收藏图片的FormDate变量*/
-    	    		var formData;
+    	    		var cpformData;
 		    	  /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
-				  	var albumNuber=$('#albumUl li').length;
-				  	if(albumNuber>6){
-				  		$("#dropDownBar").addClass("row pre-scrollable");
-				  		$('#dropDownBar').css({
+				  	var cpalbumNuber=$('#cpalbumUl li').length;
+				  	if(cpalbumNuber>6){
+				  		$("#cpdropDownBar").addClass("row pre-scrollable");
+				  		$('#cpdropDownBar').css({
 				  			'height':'250px',
 				  			'margin-left':'0px'
 				  		});
 				  	}	
 				  	
 				  	/*在选择相册模态框中，搜索或创建相册*/
-				  	function searchOrBuildAlbum() {
-		    			var searchAlbumName = $("#searchOrBuildAlbum").val();    
+				  	function cpsearchOrBuildAlbum() {
+		    			var searchAlbumName = $("#cpsearchOrBuildAlbum").val();    
 		    			if (searchAlbumName == "") {
-		     			 	$("#albumUl li").show();
-		     			 	$('#createAlbumButton').hide();
+		     			 	$("#cpalbumUl li").show();
+		     			 	$('#cpcreateAlbumButton').hide();
 		    			}
 		    			else
 		    			{
-		    				$('#createAlbumButton').show();
-		      				$("#albumUl li").each(function() {
+		    				$('#cpcreateAlbumButton').show();
+		      				$("#cpalbumUl li").each(function() {
 		            			var albumName = $(this).text();                       
 		            			if (albumName.indexOf(searchAlbumName) != -1) {
 		              				$(this).show();
@@ -139,8 +139,8 @@
 		  			}
 				  	
 				  	/*	在选择相册模态框中，当'搜索或创建相册'有输入时触发事件*/
-					$("#searchOrBuildAlbum").bind('input propertychange',function () {	
-							searchOrBuildAlbum();
+					$("#cpsearchOrBuildAlbum").bind('input propertychange',function () {	
+							cpsearchOrBuildAlbum();
 					});
 				  	
 				  	/* 点击图片上的收藏按钮的触发事件 */
@@ -150,35 +150,35 @@
 				  			var pictureName=$(this).attr('pictureName');
 				  			var pictureDescribe=$(this).attr('pictureDescribe'); 
 				  		   
-				  			formData = new FormData();
-				   		formData.append('pictureName',pictureName);
-				  			formData.append('pictureId',pictureId);
+				  			cpformData = new FormData();
+				   		cpformData.append('pictureName',pictureName);
+				  			cpformData.append('pictureId',pictureId);
 				  			
-				  			$('#uploadPictureSize').attr('src',pictureName);
+				  			$('#cpuploadPictureSize').attr('src',pictureName);
 				  			if(pictureLabel!=null&&pictureLabel!=''){
-				  				$('#pictureLabelOfAlbum').val(pictureLabel);
+				  				$('#cppictureLabelOfAlbum').val(pictureLabel);
 				  			}else{
-				  				$('#pictureLabelOfAlbum').val("");
+				  				$('#cppictureLabelOfAlbum').val("");
 				  			}
 				  			if(pictureDescribe!=null&&pictureDescribe!=''){
-				  				$('#pictureDescribeOfAlbum').val(pictureDescribe);
+				  				$('#cppictureDescribeOfAlbum').val(pictureDescribe);
 				  			}else{
-				  				$('#pictureDescribeOfAlbum').val("");
+				  				$('#cppictureDescribeOfAlbum').val("");
 				  			}
-				  			$('#selectAlbumModal').modal('show');
+				  			$('#cpselectAlbumModal').modal('show');
 	  			
 				  	});
 				  	
 				 /*  点击相册上的收藏按钮的触发事件 */
-				 $(".uploadPictureButton").click(function(){
+				 $(".cpuploadPictureButton").click(function(){
 			        	var albumId=$(this).siblings().attr("albumId");
-			        	formData.append('albumId',albumId);
-			        	formData.append('pictureLabel',$('#pictureLabelOfAlbum').val());
-			        	formData.append('pictureDescribe',$('#pictureDescribeOfAlbum').val());
+			        	cpformData.append('albumId',albumId);
+			        	cpformData.append('pictureLabel',$('#cppictureLabelOfAlbum').val());
+			        	cpformData.append('pictureDescribe',$('#cppictureDescribeOfAlbum').val());
 			        	$.ajax({
 						  url: "/picture/collectPicture",
 						  type: "POST",
-						  data: formData,
+						  data: cpformData,
 						  processData: false,	
 						  contentType: false ,
 						  success: function(data){	
@@ -188,29 +188,30 @@
 				 });
 				  	
 			  
-				 $("#createAlbumButton").click(function(){
-					 	var albumTitle=$("#searchOrBuildAlbum").val();
+				 $("#cpcreateAlbumButton").click(function(){
+					 	var albumTitle=$("#cpsearchOrBuildAlbum").val();
+					 	console.log(albumTitle);
 			  		   var url="/album/addAlbumAtSelectAlbumOfHomePage?albumTitle="+albumTitle;
-			  		   $('#albumUl').load(url,function(){
+			  		   $('#cpalbumUl').load(url,function(){
 			  			 /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
-			  			  	var albumNuber=$('#albumUl li').length;
+			  			  	var albumNuber=$('#cpalbumUl li').length;
 			  			  	if(albumNuber>6){
-			  			  		$("#dropDownBar").addClass("row pre-scrollable");
-			  			  		$('#dropDownBar').css({
+			  			  		$("#cpdropDownBar").addClass("row pre-scrollable");
+			  			  		$('#cpdropDownBar').css({
 			  			  			'height':'250px',
 			  			  			'margin-left':'0px'
 			  			  		});
 			  			  	}
 			  			  /*  点击相册上的收藏按钮的触发事件 */
-						 $(".uploadPictureButton").click(function(){
+						 $(".cpuploadPictureButton").click(function(){
 					        	var albumId=$(this).siblings().attr("albumId");
-					        	formData.append('albumId',albumId);
-					        	formData.append('pictureLabel',$('#pictureLabelOfAlbum').val());
-					        	formData.append('pictureDescribe',$('#pictureDescribeOfAlbum').val());
+					        	cpformData.append('albumId',albumId);
+					        	cpformData.append('pictureLabel',$('#cppictureLabelOfAlbum').val());
+					        	cpformData.append('pictureDescribe',$('#cppictureDescribeOfAlbum').val());
 					        	$.ajax({
 								  url: "/picture/collectPicture",
 								  type: "POST",
-								  data: formData,
+								  data: cpformData,
 								  processData: false,	
 								  contentType: false ,
 								  success: function(data){	
@@ -335,7 +336,7 @@
 			  		 });
 		  		});
     	  	});
-    	  /*编辑相册 */
+    	  /*编辑图片 */
     	  
     	  
     	  
@@ -345,6 +346,7 @@
 	  			 'userPicture':'.userPictureOfPanel',
 	  			 'firstPanelHeight':170
 	  		 });
+	  		/* 懒加载和瀑布流布局插件 */
     	  
           /*轮播模态框*/
           $("#carouselMask").hide();
@@ -378,7 +380,8 @@
                 });
                    
             });
-          });   
+          }); 
+         /*轮播模态框*/
     });
   </script>
 </head>
@@ -486,7 +489,7 @@
                                <img src="" th:data_src="${pictureDTO.userPicture}" class="userPictureOfPanel img-circle" style="width:34px;height:34px;">
                            </div>
                           <div style="align-self:center;margin-left: 15px;padding:0">
-                              <span th:text="${pictureDTO.userName}"></span><span>收藏到<br></span><span th:text="${pictureDTO.albumName}"></span>
+                              <span th:text="${pictureDTO.userName}"></span><span>收藏到<br></span><a th:href="'/picture/showPictureOfAlbum?id='+${pictureDTO.albumId}"><span th:text="${pictureDTO.albumName}"></span></a>
                           </div>
                         </div>
                     </div> 
@@ -564,7 +567,7 @@
   
 
 <!-- 选择相册模态框 --> 
-<div class="modal fade" id="selectAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="cpselectAlbumModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -575,29 +578,29 @@
              	 <div class="container">
              	 	<div class="row">
              	 		<div class="col-md-5">
-             	 			<img id="uploadPictureSize" src="">
-             	 			<div id="inputPictureData" class="form-group">
+             	 			<img id="cpuploadPictureSize" src="">
+             	 			<div id="cpinputPictureData" class="form-group">
              	 				<br>
-             	 				<textarea id="pictureDescribeOfAlbum" class="form-control" placeholder="输入描述" ></textarea>
+             	 				<textarea id="cppictureDescribeOfAlbum" class="form-control" placeholder="输入描述" ></textarea>
              	 				<br>
-             	 				<input id="pictureLabelOfAlbum" type="text" class="form-control" placeholder="输入标签">
+             	 				<input id="cppictureLabelOfAlbum" type="text" class="form-control" placeholder="输入标签">
 						  	</div>
              	 		</div>
              	 		<div class="col-md-7"> 
-             	 			<div id="selectAlbumCol" class="row">     	 	
-             	 			<input id="searchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
+             	 			<div id="cpselectAlbumCol" class="row">     	 	
+             	 			<input id="cpsearchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
              	 			<br>
-             	 			<div id="dropDownBar">
-             	 				<ul id="albumUl" class="list-group" th:fragment="albumUl">
+             	 			<div id="cpdropDownBar">
+             	 				<ul id="cpalbumUl" class="list-group" th:fragment="albumUl">
 								    <li class="list-group-item"  th:each="albums : ${albums}">
 								    	<span th:text="${albums.albumTitle}" th:albumId="${albums.id}"></span>
-								    	<button class="btn btn-danger uploadPictureButton" >收藏</button>
+								    	<button class="btn btn-danger cpuploadPictureButton" >收藏</button>
 								    </li>  						       
 								</ul>
 							</div>
 							</div>
 							<div class="row">	
-								<button id="createAlbumButton" class="btn btn-default">创建相册</button>
+								<button id="cpcreateAlbumButton" class="btn btn-default">创建相册</button>
 							</div>
              	 		</div>
              	 	</div>

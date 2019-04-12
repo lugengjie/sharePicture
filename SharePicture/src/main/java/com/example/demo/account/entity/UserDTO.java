@@ -2,12 +2,24 @@ package com.example.demo.account.entity;
 
 public class UserDTO
 {
+	private Long userId;
 	private String userName;
 	private String userPicture;
 	private int collectionNumber;
 	private int fansNumber;
 	private int albumNumber;
+	//是否已关注 0_否   1_是
+	private int isFocusOn;
 	
+	
+	public Long getUserId()
+	{
+		return userId;
+	}
+	public void setUserId(Long userId)
+	{
+		this.userId = userId;
+	}
 	public String getUserName()
 	{
 		return userName;
@@ -49,10 +61,19 @@ public class UserDTO
 		this.albumNumber = albumNumber;
 	}
 	
+	public int getIsFocusOn()
+	{
+		return isFocusOn;
+	}
+	public void setIsFocusOn(int isFocusOn)
+	{
+		this.isFocusOn = isFocusOn;
+	}
 	@Override
 	public String toString()
 	{
-		return "UserDTO [userName=" + userName + ", userPicture=" + userPicture + ", collectionNumber="
-				+ collectionNumber + ", fansNumber=" + fansNumber + ", albumNumber=" + albumNumber + "]";
-	}
+		return "UserDTO [userId=" + userId + ", userName=" + userName + ", userPicture=" + userPicture
+				+ ", collectionNumber=" + collectionNumber + ", fansNumber=" + fansNumber + ", albumNumber="
+				+ albumNumber + ", isFocusOn=" + isFocusOn + "]";
+	}	
 }

@@ -2,6 +2,8 @@ package com.example.demo.account.service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -15,11 +17,18 @@ import com.example.demo.account.entity.AccountDTO;
 import com.example.demo.account.entity.Check;
 import com.example.demo.account.entity.State;
 import com.example.demo.account.entity.User;
+import com.example.demo.account.entity.UserDTO;
 import com.example.demo.account.repository.CheckRepository;
 import com.example.demo.account.repository.UserRepository;
+import com.example.demo.album.entity.Album;
+import com.example.demo.album.repository.AlbumRepository;
+import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.common.utils.Md5Util;
 import com.example.demo.common.utils.SendEmailUtil;
 import com.example.demo.common.utils.UuidUtil;
+import com.example.demo.personalCenter.entity.Fans;
+import com.example.demo.personalCenter.repository.FansRepository;
+import com.example.demo.picture.repository.PictureRepository;
 
 @Service
 @Transactional
@@ -29,7 +38,14 @@ public class AccountService implements IAccountService
 	private CheckRepository checkRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+    @Autowired
+    private AlbumRepository albumRepository;
+    @Autowired
+    private FocusOnAlbumRepository focusOnAlbumRepository;
+    @Autowired
+    private FansRepository fansRepository;
+    @Autowired
+    private PictureRepository pictureRepository;
 	/**
 	 * 保存用户，将密码转为md5摘要
 	 */
@@ -215,6 +231,53 @@ public class AccountService implements IAccountService
 		String Md5PassWord = Md5Util.getMd5(accountDTO.getPassword());
 		String email = accountDTO.getEmail();
 		userRepository.changePassword(Md5PassWord, email);
+	}
+	
+	/*
+	 * 封装到showPictureOfAlbum的UserDTO
+	 * 1.该用户是否已关注
+	 * 2.用户DTO中不能有自己
+	 *
+	 */
+	public List<UserDTO> findUserDTOByAlbumId(Long userId, Long albumId)
+	{
+		List<UserDTO> userDTOs = null;
+		if(albumId != null && albumId !=0)
+		{
+			Album album = albumRepository.findById(albumId).get();
+			if(album != null)
+			{
+				List<Long> userIds = focusOnAlbumRepository.findFocusOnUserIdsByAlbumId(albumId);
+				if(userIds != null && !userIds.isEmpty())
+				{
+					userDTOs = new ArrayList<UserDTO>();
+					for(Long userIdTemp :userIds)
+					{
+						UserDTO userDTO = new UserDTO();
+						int fansNumber = fansRepository.findFansNumberByUserId(userIdTemp);
+						int findPictureNumber =pictureRepository.findPictureNumberByUserId(userIdTemp);
+						User user = userRepository.findById(userIdTemp).get();
+						userDTO.setUserName(user.getName());
+						userDTO.setUserPicture(user.getUserPicture());
+						userDTO.setFansNumber(fansNumber);
+						userDTO.setCollectionNumber(findPictureNumber);
+						userDTO.setUserId(userIdTemp);
+						Fans fans = fansRepository.findByUserIdAndFansId(userIdTemp, userId);
+						if(fans == null)
+						{
+							userDTO.setIsFocusOn(0);
+						}
+						else
+						{
+							userDTO.setIsFocusOn(1);
+						}
+						userDTOs.add(userDTO);
+					}
+					return userDTOs;
+				}
+			}
+		}
+		return userDTOs;
 	}
 	
 }

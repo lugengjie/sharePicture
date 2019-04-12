@@ -17,7 +17,6 @@ public class Album
 	private String albumDescribe;
 	// 类别
 	private String albumClassification;
-	
 	// 用户Id
 	private Long userId;
 	// 被关注数

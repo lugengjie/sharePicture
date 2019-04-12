@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.account.entity.UserDTO;
+import com.example.demo.account.service.AccountService;
+import com.example.demo.account.service.IAccountService;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.service.AlbumService;
 import com.example.demo.album.service.IAlbumService;
@@ -31,6 +34,8 @@ public class PictureController
 	IAlbumService albumService;
 	@Autowired
 	IPersonalCenterService personalCenterService;
+	@Autowired
+	IAccountService accountService;
 	
 	/**
 	 * 展示相册中已有的图片或添加图片
@@ -43,17 +48,21 @@ public class PictureController
 	@RequestMapping("/showPictureOfAlbum")
     public String showPictureOfAlbum(HttpSession session,AlbumDTO albumDTO,Model model)
 	{
-		albumDTO.setId(1L);
 		Long userId = 1L;
 		Long albumId = albumDTO.getId();
+		/*for(int i=0;i<10;i++) {System.out.println(albumId);}*/
+		
 		List<Long> albumIds = new ArrayList<Long>();
 		if(albumId!=null && albumId!=0) 
 		{
 			albumIds.add(albumId);	
 		}
 		AlbumDTO albumDTOTemp = albumService.findAlbumDtoByUserIdAndAlbumId(userId, albumId);
+		List<UserDTO> userDTOs = accountService.findUserDTOByAlbumId(userId, albumId);
 		List<PictureDTO> pictureDTOs = personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds, userId);
 		List<AlbumDTO> albums = albumService.showAlbum(1L);
+		System.out.println(userDTOs);
+		model.addAttribute("userDTOs",userDTOs);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albumDTO", albumDTOTemp);
 		model.addAttribute("albums", albums);

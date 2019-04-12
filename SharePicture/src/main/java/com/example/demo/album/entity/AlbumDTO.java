@@ -37,6 +37,8 @@ public class AlbumDTO
 	private List<PictureDTO> pictureDTOs = new ArrayList<PictureDTO>();
 	// 图片数
 	private int pictureNumber;
+	//是否已关注 1_是   0_不是
+	private int isFocusOn;
 	
 	
 	public Long getUserId()
@@ -198,6 +200,17 @@ public class AlbumDTO
 		this.pictureNumber = pictureNumber;
 	}
 
+	
+	public int getIsFocusOn()
+	{
+		return isFocusOn;
+	}
+
+	public void setIsFocusOn(int isFocusOn)
+	{
+		this.isFocusOn = isFocusOn;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -206,7 +219,7 @@ public class AlbumDTO
 				+ pictureNames + ", userName=" + userName + ", userPicture=" + userPicture + ", userId=" + userId
 				+ ", pictureIndex=" + pictureIndex + ", mainPictureDescribe=" + mainPictureDescribe + ", isMyAlbum="
 				+ isMyAlbum + ", focusNumber=" + focusNumber + ", pictureDTOs=" + pictureDTOs + ", pictureNumber="
-				+ pictureNumber + "]";
+				+ pictureNumber + ", isFocusOn=" + isFocusOn + "]";
 	}
 
 }

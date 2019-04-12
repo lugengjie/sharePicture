@@ -1,5 +1,7 @@
 package com.example.demo.account.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.account.entity.AccountDTO;
 import com.example.demo.account.entity.Check;
 import com.example.demo.account.entity.User;
+import com.example.demo.account.entity.UserDTO;
 
 public interface IAccountService
 {
@@ -33,5 +36,10 @@ public interface IAccountService
 	public void sendEmailToChangePassword(AccountDTO accountDTO);
 
 	public void changePassword(AccountDTO accountDTO);
+	
+	//封装到showPictureOfAlbum的UserDTO
+	public List<UserDTO> findUserDTOByAlbumId(Long userId, Long albumId);
+	
+	
 
 }

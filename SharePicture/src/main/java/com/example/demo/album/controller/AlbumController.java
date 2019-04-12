@@ -47,7 +47,7 @@ public class AlbumController
 	}
 	
 	/**
-	 * addPicture页面在选择相册模态框中中添加相册
+	 * showPictureOfAlbum页面在选择相册模态框中中添加相册
 	 * @param session
 	 * @param albumDto
 	 * @param model
@@ -60,7 +60,7 @@ public class AlbumController
 		albumService.addAlbum(1L, albumDto);
 		List<AlbumDTO> albums=albumService.showAlbum(1L);
 		model.addAttribute("albums", albums);
-		return "addPicture::albumUl";
+		return "showPictureOfAlbum::albumUl";
 
 	}
 	
@@ -75,6 +75,7 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbumAtSelectAlbumOfHomePage")
 	public String addAlbumAtSelectAlbumOfHomePage(HttpSession session, AlbumDTO albumDto,Model model)
 	{
+		System.out.println(albumDto);
 		albumService.addAlbum(1L, albumDto);
 		List<AlbumDTO> albums=albumService.showAlbum(1L);
 		model.addAttribute("albums", albums);

@@ -19,4 +19,7 @@ public interface FocusOnAlbumRepository extends CrudRepository<FocusOnAlbum, Lon
 	@Query("select f.albumId from FocusOnAlbum f where f.userId=?1")
 	public List<Long> findFocusOnAlbumIdsByUserId(Long userId);
 	
+	@Query("select f.userId from FocusOnAlbum f where f.albumId=?1")
+	public List<Long> findFocusOnUserIdsByAlbumId(Long albumId);
+	
 }

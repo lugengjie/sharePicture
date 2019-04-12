@@ -52,8 +52,8 @@ public class PersonalCenterService implements IPersonalCenterService
 			Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
 			if(fansData == null)
 			{
-				int followNumber = user.getFollowNumber()+1;
-				user.setFollowNumber(followNumber);
+				int fansNumber = user.getFansNumber()+1;
+				user.setFansNumber(fansNumber);
 				userRepository.save(user);
 				fansData = new Fans();
 				fansData.setFansId(fansId);
@@ -74,8 +74,8 @@ public class PersonalCenterService implements IPersonalCenterService
 		Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
 		if(fansData != null)
 		{
-			int followNumber = user.getFollowNumber()-1;
-			user.setFollowNumber(followNumber);
+			int fansNumber = user.getFansNumber()-1;
+			user.setFansNumber(fansNumber);
 			userRepository.save(user);
 			fansRepository.delete(fansData);
 		}

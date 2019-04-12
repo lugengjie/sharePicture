@@ -18,7 +18,7 @@ public class User
 	private String name;
 	private String password;
 	private String userPicture;
-	private int followNumber = 0;
+	private int fansNumber = 0;
 	// 是否账号是否已经激活
 	private State state = State.NO;
 	
@@ -89,20 +89,20 @@ public class User
 	}
 	
 	
-	public int getFollowNumber()
+	public int getFansNumber()
 	{
-		return followNumber;
+		return fansNumber;
 	}
 
-	public void setFollowNumber(int followNumber)
+	public void setFansNumber(int fansNumber)
 	{
-		this.followNumber = followNumber;
+		this.fansNumber = fansNumber;
 	}
 
 	@Override
 	public String toString()
 	{
 		return "User [id=" + id + ", email=" + email + ", name=" + name + ", password=" + password + ", userPicture="
-				+ userPicture + ", followNumber=" + followNumber + ", state=" + state + "]";
+				+ userPicture + ", fansNumber=" + fansNumber + ", state=" + state + "]";
 	}
 }

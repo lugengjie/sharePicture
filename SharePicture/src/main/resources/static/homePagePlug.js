@@ -29,6 +29,12 @@
 	  widthArray.push(0);
 	  heightArray.push(firstPanelHeight);
 	  var boxColum=parseInt(pageWidth / (imageWidth + gap));
+	  
+	  if(firstPanelHeight<10){
+		  heightArray=[];
+		  widthArray=[];
+	  }
+	  
 	  this.children().each(function(){
 		    $(this).hide();
 	  });
@@ -78,20 +84,35 @@
             }
           }
       }
-
+      
       /* 瀑布流布局*/
       function waterFall(images,imageWidth,boxColum,gap,heightArray,widthArray){   
-        if(index<boxColum-1){     
-          images[index].style.top = 0;
-		  images[index].style.left = (imageWidth+gap)*(index+1)+'px';
-		  widthArray.push((imageWidth+gap)*(index+1));
-		  heightArray.push($(images[index]).height());
+        if(firstPanelHeight>10){
+        	if(index<boxColum-1){     
+                images[index].style.top = 0;
+      		  images[index].style.left = (imageWidth+gap)*(index+1)+'px';
+      		  widthArray.push((imageWidth+gap)*(index+1));
+      		  heightArray.push($(images[index]).height());
+              }else{
+              	var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));
+      			images[index].style.top = heightArray[minHeightIndex]+gap+'px';
+      			images[index].style.left = widthArray[minHeightIndex]+'px';
+      			heightArray[minHeightIndex] = heightArray[minHeightIndex]+$(images[index]).height()+gap;
+              }
         }else{
-        	var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));
-			images[index].style.top = heightArray[minHeightIndex]+gap+'px';
-			images[index].style.left = widthArray[minHeightIndex]+'px';
-			heightArray[minHeightIndex] = heightArray[minHeightIndex]+$(images[index]).height()+gap;
+        	if(index<boxColum){     
+              images[index].style.top = 0;
+      		  images[index].style.left = (imageWidth+gap)*(index)+'px';
+      		  widthArray.push((imageWidth+gap)*(index));
+      		  heightArray.push($(images[index]).height());
+              }else{
+              	var minHeightIndex = heightArray.indexOf(Math.min.apply(null,heightArray));
+      			images[index].style.top = heightArray[minHeightIndex]+gap+'px';
+      			images[index].style.left = widthArray[minHeightIndex]+'px';
+      			heightArray[minHeightIndex] = heightArray[minHeightIndex]+$(images[index]).height()+gap;
+              }
         }
+        
         $(images[index]).show();
        
     }
