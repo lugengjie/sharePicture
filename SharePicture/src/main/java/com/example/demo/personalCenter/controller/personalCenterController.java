@@ -24,6 +24,18 @@ public class personalCenterController
 	@Autowired
 	IAlbumService albumService;
 	
+	@RequestMapping(value="/personalCenterOfAlbum")
+	public String toPersonalCenterOfAlbum(HttpSession session,Long userId, Model model)
+	{
+		Long myUserId = 1L;
+		userId = 1L;
+		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId, userId);
+		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		model.addAttribute("albums", albums);
+		model.addAttribute("userDTO", userDTO);
+		return "personalCenterOfAlbum";
+	}
+	
 	/**
 	 * 跳转到homePage
 	 * @param session

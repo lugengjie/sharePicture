@@ -72,8 +72,10 @@ public class AlbumService implements IAlbumService
 	 * 1.根据usrId查询相册，反转List，使最新的在前面
 	 * 2.循环，根据albumId查询图片名，反转List，使最新的在前面
 	 * 3.将结果封装到DTO中
+	 * 4.判断是否是自己的相册
+	 * 5.判断是否已关注该相册
 	 */
-	public List<AlbumDTO> showAlbumAndCoverPicture(Long userId)
+	public List<AlbumDTO> showAlbumAndCoverPicture(Long myUserId, Long userId)
 	{
 		List<Album> albums=albumRepository.findAlbumsByUserId(userId);
 		if(albums != null && !albums.isEmpty()) 
@@ -84,6 +86,25 @@ public class AlbumService implements IAlbumService
 			{
 				AlbumDTO albumDto=new AlbumDTO();
 				BeanUtils.copyProperties(album, albumDto);
+				//判断是否是自己的相册
+				if(userId != myUserId)
+				{
+					albumDto.setIsMyAlbum(0);
+				}
+				else
+				{
+					albumDto.setIsMyAlbum(1);
+				}
+				//判断是否已关注该相册
+				FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(album.getId(), myUserId);
+				if(focusOnAlbum == null)
+				{
+					albumDto.setIsFocusOn(0);
+				}
+				else
+				{
+					albumDto.setIsFocusOn(1);
+				}
 				List<Picture> pictures=pictureRepository.findPictureByAlbumId(album.getId());
 				albumDto.setCoverPictureName("");
 				for(int i=0;i<3;i++)

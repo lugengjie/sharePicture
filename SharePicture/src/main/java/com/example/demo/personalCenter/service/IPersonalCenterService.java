@@ -21,4 +21,7 @@ public interface IPersonalCenterService
 	
 	//封装发送到HomePage的UserDTO
 	public UserDTO homePageOfUserDTOs(String email);
+	
+	//封装发送到personalCenterOfAlbum的UserDTO
+	public UserDTO personalCenterOfAlbumOfUserDTOs(Long myUserId, Long userId);
 }

@@ -24,5 +24,8 @@ public interface FansRepository extends CrudRepository<Fans, Long>
 	
 	@Query("select count(*) from Fans f where f.userId=?1")
 	public int findFansNumberByUserId(Long userId);
+	
+	@Query("select count(*) from Fans f where f.fansId=?1")
+	public int findFocusOnNumberByUserId(Long fansId);
 
 }

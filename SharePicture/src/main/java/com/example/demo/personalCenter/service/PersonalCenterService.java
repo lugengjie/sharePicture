@@ -40,7 +40,7 @@ public class PersonalCenterService implements IPersonalCenterService
 	/**
 	 * 关注用户:1.将用户的被关注属性+1， 2.就关注关系存入数据库
 	 * 被关注用户不能为空，
-	 * 被关注用户Id和fansId不能样，
+	 * 被关注用户Id和fansId不能一样，
 	 * fans表中不能已有该关注关系
 	 */
 	public void focusOnUser(Long userId, String email)
@@ -174,7 +174,9 @@ public class PersonalCenterService implements IPersonalCenterService
 	}
 	
 	
-	//封装到HomePage的UserDTO
+	/**
+	 * 封装到HomePage的UserDTO
+	 */
 	public UserDTO homePageOfUserDTOs(String email)
 	{
 		User user = userRepository.findByEmial(email);
@@ -191,6 +193,49 @@ public class PersonalCenterService implements IPersonalCenterService
 			userDTO.setFansNumber(fansNumber);
 			userDTO.setUserName(user.getName());
 			userDTO.setUserPicture(user.getUserPicture());
+		}
+		return userDTO;
+	}
+	
+	/**
+	 * 封装发送到personalCenterOfAlbum的UserDTO
+	 */
+	public UserDTO personalCenterOfAlbumOfUserDTOs(Long myUserId, Long userId)
+	{
+		User user = userRepository.findById(userId).get();
+		UserDTO userDTO = null;
+		if(user!=null)
+		{
+			userDTO = new UserDTO();
+			int albumNumber = albumRepository.findAlbumNumberByUserId(userId);
+			int fansNumber = fansRepository.findFansNumberByUserId(userId);
+			int findPictureNumber =pictureRepository.findPictureNumberByUserId(userId);
+			userDTO.setAlbumNumber(albumNumber);
+			userDTO.setCollectionNumber(findPictureNumber);
+			userDTO.setFansNumber(fansNumber);
+			userDTO.setUserName(user.getName());
+			userDTO.setUserPicture(user.getUserPicture());
+			int focusOnNumber = fansRepository.findFocusOnNumberByUserId(userId);
+			userDTO.setFocusOnNumber(focusOnNumber);
+			//判断是否是自己
+			if(myUserId != userId)
+			{
+				userDTO.setIsMyUser(0);
+			}
+			else
+			{
+				userDTO.setIsMyUser(1);
+			}
+			Fans fans = fansRepository.findByUserIdAndFansId(userId, myUserId);
+			//判断是否已关注
+			if(fans != null)
+			{
+				userDTO.setIsFocusOn(1);
+			}
+			else
+			{
+				userDTO.setIsFocusOn(0);
+			}
 		}
 		return userDTO;
 	}

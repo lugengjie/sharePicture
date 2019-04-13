@@ -50,7 +50,7 @@ public class PictureController
 	{
 		Long userId = 1L;
 		Long albumId = albumDTO.getId();
-		/*for(int i=0;i<10;i++) {System.out.println(albumId);}*/
+		for(int i=0;i<10;i++) {System.out.println(albumId);}
 		
 		List<Long> albumIds = new ArrayList<Long>();
 		if(albumId!=null && albumId!=0) 
@@ -61,7 +61,6 @@ public class PictureController
 		List<UserDTO> userDTOs = accountService.findUserDTOByAlbumId(userId, albumId);
 		List<PictureDTO> pictureDTOs = personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds, userId);
 		List<AlbumDTO> albums = albumService.showAlbum(1L);
-		System.out.println(userDTOs);
 		model.addAttribute("userDTOs",userDTOs);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albumDTO", albumDTOTemp);

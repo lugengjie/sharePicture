@@ -13,7 +13,7 @@ public interface IAlbumService
 	//展示相册
 	public List<AlbumDTO> showAlbum(Long userId);
 	//展示相册和封面图片
-	public List<AlbumDTO> showAlbumAndCoverPicture(Long userId);
+	public List<AlbumDTO> showAlbumAndCoverPicture(Long myUserId, Long userId);
 	//修改相册
 	public void changeAlbum(AlbumDTO albumDTO);
 	//删除相册

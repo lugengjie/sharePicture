@@ -24,13 +24,6 @@ public class AlbumController
 	@Autowired
 	IAlbumService albumService;
 	
-	@RequestMapping(value="/personal")
-	public String toPersonalCenter(HttpSession session,Model model)
-	{
-		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
-		model.addAttribute("albums", albums);
-		return "personalCenter";
-	}
 	
 	/**
 	 * 添加相册
@@ -93,8 +86,9 @@ public class AlbumController
 	@RequestMapping(value = "/changeAlbum")
 	public String changeAlbum(AlbumDTO albumDTO,Model model)
 	{
+		Long myUserId = 1L;
 		albumService.changeAlbum(albumDTO);
-		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
+		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
 		model.addAttribute("albums", albums);
 		return "personalCenter";
 	}
@@ -108,8 +102,9 @@ public class AlbumController
 	@RequestMapping(value = "/deleteAlbum")
 	public String deleteAlbum(AlbumDTO albumDTO,Model model)
 	{
+		Long myUserId = 1L;
 		albumService.deleteAlbum(albumDTO.getId());
-		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(1L);
+		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
 		model.addAttribute("albums", albums);
 		return "personalCenter";
 	}

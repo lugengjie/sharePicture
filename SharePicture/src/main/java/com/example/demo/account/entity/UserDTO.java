@@ -6,10 +6,12 @@ public class UserDTO
 	private String userName;
 	private String userPicture;
 	private int collectionNumber;
+	private int focusOnNumber;
 	private int fansNumber;
 	private int albumNumber;
 	//是否已关注 0_否   1_是
 	private int isFocusOn;
+	private int isMyUser;
 	
 	
 	public Long getUserId()
@@ -69,11 +71,30 @@ public class UserDTO
 	{
 		this.isFocusOn = isFocusOn;
 	}
+	
+	
+	public int getIsMyUser()
+	{
+		return isMyUser;
+	}
+	public void setIsMyUser(int isMyUser)
+	{
+		this.isMyUser = isMyUser;
+	}
+	public int getFocusOnNumber()
+	{
+		return focusOnNumber;
+	}
+	public void setFocusOnNumber(int focusOnNumber)
+	{
+		this.focusOnNumber = focusOnNumber;
+	}
 	@Override
 	public String toString()
 	{
 		return "UserDTO [userId=" + userId + ", userName=" + userName + ", userPicture=" + userPicture
-				+ ", collectionNumber=" + collectionNumber + ", fansNumber=" + fansNumber + ", albumNumber="
-				+ albumNumber + ", isFocusOn=" + isFocusOn + "]";
-	}	
+				+ ", collectionNumber=" + collectionNumber + ", focusOnNumber=" + focusOnNumber + ", fansNumber="
+				+ fansNumber + ", albumNumber=" + albumNumber + ", isFocusOn=" + isFocusOn + ", isMyUser=" + isMyUser
+				+ "]";
+	}
 }

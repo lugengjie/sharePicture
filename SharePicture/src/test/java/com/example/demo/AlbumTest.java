@@ -52,7 +52,7 @@ public class AlbumTest
 		albumService.showAlbum(1L);
 	}
 	
-	@Test
+	/*@Test
 	public void showAlbumAndCoverPictureTest()
 	{
 		List<AlbumDTO> albumDtos=albumService.showAlbumAndCoverPicture(1L);
@@ -60,7 +60,7 @@ public class AlbumTest
 		{
 			System.out.println(albumDTO);
 		}
-	}
+	}*/
 	
 	@Test
 	public void changeAlbum() 
