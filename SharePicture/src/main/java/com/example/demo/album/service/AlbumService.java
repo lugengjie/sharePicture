@@ -87,7 +87,7 @@ public class AlbumService implements IAlbumService
 				AlbumDTO albumDto=new AlbumDTO();
 				BeanUtils.copyProperties(album, albumDto);
 				//判断是否是自己的相册
-				if(userId != myUserId)
+				if(!userId.equals(myUserId))
 				{
 					albumDto.setIsMyAlbum(0);
 				}
@@ -217,7 +217,7 @@ public class AlbumService implements IAlbumService
 				Long userIdTemp = album.getUserId();
 				User user = userRepository.findById(userIdTemp).get();
 				//判断是否是用户的相册
-				if(user.getId()!=userId)
+				if(!user.getId().equals(userId))
 				{
 					albumDTO.setIsMyAlbum(0);
 				}

@@ -489,7 +489,9 @@
                                <img src="" th:data_src="${pictureDTO.userPicture}" class="userPictureOfPanel img-circle" style="width:34px;height:34px;">
                            </div>
                           <div style="align-self:center;margin-left: 15px;padding:0">
-                              <span th:text="${pictureDTO.userName}"></span><span>收藏到<br></span><a th:href="'/picture/showPictureOfAlbum?id='+${pictureDTO.albumId}"><span th:text="${pictureDTO.albumName}"></span></a>
+                              <a th:href="'/personalCenter/personalCenterOfAlbum?userId='+${pictureDTO.userId}"><span th:text="${pictureDTO.userName}"></span></a>
+                              <span>收藏到<br></span>
+                              <a th:href="'/picture/showPictureOfAlbum?id='+${pictureDTO.albumId}"><span th:text="${pictureDTO.albumName}"></span></a>
                           </div>
                         </div>
                     </div> 
@@ -591,7 +593,7 @@
              	 			<input id="cpsearchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
              	 			<br>
              	 			<div id="cpdropDownBar">
-             	 				<ul id="cpalbumUl" class="list-group" th:fragment="albumUl">
+             	 				<ul id="cpalbumUl" class="list-group" th:fragment="cpalbumUl">
 								    <li class="list-group-item"  th:each="albums : ${albums}">
 								    	<span th:text="${albums.albumTitle}" th:albumId="${albums.id}"></span>
 								    	<button class="btn btn-danger cpuploadPictureButton" >收藏</button>

@@ -9,7 +9,7 @@
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="./../homePagePlug.js"></script>
   <script src="./../background-blur.min.js"></script>
-    <script src="./../index.js"></script>
+  <script src="./../index.js"></script>
   <style>
     body{background-color:#f5f5f5;}
     /*防止打开模态框时页面抖动*/
@@ -224,8 +224,7 @@
 	  
 		 $("#cpcreateAlbumButton").click(function(){
 			 	var albumTitle=$("#cpsearchOrBuildAlbum").val();
-			 	console.log(albumTitle);
-	  		   var url="/album/addAlbumAtSelectAlbumOfHomePage?albumTitle="+albumTitle;
+	  		   var url="/album/addAlbumAtSelectAlbum2?albumTitle="+albumTitle;
 	  		   $('#cpalbumUl').load(url,function(){
 	  			 /*在选择相册模态框中，当相册个数超过6个时添加下拉条*/
 	  			  	var albumNuber=$('#cpalbumUl li').length;
@@ -895,7 +894,7 @@
              	 			<input id="cpsearchOrBuildAlbum" type="text" class="form-control" placeholder="搜索或创建相册">
              	 			<br>
              	 			<div id="cpdropDownBar">
-             	 				<ul id="cpalbumUl" class="list-group" th:fragment="albumUl">
+             	 				<ul id="cpalbumUl" class="list-group" th:fragment="cpalbumUl">
 								    <li class="list-group-item"  th:each="albums : ${albums}">
 								    	<span th:text="${albums.albumTitle}" th:albumId="${albums.id}"></span>
 								    	<button class="btn btn-danger cpuploadPictureButton" >收藏</button>

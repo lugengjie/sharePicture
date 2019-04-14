@@ -71,7 +71,26 @@
   </style>
   <script type="text/javascript">
       $(document).ready(function(){
-      	   /*上传图片*/
+    	  
+    	    /*点击导航按钮进行跳转*/
+    	    $('#toPersonalCenterOfCollect').click(function(){
+    	       var userId = $(this).attr('userId');
+    	       window.location.href="/personalCenter/personalCenterOfCollect?userId="+userId;
+      	 });
+    	    $('#toPersonalCenterOfAlbum').click(function(){
+     	       var userId = $(this).attr('userId');
+     	       window.location.href="/personalCenter/personalCenterOfAlbum?userId="+userId;
+       	 });
+    	    $('#toPersonalCenterOfLike').click(function(){
+     	       var userId = $(this).attr('userId');
+     	       window.location.href="/personalCenter/personalCenterOfLike?userId="+userId;
+       	 });
+    	    $('#fans').click(function(){
+       	       var userId = $(this).attr('userId');
+       	       window.location.href="/personalCenter/personalCenterOfFans?userId="+userId;
+          });	
+    	    /*点击导航按钮进行跳转*/
+      	 /*上传图片*/
           $("#addAlbumButton").click(function(){ 
 	           var formTemp = $('#addAlbumForm')[0];
 	           var formDataTemp = new FormData(formTemp);
@@ -233,10 +252,10 @@
               </div>
             </div>
             <div  id="fansAndFollow" class="row">
-              <div id="fans" class="col-md-1">
+              <div id="fans" class="col-md-1" th:userId="${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.fansNumber}">4</strong><br>粉丝
               </div>
-              <div id="follow" class="col-md-1">
+              <div id="follow" class="col-md-1" th:userId="${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.focusOnNumber}">4</strong><br>关注
               </div> 
             </div> 
@@ -244,9 +263,9 @@
         </div>
       <div id="navTabPanel" class="panel-footer">
            <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#albumPage">相册</a></li>
-              <li><a data-toggle="tab" href="#menu2">收藏</a></li>
-              <li><a data-toggle="tab" href="#menu3">喜欢</a></li>
+              <li class="active"><a id="toPersonalCenterOfAlbum" data-toggle="tab" href="#albumPage"  th:userId="${userDTO.userId}">相册</a></li>
+              <li><a id="toPersonalCenterOfCollect" data-toggle="tab" href="#albumPage" th:userId="${userDTO.userId}">收藏</a></li>
+              <li><a id="toPersonalCenterOfLike"  data-toggle="tab" href="#albumPage" th:userId="${userDTO.userId}">喜欢</a></li>
           </ul>
       </div>
      </div>
@@ -255,7 +274,7 @@
      <!-- 相册组 -->
     <div class="tab-content">
         <div id="albumPage" class="tab-pane fade in active">  
-            <div class="container">
+            <div class="container" style="min-height:400px;">
             	<div class="row">
 	                <a data-toggle="modal" data-target="#addAlbum" th:if="${userDTO.isMyUser!=0}">
 	                    <div class="myPanel">

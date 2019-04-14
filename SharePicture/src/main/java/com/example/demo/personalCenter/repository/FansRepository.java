@@ -30,5 +30,10 @@ public interface FansRepository extends CrudRepository<Fans, Long>
 	
 	@Query("select distinct p.id,p.pictureDescribe,p.pictureName,p.likeNumber,p.collectNumber,p.pictureLabel,a.id,a.albumTitle,u.id,u.name,u.userPicture from Album a,User u,Picture p where p.id in(?1) and a.userId=u.id and p.albumId=a.id order by p.id desc")
 	public List<Object> findPictureDTOsOfLikeByPictureIds(List<Long> pictureIds);
+	
+	//通过用户id查找粉丝的详细信息
+	@Query("select u.id,u.name,u.userPicture,u.fansNumber from User u,Fans f where u.id=f.fansId and f.userId=?1 order by u.id desc")
+	public List<Object> findUserDTOsOfFansByUserId(Long myUserId);
+	
 
 }

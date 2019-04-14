@@ -47,7 +47,7 @@ public class PersonalCenterService implements IPersonalCenterService
 	{
 		User user = userRepository.findById(userId).get();
 		Long fansId = userRepository.findByEmial(email).getId(); 
-		if (user != null && fansId !=user.getId())
+		if (user != null && !fansId.equals(user.getId()))
 		{
 			Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
 			if(fansData == null)
@@ -107,7 +107,7 @@ public class PersonalCenterService implements IPersonalCenterService
 					pictureDTO.setAlbumName((String)pictureDTOTemp[7]);
 					pictureDTO.setUserId((Long)pictureDTOTemp[8]);
 					pictureDTO.setIsLike(0);
-					if(pictureDTO.getUserId() == userId)
+					if(pictureDTO.getUserId().equals(userId))
 					{
 						//该图片是用户自己的
 						pictureDTO.setIsMine(1);
@@ -217,8 +217,9 @@ public class PersonalCenterService implements IPersonalCenterService
 			userDTO.setUserPicture(user.getUserPicture());
 			int focusOnNumber = fansRepository.findFocusOnNumberByUserId(userId);
 			userDTO.setFocusOnNumber(focusOnNumber);
+			userDTO.setUserId(userId);
 			//判断是否是自己
-			if(myUserId != userId)
+			if(!myUserId.equals(userId))
 			{
 				userDTO.setIsMyUser(0);
 			}
@@ -271,7 +272,7 @@ public class PersonalCenterService implements IPersonalCenterService
 						pictureDTO.setAlbumName((String)pictureDTOTemp[7]);
 						pictureDTO.setUserId((Long)pictureDTOTemp[8]);
 						pictureDTO.setIsLike(0);
-						if(pictureDTO.getUserId() == myUserId)
+						if(pictureDTO.getUserId().equals(myUserId))
 						{
 							//该图片是用户自己的
 							pictureDTO.setIsMine(1);
@@ -325,4 +326,55 @@ public class PersonalCenterService implements IPersonalCenterService
 		}
 		return pictureDTOs;
    }
+  
+   	/**
+   	 * 封装发送到personalCenterOfFans的UserDTOs 
+   	 */
+	public List<UserDTO> personalCenterOfFans(Long myUserId, Long userId)
+	{
+		User user = userRepository.findById(userId).get();
+		List<UserDTO> userDTOs = null;
+		if(user != null)
+		{
+			List<Object> objectTemps = fansRepository.findUserDTOsOfFansByUserId(userId);
+			if(objectTemps != null && !objectTemps.isEmpty())
+			{
+				userDTOs = new ArrayList<UserDTO>();
+				for(Object objectTemp : objectTemps)
+				{
+					Object[] userDTOTemp =(Object[]) objectTemp;
+					UserDTO userDTO = new UserDTO();
+					userDTO.setUserId((Long)userDTOTemp[0]);
+					userDTO.setUserName((String)userDTOTemp[1]);
+					userDTO.setUserPicture((String)userDTOTemp[2]);
+					userDTO.setFansNumber((int)userDTOTemp[3]);
+					int findPictureNumber =pictureRepository.findPictureNumberByUserId(userId);
+					userDTO.setCollectionNumber(findPictureNumber);
+					//判断是否是自己
+					if((myUserId .equals((Long)userDTOTemp[0])))
+					{
+						userDTO.setIsMyUser(1);
+						
+					}
+					else
+					{
+						userDTO.setIsMyUser(0);
+					}
+					Fans fans = fansRepository.findByUserIdAndFansId((Long)userDTOTemp[0], myUserId);
+					//判断是否已关注
+					if(fans != null)
+					{
+						userDTO.setIsFocusOn(1);
+					}
+					else
+					{
+						userDTO.setIsFocusOn(0);
+					}
+					userDTOs.add(userDTO);
+				}
+				
+			}
+		}
+		return userDTOs;
+	}
 }

@@ -256,8 +256,8 @@ public class PictureService implements IPictureService
 	public boolean quickCollectPicture(HttpSession session,PictureDTO pictureDTO)
 	{
 
-		Long albumId =0L;
-		Long userId = 1L;
+		Long albumId = null;
+		Long userId = (Long)session.getAttribute("userId");
 		if(session.getAttribute("albumId")!=null)
 		{
 			albumId =(Long) session.getAttribute("albumId");

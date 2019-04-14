@@ -35,8 +35,9 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbum")
 	public @ResponseBody String addAlbum(HttpSession session, AlbumDTO albumDto,Model model) 
 	{
-		albumService.addAlbum(1L, albumDto);
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		Long albumId = albums.get(0).getId();
 		return albumId+"";
 	}
@@ -51,11 +52,29 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbumAtSelectAlbum")
 	public String addAlbumAtSelectAlbumOfAddPicture(HttpSession session, AlbumDTO albumDto,Model model)
 	{
-		System.out.println(albumDto);
-		albumService.addAlbum(1L, albumDto);
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		model.addAttribute("albums", albums);
 		return "showPictureOfAlbum::albumUl";
+
+	}
+	
+	/**
+	 * showPictureOfAlbum页面在选择相册模态框中中添加相册 2 CP
+	 * @param session
+	 * @param albumDto
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/addAlbumAtSelectAlbum2")
+	public String addAlbumAtSelectAlbumOfAddPicture2(HttpSession session, AlbumDTO albumDto,Model model)
+	{
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
+		model.addAttribute("albums", albums);
+		return "showPictureOfAlbum::cpalbumUl";
 
 	}
 	
@@ -70,9 +89,9 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbumAtSelectAlbumOfPersonalCenterOfLike")
 	public String addAlbumAtSelectAlbumOfPersonalCenterOfLike(HttpSession session, AlbumDTO albumDto,Model model)
 	{
-		System.out.println(albumDto);
-		albumService.addAlbum(1L, albumDto);
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		model.addAttribute("albums", albums);
 		return "personalCenterOfLike::albumUl";
 
@@ -88,9 +107,9 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbumAtSelectAlbumOfPersonalCenterOfCollect")
 	public String addAlbumAtSelectAlbumOfPersonalCenterOfCollect(HttpSession session, AlbumDTO albumDto,Model model)
 	{
-		System.out.println(albumDto);
-		albumService.addAlbum(1L, albumDto);
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		model.addAttribute("albums", albums);
 		return "personalCenterOfCollect::albumUl";
 
@@ -106,11 +125,11 @@ public class AlbumController
 	@RequestMapping(value = "/addAlbumAtSelectAlbumOfHomePage")
 	public String addAlbumAtSelectAlbumOfHomePage(HttpSession session, AlbumDTO albumDto,Model model)
 	{
-		System.out.println(albumDto);
-		albumService.addAlbum(1L, albumDto);
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		model.addAttribute("albums", albums);
-		return "homePage::albumUl";
+		return "homePage::cpalbumUl";
 
 	}
 	
@@ -140,7 +159,6 @@ public class AlbumController
 	@RequestMapping(value = "/deleteAlbum")
 	public @ResponseBody String deleteAlbum(AlbumDTO albumDTO,Model model)
 	{
-		Long myUserId = 1L;
 		albumService.deleteAlbum(albumDTO.getId());
 		/*List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
 		model.addAttribute("albums", albums);*/

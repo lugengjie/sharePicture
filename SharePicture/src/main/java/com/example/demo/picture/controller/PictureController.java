@@ -48,10 +48,8 @@ public class PictureController
 	@RequestMapping("/showPictureOfAlbum")
     public String showPictureOfAlbum(HttpSession session,AlbumDTO albumDTO,Model model)
 	{
-		Long userId = 1L;
+		Long userId = (Long)session.getAttribute("userId");
 		Long albumId = albumDTO.getId();
-		for(int i=0;i<10;i++) {System.out.println(albumId);}
-		
 		List<Long> albumIds = new ArrayList<Long>();
 		if(albumId!=null && albumId!=0) 
 		{
@@ -60,7 +58,7 @@ public class PictureController
 		AlbumDTO albumDTOTemp = albumService.findAlbumDtoByUserIdAndAlbumId(userId, albumId);
 		List<UserDTO> userDTOs = accountService.findUserDTOByAlbumId(userId, albumId);
 		List<PictureDTO> pictureDTOs = personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds, userId);
-		List<AlbumDTO> albums = albumService.showAlbum(1L);
+		List<AlbumDTO> albums = albumService.showAlbum(userId);
 		model.addAttribute("userDTOs",userDTOs);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albumDTO", albumDTOTemp);
@@ -99,7 +97,6 @@ public class PictureController
 	public String pictureCarousel(PictureDTO picture ,Model model)
 	{
 		AlbumDTO album=pictureService.pictureCarousel(picture.getPictureId());
-		System.out.println(album);
 		model.addAttribute("littleAlbum", album);
 		return "homePage::carouselMask";
 	}
@@ -110,7 +107,7 @@ public class PictureController
 	@RequestMapping("/collectPicture")
 	public @ResponseBody String collectPicture(HttpSession session,PictureDTO pictureDTO)
 	{
-		String email = "xueyuancpt@163.com";
+		String email = (String)session.getAttribute("email");
 		if(pictureService.collectPicture(session, pictureDTO, email)) {
 			return "收藏图片成功";
 		}
@@ -136,7 +133,7 @@ public class PictureController
 	@RequestMapping("/likePicture")
 	public @ResponseBody String likePicture(HttpSession session,PictureDTO pictureDTO)
 	{
-		String email = "xueyuancpt@163.com";
+		String email = (String)session.getAttribute("email");
 		Long pictureId = pictureDTO.getPictureId();
 		if(pictureId != null && pictureId != 0) 
 		{
@@ -154,8 +151,7 @@ public class PictureController
 	@RequestMapping("/cancelLikePicture")
 	public @ResponseBody String cancelLikePicture(HttpSession session,PictureDTO pictureDTO)
 	{
-		System.out.println(pictureDTO);
-		String email = "xueyuancpt@163.com";
+		String email = (String)session.getAttribute("email");
 		Long pictureId = pictureDTO.getPictureId();
 		if(pictureId != null && pictureId != 0) 
 		{
@@ -177,7 +173,7 @@ public class PictureController
 	public @ResponseBody String editPicture(HttpSession session, PictureDTO pictureDTO)
 	{
 		
-		Long userId =1L;
+		Long userId = (Long)session.getAttribute("userId");
 		if(pictureService.editPicture(userId, pictureDTO))
 		{
 			return "编辑图片成功";
@@ -194,7 +190,7 @@ public class PictureController
 	@RequestMapping("/deletePicture")
 	public @ResponseBody String deletePicture(HttpSession session, PictureDTO pictureDTO)
 	{
-		Long userId =1L;
+		Long userId = (Long)session.getAttribute("userId");
 		if(pictureService.deletePicture(userId, pictureDTO))
 		{
 			return "删除图片成功";

@@ -30,12 +30,13 @@ public class personalCenterController
 	@RequestMapping(value="/personalCenterOfAlbum")
 	public String toPersonalCenterOfAlbum(HttpSession session,Long userId, Model model)
 	{
-		Long myUserId = 1L;
-		userId = 1L;
+		
+		Long myUserId = (Long) session.getAttribute("userId");
 		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId, userId);
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		model.addAttribute("albums", albums);
 		model.addAttribute("userDTO", userDTO);
+		System.out.println(userDTO);
 		return "personalCenterOfAlbum";
 	}
 	
@@ -46,9 +47,8 @@ public class personalCenterController
 	@RequestMapping(value="/personalCenterOfCollect")
 	public String toPersonalCenterOfCollect(HttpSession session,Long userId, Model model)
 	{
-		Long myUserId = 1L;
-		userId = 1L;
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long myUserId = (Long) session.getAttribute("userId");
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<PictureDTO> pictureDTOs = personalCenterService.personalCenterOfCollect(myUserId, userId);
 		model.addAttribute("pictureDTOs", pictureDTOs);
@@ -64,15 +64,29 @@ public class personalCenterController
 	@RequestMapping(value="personalCenterOfLike")
 	public String toPersonalCenterOfLike(HttpSession session,Long userId, Model model)
 	{
-		Long myUserId = 1L;
-		userId = 1L;
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long myUserId = (Long) session.getAttribute("userId");
+		List<AlbumDTO> albums=albumService.showAlbum(myUserId);
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<PictureDTO> pictureDTOs = personalCenterService.personalCenterOfLike(myUserId, userId);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albums", albums);
 		model.addAttribute("userDTO", userDTO);
 		return "personalCenterOfLike";
+	}
+	
+	
+	/*
+	 * 跳转到PersonalCenterOfFans
+	 */
+	@RequestMapping(value="personalCenterOfFans")
+	public String toPersonalCenterOfFans(HttpSession session,Long userId, Model model)
+	{
+		Long myUserId = (Long) session.getAttribute("userId");
+		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		List<UserDTO> fansDTOs = personalCenterService.personalCenterOfFans(myUserId, userId);
+		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("fansDTOs", fansDTOs);
+		return "personalCenterOfFans";
 	}
 	
 	/**
