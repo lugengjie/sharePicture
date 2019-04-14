@@ -280,4 +280,12 @@ public class AccountService implements IAccountService
 		return userDTOs;
 	}
 	
+	/*
+	 * 根据email查询用户
+	 */
+    public User findUserByEmail(String email)
+    {
+    	return userRepository.findByEmial(email);
+    }
+	
 }

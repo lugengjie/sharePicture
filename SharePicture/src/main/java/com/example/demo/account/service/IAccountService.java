@@ -40,6 +40,9 @@ public interface IAccountService
 	//封装到showPictureOfAlbum的UserDTO
 	public List<UserDTO> findUserDTOByAlbumId(Long userId, Long albumId);
 	
+	//根据email查询用户
+	public User findUserByEmail(String email);
+	
 	
 
 }

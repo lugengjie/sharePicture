@@ -24,6 +24,9 @@ public class personalCenterController
 	@Autowired
 	IAlbumService albumService;
 	
+	/*
+	 * 跳转到PersonalCenterOfAlbum
+	 */
 	@RequestMapping(value="/personalCenterOfAlbum")
 	public String toPersonalCenterOfAlbum(HttpSession session,Long userId, Model model)
 	{
@@ -36,6 +39,42 @@ public class personalCenterController
 		return "personalCenterOfAlbum";
 	}
 	
+	
+	/*
+	 * 跳转到PersonalCenterOfCollect
+	 */
+	@RequestMapping(value="/personalCenterOfCollect")
+	public String toPersonalCenterOfCollect(HttpSession session,Long userId, Model model)
+	{
+		Long myUserId = 1L;
+		userId = 1L;
+		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		List<PictureDTO> pictureDTOs = personalCenterService.personalCenterOfCollect(myUserId, userId);
+		model.addAttribute("pictureDTOs", pictureDTOs);
+		model.addAttribute("albums", albums);
+		model.addAttribute("userDTO", userDTO);
+		return "personalCenterOfCollect";
+	}
+	
+	
+	/*
+	 * 跳转到PersonalCenterOfLike
+	 */
+	@RequestMapping(value="personalCenterOfLike")
+	public String toPersonalCenterOfLike(HttpSession session,Long userId, Model model)
+	{
+		Long myUserId = 1L;
+		userId = 1L;
+		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		List<PictureDTO> pictureDTOs = personalCenterService.personalCenterOfLike(myUserId, userId);
+		model.addAttribute("pictureDTOs", pictureDTOs);
+		model.addAttribute("albums", albums);
+		model.addAttribute("userDTO", userDTO);
+		return "personalCenterOfLike";
+	}
+	
 	/**
 	 * 跳转到homePage
 	 * @param session
@@ -45,12 +84,16 @@ public class personalCenterController
 	@RequestMapping(value = "/toHomePage")
 	public String toHomePage(HttpSession session, Model model)
 	{
-		List<PictureDTO> pictureDTOs = personalCenterService.homePageOfPictureDTOs("xueyuancpt@163.com");
-		UserDTO userDTO = personalCenterService.homePageOfUserDTOs("xueyuancpt@163.com");
-		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		Long userId =(Long) session.getAttribute("userId");
+		String email =(String)session.getAttribute("email");
+		List<PictureDTO> pictureDTOs = personalCenterService.homePageOfPictureDTOs(email);
+		UserDTO userDTO = personalCenterService.homePageOfUserDTOs(email);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albums", albums);
 		return "homepage";
 	}
+	
+	
 }

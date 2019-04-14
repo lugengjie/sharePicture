@@ -14,16 +14,16 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 public class LoginInterceptor implements HandlerInterceptor
 {
-//	@Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        // 检查每个到来的请求对应的session域中是否有登录标识
-//        Object isAllowPass = request.getSession().getAttribute("isAllowPass");
-//        if (null != isAllowPass && !((boolean)isAllowPass)) {
-//            // 未登录，重定向到登录页
-//        	return true;  
-//        }
-//        response.sendRedirect("/");
-//        return false;
-//    }
+	@Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 检查每个到来的请求对应的session域中是否有登录标识
+        Object isAllowPass = request.getSession().getAttribute("isAllowPass");
+        if (null != isAllowPass && ((boolean)isAllowPass)) {
+        	return true;  
+        }
+        // 未登录，重定向到登录页
+        response.sendRedirect("/");
+        return false;
+    }
 
 }

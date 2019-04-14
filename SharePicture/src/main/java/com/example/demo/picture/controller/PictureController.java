@@ -80,7 +80,7 @@ public class PictureController
 		/**
 		 * 临时设AlbumId为1L，用session以后恢复
 		 */
-		picture.setAlbumId(1L);
+		/*picture.getAlbumId();*/
 		if(pictureService.uploadPicture(multipartFile, picture))
 		{
 			return "上传图片成功";

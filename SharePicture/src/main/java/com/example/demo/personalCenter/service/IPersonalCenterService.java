@@ -24,4 +24,8 @@ public interface IPersonalCenterService
 	
 	//封装发送到personalCenterOfAlbum的UserDTO
 	public UserDTO personalCenterOfAlbumOfUserDTOs(Long myUserId, Long userId);
+	
+	//封装发送到personalCenterOfLike的PictureDTOs
+	public List<PictureDTO> personalCenterOfLike(Long myUserId, Long userId);
+	
 }

@@ -239,4 +239,90 @@ public class PersonalCenterService implements IPersonalCenterService
 		}
 		return userDTO;
 	}
+	
+	
+   /*
+	 * 封装发送到personalCenterOfLike的PictureDTOs
+	*/
+   public List<PictureDTO> personalCenterOfLike(Long myUserId, Long userId)
+   {
+	    User user = userRepository.findById(userId).get();
+		List<PictureDTO> pictureDTOs = null;
+		if(user != null)
+		{
+			List<Long> pictureIds = likePictureRepository.findLikePictureIdsByUserId(userId);
+			if(pictureIds != null && !pictureIds.isEmpty())
+			{
+				List<Object> objectTemps = fansRepository.findPictureDTOsOfLikeByPictureIds(pictureIds);
+				if(objectTemps!=null && !objectTemps.isEmpty())
+				{
+					pictureDTOs=new ArrayList<PictureDTO>();
+					for(Object objectTemp:objectTemps)
+					{
+						Object[] pictureDTOTemp=(Object[])objectTemp;
+						PictureDTO pictureDTO = new PictureDTO();
+						pictureDTO.setPictureId((Long)pictureDTOTemp[0]);
+						pictureDTO.setPictureDescribe((String)pictureDTOTemp[1]);
+						pictureDTO.setPictureName((String)pictureDTOTemp[2]);
+						pictureDTO.setLikeNumber((int)pictureDTOTemp[3]);
+						pictureDTO.setCollectNumber((int)pictureDTOTemp[4]);
+						pictureDTO.setPictureLabel((String)pictureDTOTemp[5]);
+						pictureDTO.setAlbumId((Long)pictureDTOTemp[6]);
+						pictureDTO.setAlbumName((String)pictureDTOTemp[7]);
+						pictureDTO.setUserId((Long)pictureDTOTemp[8]);
+						pictureDTO.setIsLike(0);
+						if(pictureDTO.getUserId() == myUserId)
+						{
+							//该图片是用户自己的
+							pictureDTO.setIsMine(1);
+						}
+						else
+						{
+							//该图片不是用户自己的
+							pictureDTO.setIsMine(0);
+						}
+						pictureDTO.setUserName((String)pictureDTOTemp[9]);
+						pictureDTO.setUserPicture((String)pictureDTOTemp[10]);
+						pictureDTOs.add(pictureDTO);
+					}
+					
+					//pictureDTO中id在用户喜欢的图片id中，则将改pictureDTO的isLike属性设为1，否则设为0
+					List<Long> likePictureIds = likePictureRepository.findLikePictureIdsByUserId(myUserId);
+					if(likePictureIds !=null && !likePictureIds.isEmpty())
+					{
+						for(PictureDTO pictureDTO : pictureDTOs)
+						{
+							if(likePictureIds.contains(pictureDTO.getPictureId()))
+							{
+								pictureDTO.setIsLike(1);
+							}
+						}
+					}
+					
+				}
+				
+			}
+		}
+		return pictureDTOs;
+    }
+   
+   /*
+	 * 封装发送到personalCenterOfCollect的PictureDTOs
+	*/
+  public List<PictureDTO> personalCenterOfCollect(Long myUserId, Long userId)
+  {
+	    User user = userRepository.findById(userId).get();
+		List<PictureDTO> pictureDTOs = null;
+		if(user != null)
+		{
+			List<Long> albumIds = new ArrayList<Long>();
+			List<Long> albumIdsOfUser = albumRepository.findAlbumIdsByUserId(userId);
+			if(albumIdsOfUser != null && !albumIdsOfUser.isEmpty())
+			{
+				albumIds.addAll(albumIdsOfUser);
+			}
+			pictureDTOs = findPictureDTOsOfUserByAlbumIds(albumIds, myUserId);
+		}
+		return pictureDTOs;
+   }
 }

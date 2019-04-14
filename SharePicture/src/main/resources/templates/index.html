@@ -19,6 +19,7 @@
     #loginModalButton{background-color:rgba(0,0,0,0);color:white;}
 
    /* 搜索框*/
+   #indexOfSearchButton{cursor: pointer;}
    #searchInput{position: absolute;top:42%;left:32.5%;width:35%}
    #searchInputInnerDiv{width:100%;position:relative;}
    #searchInput span{position:absolute;right:10px;font-size:20px;color:#c8c8c8;margin-top:13px}
@@ -83,6 +84,9 @@
 	              type: "POST",
 	              data: $('#loginForm').serialize(),
 	              success:function(data){
+	            	   if(data=='登录成功'){
+	            		   window.location.href='/personalCenter/toHomePage';
+	            	   } 
 	            	   $('#loginModal').modal('hide');
 	                  $("#loginWarnText").text(data);
 	                  $('#loginWarnModal').modal('show');
@@ -141,7 +145,7 @@
     <!-- 搜索框 -->
     <div id="searchInput">
         <div id="searchInputInnerDiv">
-            <span class="glyphicon glyphicon-search"></span>
+            <span id="indexOfSearchButton" class="glyphicon glyphicon-search"></span>
             <input type="text" class="input-lg" placeholder="搜索你喜欢的">
         </div>
     </div>

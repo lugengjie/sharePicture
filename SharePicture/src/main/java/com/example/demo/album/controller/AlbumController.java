@@ -1,6 +1,7 @@
 package com.example.demo.album.controller;
 
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.album.entity.Album;
 import com.example.demo.album.entity.AlbumDTO;
@@ -31,12 +33,12 @@ public class AlbumController
 	 * @param albumDto
 	 */
 	@RequestMapping(value = "/addAlbum")
-	public String addAlbum(HttpSession session, AlbumDTO albumDto,Model model) 
+	public @ResponseBody String addAlbum(HttpSession session, AlbumDTO albumDto,Model model) 
 	{
 		albumService.addAlbum(1L, albumDto);
 		List<AlbumDTO> albums=albumService.showAlbum(1L);
-		model.addAttribute("albums", albums);
-		return "addPicture";
+		Long albumId = albums.get(0).getId();
+		return albumId+"";
 	}
 	
 	/**
@@ -57,6 +59,42 @@ public class AlbumController
 
 	}
 	
+	
+	/**
+	 * personalCenterOfLike页面在选择相册模态框中中添加相册
+	 * @param session
+	 * @param albumDto
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/addAlbumAtSelectAlbumOfPersonalCenterOfLike")
+	public String addAlbumAtSelectAlbumOfPersonalCenterOfLike(HttpSession session, AlbumDTO albumDto,Model model)
+	{
+		System.out.println(albumDto);
+		albumService.addAlbum(1L, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		model.addAttribute("albums", albums);
+		return "personalCenterOfLike::albumUl";
+
+	}
+	
+	/**
+	 * personalCenterOfCollect页面在选择相册模态框中中添加相册
+	 * @param session
+	 * @param albumDto
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/addAlbumAtSelectAlbumOfPersonalCenterOfCollect")
+	public String addAlbumAtSelectAlbumOfPersonalCenterOfCollect(HttpSession session, AlbumDTO albumDto,Model model)
+	{
+		System.out.println(albumDto);
+		albumService.addAlbum(1L, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(1L);
+		model.addAttribute("albums", albums);
+		return "personalCenterOfCollect::albumUl";
+
+	}
 	
 	/**
 	 * homePage页面在选择相册模态框中中添加相册
@@ -84,13 +122,13 @@ public class AlbumController
 	 * @return
 	 */
 	@RequestMapping(value = "/changeAlbum")
-	public String changeAlbum(AlbumDTO albumDTO,Model model)
+	public @ResponseBody String changeAlbum(AlbumDTO albumDTO,Model model)
 	{
 		Long myUserId = 1L;
 		albumService.changeAlbum(albumDTO);
-		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
-		model.addAttribute("albums", albums);
-		return "personalCenter";
+		/*List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
+		model.addAttribute("albums", albums);*/
+		return "修改相册成功";
 	}
 	
 	/**
@@ -100,12 +138,12 @@ public class AlbumController
 	 * @return
 	 */
 	@RequestMapping(value = "/deleteAlbum")
-	public String deleteAlbum(AlbumDTO albumDTO,Model model)
+	public @ResponseBody String deleteAlbum(AlbumDTO albumDTO,Model model)
 	{
 		Long myUserId = 1L;
 		albumService.deleteAlbum(albumDTO.getId());
-		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
-		model.addAttribute("albums", albums);
-		return "personalCenter";
+		/*List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
+		model.addAttribute("albums", albums);*/
+		return "删除相册成功";
 	}
 }

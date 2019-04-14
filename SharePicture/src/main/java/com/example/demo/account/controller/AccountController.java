@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.account.entity.AccountDTO;
+import com.example.demo.account.entity.User;
 import com.example.demo.account.service.AccountService;
 
 @Controller
@@ -77,7 +78,10 @@ public class AccountController
 			{
 				if (accountService.passwordIsRight(accountDTO))
 				{
+					User user = accountService.findUserByEmail(email);
 					session.setAttribute("isAllowPass", true);
+					session.setAttribute("userId", user.getId());
+					session.setAttribute("email", email);
 					return "登录成功";
 				} 
 				else
