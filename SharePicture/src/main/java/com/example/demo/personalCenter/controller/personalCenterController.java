@@ -61,7 +61,7 @@ public class personalCenterController
 	/*
 	 * 跳转到PersonalCenterOfLike
 	 */
-	@RequestMapping(value="personalCenterOfLike")
+	@RequestMapping(value="/personalCenterOfLike")
 	public String toPersonalCenterOfLike(HttpSession session,Long userId, Model model)
 	{
 		Long myUserId = (Long) session.getAttribute("userId");
@@ -78,7 +78,7 @@ public class personalCenterController
 	/*
 	 * 跳转到PersonalCenterOfFans
 	 */
-	@RequestMapping(value="personalCenterOfFans")
+	@RequestMapping(value="/personalCenterOfFans")
 	public String toPersonalCenterOfFans(HttpSession session,Long userId, Model model)
 	{
 		Long myUserId = (Long) session.getAttribute("userId");
@@ -87,6 +87,22 @@ public class personalCenterController
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("fansDTOs", fansDTOs);
 		return "personalCenterOfFans";
+	}
+	
+	/*
+	 * 跳转到PersonalCenterOfFans
+	 */
+	@RequestMapping(value="/personalCenterOfFocusOn")
+	public String toPersonalCenterOfFocusOn(HttpSession session,Long userId, Model model)
+	{
+		Long myUserId = (Long) session.getAttribute("userId");
+		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		List<UserDTO> focusOnDTOs = personalCenterService.personalCenterOfFocusOnOfUserDTOs(myUserId, userId);
+		List<AlbumDTO> albumDTOs = personalCenterService.personalCenterOfFocusOnOfAlbumDTOs(myUserId, myUserId);
+		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("focusOnDTOs", focusOnDTOs);
+		model.addAttribute("albumDTOs", albumDTOs);
+		return "personalCenterOfFocusOn";
 	}
 	
 	/**

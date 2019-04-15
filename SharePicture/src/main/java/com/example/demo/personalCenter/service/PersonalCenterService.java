@@ -12,10 +12,13 @@ import org.springframework.stereotype.Service;
 import com.example.demo.account.entity.User;
 import com.example.demo.account.entity.UserDTO;
 import com.example.demo.account.repository.UserRepository;
+import com.example.demo.album.entity.AlbumDTO;
+import com.example.demo.album.entity.FocusOnAlbum;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.personalCenter.entity.Fans;
 import com.example.demo.personalCenter.repository.FansRepository;
+import com.example.demo.picture.entity.Picture;
 import com.example.demo.picture.entity.PictureDTO;
 import com.example.demo.picture.repository.LikePictureRepository;
 import com.example.demo.picture.repository.PictureRepository;
@@ -347,8 +350,9 @@ public class PersonalCenterService implements IPersonalCenterService
 					userDTO.setUserId((Long)userDTOTemp[0]);
 					userDTO.setUserName((String)userDTOTemp[1]);
 					userDTO.setUserPicture((String)userDTOTemp[2]);
-					userDTO.setFansNumber((int)userDTOTemp[3]);
-					int findPictureNumber =pictureRepository.findPictureNumberByUserId(userId);
+					int fansNumber = fansRepository.findFansNumberByUserId((Long)userDTOTemp[0]);
+					userDTO.setFansNumber(fansNumber);
+					int findPictureNumber =pictureRepository.findPictureNumberByUserId((Long)userDTOTemp[0]);
 					userDTO.setCollectionNumber(findPictureNumber);
 					//判断是否是自己
 					if((myUserId .equals((Long)userDTOTemp[0])))
@@ -377,4 +381,128 @@ public class PersonalCenterService implements IPersonalCenterService
 		}
 		return userDTOs;
 	}
+	
+	/**
+	 * 封装发送到personalCenterOfFocusOn的UserDTOs
+	 */
+	public List<UserDTO> personalCenterOfFocusOnOfUserDTOs(Long myUserId, Long userId)
+	{
+		User user = userRepository.findById(userId).get();
+		List<UserDTO> userDTOs = null;
+		if(user != null)
+		{
+			List<Object> objectTemps = fansRepository.findUserDTOsOfUsersByFansId(userId);
+			if(objectTemps != null && !objectTemps.isEmpty())
+			{
+				userDTOs = new ArrayList<UserDTO>();
+				for(Object objectTemp : objectTemps)
+				{
+					Object[] userDTOTemp =(Object[]) objectTemp;
+					UserDTO userDTO = new UserDTO();
+					userDTO.setUserId((Long)userDTOTemp[0]);
+					userDTO.setUserName((String)userDTOTemp[1]);
+					userDTO.setUserPicture((String)userDTOTemp[2]);
+					int fansNumber = fansRepository.findFansNumberByUserId((Long)userDTOTemp[0]);
+					userDTO.setFansNumber(fansNumber);
+					int findPictureNumber =pictureRepository.findPictureNumberByUserId((Long)userDTOTemp[0]);
+					userDTO.setCollectionNumber(findPictureNumber);
+					//判断是否是自己
+					if((myUserId .equals((Long)userDTOTemp[0])))
+					{
+						userDTO.setIsMyUser(1);
+						
+					}
+					else
+					{
+						userDTO.setIsMyUser(0);
+					}
+					Fans fans = fansRepository.findByUserIdAndFansId((Long)userDTOTemp[0], myUserId);
+					//判断是否已关注
+					if(fans != null)
+					{
+						userDTO.setIsFocusOn(1);
+					}
+					else
+					{
+						userDTO.setIsFocusOn(0);
+					}
+					userDTOs.add(userDTO);
+				}
+				
+			}
+		}
+		return userDTOs;
+	}
+	
+	/**
+	 * 封装发送到personalCenterOfFocusOn的AlbumDTOs
+	 */
+	public List<AlbumDTO> personalCenterOfFocusOnOfAlbumDTOs(Long myUserId, Long userId)
+	{
+		 List<Long> albumIds = focusOnAlbumRepository.findFocusOnAlbumIdsByUserId(userId);
+		 List<AlbumDTO> albumDTOs = null;
+		 if(albumIds != null && !albumIds.isEmpty())
+		 {
+			 List<Object> objectTemps = albumRepository.findAlbumDTOByAlbumIds(albumIds);
+			 if(objectTemps != null && !objectTemps.isEmpty())
+			 {
+				 albumDTOs = new ArrayList<AlbumDTO>();
+				 for(Object objectTemp : objectTemps)
+				 {
+					 Object[] userDTOTemp =(Object[]) objectTemp;
+					 AlbumDTO albumDTO = new AlbumDTO();
+					 albumDTO.setId((Long)userDTOTemp[0]);
+					 albumDTO.setAlbumTitle((String)userDTOTemp[1]);
+					 albumDTO.setAlbumDescribe((String)userDTOTemp[2]);
+					 albumDTO.setUserId((Long)userDTOTemp[3]);
+					 albumDTO.setUserName((String)userDTOTemp[4]);
+					 albumDTO.setCoverPictureName((String)userDTOTemp[5]);
+					//判断是否是自己的相册
+					if(!((Long)userDTOTemp[3]).equals(myUserId))
+					{
+						albumDTO.setIsMyAlbum(0);
+					}
+					else
+					{
+						albumDTO.setIsMyAlbum(1);
+					}
+					//判断是否已关注该相册
+					FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId((Long)userDTOTemp[0], myUserId);
+					if(focusOnAlbum == null)
+					{
+						albumDTO.setIsFocusOn(0);
+					}
+					else
+					{
+						albumDTO.setIsFocusOn(1);
+					}
+					List<Picture> pictures=pictureRepository.findPictureByAlbumId((Long)userDTOTemp[0]);
+					albumDTO.setCoverPictureName("");
+					for(int i=0;i<3;i++)
+					{
+						albumDTO.getPictureNames().add("");
+					}
+					if(pictures != null && !pictures.isEmpty()) 
+					{
+						//将图片List的最后一张图片作为相册的封面
+						String coverPictureName=pictures.get(pictures.size()-1).getPictureName();
+						albumDTO.setCoverPictureName(coverPictureName);
+						int j=0;
+						for(int i=pictures.size()-2;i>=0;i--)
+						{
+							String pictureName=pictures.get(i).getPictureName();
+							albumDTO.getPictureNames().set(j++,pictureName);
+							if(j>2)
+							{
+								break;
+							}
+						}
+					}
+					albumDTOs.add(albumDTO);	 	 
+				 }
+			 }
+		 }
+		 return albumDTOs;
+	}
+	
 }

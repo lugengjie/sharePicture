@@ -80,17 +80,17 @@ public class AlbumTest
 		albumService.changeAlbum(albumDTO);
 	}
 
-	@Test
+	/*@Test
 	public void focusOnAlbumTest()
 	{
 		albumService.focusOnAlbum(74L, "1923808485@qq.com");
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	public void cancelFocusOnAlbumFocusOnAlbumTest()
 	{
 		albumService.cancelFocusOnAlbum(74L, "1923808485@qq.com");
-	}
+	}*/
 	
 	
 	@Test

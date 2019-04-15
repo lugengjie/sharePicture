@@ -156,25 +156,34 @@ public class AlbumService implements IAlbumService
 	 * 2.判断关注关系是否已存在
 	 * 3.将相册的被关注数+1
 	 * 4.就关注关系存入数据库
+	 * 5.相册不能为自己的相册
 	 */
-	public void focusOnAlbum(Long albumId, String email)
+	public boolean focusOnAlbum(Long albumId, Long userId)
 	{
 		Album album = albumRepository.findById(albumId).get();
-		Long userId = userRepository.findByEmial(email).getId();
-		if (album != null)
+		Album albumTemp = albumRepository.findAlbumByAlbumIdAndUserId(albumId, userId);
+		if(albumTemp == null)
 		{
-			FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
-			if(focusOnAlbum == null)
+			if(userId != null && userId !=0)
 			{
-				int focusNumber = album.getFocusNumber()+1;
-				album.setFocusNumber(focusNumber);
-				albumRepository.save(album);
-				focusOnAlbum = new FocusOnAlbum();
-				focusOnAlbum.setAlbumId(albumId);
-				focusOnAlbum.setUserId(userId);
-				focusOnAlbumRepository.save(focusOnAlbum);		
+				if (album != null)
+				{
+					FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
+					if(focusOnAlbum == null)
+					{
+						int focusNumber = album.getFocusNumber()+1;
+						album.setFocusNumber(focusNumber);
+						albumRepository.save(album);
+						focusOnAlbum = new FocusOnAlbum();
+						focusOnAlbum.setAlbumId(albumId);
+						focusOnAlbum.setUserId(userId);
+						focusOnAlbumRepository.save(focusOnAlbum);	
+						return true;
+					}
+				}
 			}
-		}	
+		}
+		return false;
 	}
 
 	/**
@@ -184,21 +193,24 @@ public class AlbumService implements IAlbumService
 	 * 3.将相册的被关注数-1
 	 * 4.将关注关系删除
 	 */
-	public void cancelFocusOnAlbum(Long albumId, String email)
+	public boolean cancelFocusOnAlbum(Long albumId, Long userId)
 	{
 		Album album = albumRepository.findById(albumId).get();
-		Long userId = userRepository.findByEmial(email).getId();
-		if (album != null)
+		if(userId != null && userId !=0)
 		{
-			FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
-			if(focusOnAlbum != null)
+			if (album != null)
 			{
-				int focusNumber = album.getFocusNumber()-1;
-				album.setFocusNumber(focusNumber);
-				albumRepository.save(album);
-				focusOnAlbumRepository.delete(focusOnAlbum);	
+				FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
+				if(focusOnAlbum != null)
+				{
+					int focusNumber = album.getFocusNumber()-1;
+					album.setFocusNumber(focusNumber);
+					albumRepository.save(album);
+					focusOnAlbumRepository.delete(focusOnAlbum);	
+				}
 			}
-		}	
+		}
+		return true;
 	}
 	/**
 	 * 封装到showPictureOfAlbum的AlbumDTO

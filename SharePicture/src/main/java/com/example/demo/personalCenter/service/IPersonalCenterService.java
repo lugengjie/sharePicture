@@ -3,6 +3,7 @@ package com.example.demo.personalCenter.service;
 import java.util.List;
 
 import com.example.demo.account.entity.UserDTO;
+import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.picture.entity.PictureDTO;
 
 public interface IPersonalCenterService
@@ -30,5 +31,12 @@ public interface IPersonalCenterService
 	
 	//封装发送到personalCenterOfFans的UserDTOs
 	public List<UserDTO> personalCenterOfFans(Long myUserId, Long userId);
+	
+	//封装发送到personalCenterOfFocusOn的UserDTOs
+	public List<UserDTO> personalCenterOfFocusOnOfUserDTOs(Long myUserId, Long userId);
+	
+	//封装发送到personalCenterOfFocusOn的AlbumDTOs
+	public List<AlbumDTO> personalCenterOfFocusOnOfAlbumDTOs(Long myUserId, Long userId);
+	
 	
 }

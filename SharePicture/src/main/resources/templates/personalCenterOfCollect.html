@@ -32,7 +32,8 @@
 
     /*pictureAndNamePanelCss*/
     #userSetting{cursor: pointer;}
-    #fansAndFollow{cursor: pointer; }
+    #fans{cursor: pointer;}
+    #follow{cursor: pointer;}
     #pictureAndNamePanel{margin-left:4%;margin-right:2%;margin-top:8.5%;width:1246px;}
     #pictureAndNamePanel .container{width:1220px;}
     #userPicture{height:150px;width:140px;margin-top:-60px;margin-left:-10px}
@@ -635,11 +636,15 @@
               </div>
             </div>
             <div  id="fansAndFollow" class="row">
-              <div id="fans" class="col-md-1">
+              <div id="fans" class="col-md-1" th:userId="${userDTO.userId}">
+              	  <a th:href="'/personalCenter/personalCenterOfFans?userId='+${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.fansNumber}">4</strong><br>粉丝
+                 </a>
               </div>
-              <div id="follow" class="col-md-1">
+              <div id="follow" class="col-md-1" th:userId="${userDTO.userId}">
+              	  <a th:href="'/personalCenter/personalCenterOfFocusOn?userId='+${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.focusOnNumber}">4</strong><br>关注
+                 </a>
               </div> 
             </div> 
           </div> 

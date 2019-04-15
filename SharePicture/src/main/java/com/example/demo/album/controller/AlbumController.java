@@ -1,7 +1,5 @@
 package com.example.demo.album.controller;
 
-
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -143,7 +141,7 @@ public class AlbumController
 	@RequestMapping(value = "/changeAlbum")
 	public @ResponseBody String changeAlbum(AlbumDTO albumDTO,Model model)
 	{
-		Long myUserId = 1L;
+		/*Long myUserId = 1L;*/
 		albumService.changeAlbum(albumDTO);
 		/*List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
 		model.addAttribute("albums", albums);*/
@@ -163,5 +161,39 @@ public class AlbumController
 		/*List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId,1L);
 		model.addAttribute("albums", albums);*/
 		return "删除相册成功";
+	}
+	
+	/**
+	 *关注相册
+	 * @param albumDTO
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/foucusOnAlbum")
+	public @ResponseBody String foucusOnAlbum(HttpSession session, Long albumId)
+	{
+		Long myUserId = (Long)session.getAttribute("userId");
+		if(albumService.focusOnAlbum(albumId, myUserId))
+		{
+			return "关注相册成功";
+		}
+		return "关注相册失败";
+	}
+	
+	/**
+	 *关注相册
+	 * @param albumDTO
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/cancelFoucusOnAlbum")
+	public @ResponseBody String cancelFocusOnAlbum(HttpSession session, Long albumId)
+	{
+		Long myUserId = (Long)session.getAttribute("userId");
+		if(albumService.cancelFocusOnAlbum(albumId, myUserId))
+		{
+			return "取消关注相册成功";
+		}
+		return "取消关注相册失败";
 	}
 }

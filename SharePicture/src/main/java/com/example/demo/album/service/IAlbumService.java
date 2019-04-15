@@ -19,9 +19,9 @@ public interface IAlbumService
 	//删除相册
 	public void deleteAlbum(Long albumId);
 	//关注相册
-	public void focusOnAlbum(Long albumId, String email);
+	public boolean focusOnAlbum(Long albumId, Long userId);
 	//取消关注相册
-	public void cancelFocusOnAlbum(Long albumId, String email);
+	public boolean cancelFocusOnAlbum(Long albumId, Long userId);
 	//封装到showPictureOfAlbum的DTO
 	public AlbumDTO findAlbumDtoByUserIdAndAlbumId(Long userId, Long albumId);
 	
