@@ -47,6 +47,10 @@ public class FileUploadUtil
 	 */
 	public static String upLoad(MultipartFile multipartFile,String localAbsolutePath)
 	{
+		if(multipartFile==null)
+		{
+			return null;
+		}
 		int fileHashCode=Math.abs(multipartFile.hashCode());
 		String packageName="/"+(fileHashCode%1000);
 		localAbsolutePath+=packageName;

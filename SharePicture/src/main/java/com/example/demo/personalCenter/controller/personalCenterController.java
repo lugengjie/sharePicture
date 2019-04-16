@@ -9,10 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.account.entity.UserDTO;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.service.IAlbumService;
+import com.example.demo.personalCenter.entity.UserSettingDTO;
+import com.example.demo.personalCenter.service.InterestService;
 import com.example.demo.personalCenter.service.PersonalCenterService;
 import com.example.demo.picture.entity.PictureDTO;
 
@@ -24,6 +27,8 @@ public class personalCenterController
 	PersonalCenterService personalCenterService;
 	@Autowired
 	IAlbumService albumService;
+	@Autowired
+	InterestService interestService;
 	
 	/*
 	 * 跳转到PersonalCenterOfAlbum
@@ -148,6 +153,18 @@ public class personalCenterController
 		Long fansId =(Long) session.getAttribute("userId");
 		personalCenterService.cancelFocusOnUser(userId, fansId);
 		return "成功";
+	}
+	
+	@RequestMapping(value = "/userSetting")
+	public @ResponseBody String userSetting(MultipartFile multipartFile, HttpSession session, UserSettingDTO userSettingDTO)
+	{
+		Long myUserId =(Long) session.getAttribute("userId");
+		for(int i=0;i<10;i++)System.out.println(userSettingDTO);
+		if(interestService.userSetting(multipartFile, myUserId, userSettingDTO))
+		{
+			return "成功";
+		}
+		return "失败";
 	}
 	
 	
