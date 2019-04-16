@@ -45,14 +45,15 @@
     #navTabPanel{background-color:white;}
     
      /*图片组*/
-    #picturePage .container{width:1250px;margin-top:70px;} 
-    #outerBorder{height:170px;width:19%;position:absolute;background-color:white;padding:10px;}
-    .uploadPicturePanel{width:19%;background-color:white;position:absolute;display:none;}
+    #picturePage .container{width:1250px;}
+    #outerBorder{margin-left:5px;text-align:center;border:2px dashed #dedede;width:18.54%;position:absolute;background-color:white}
+    #innerBorder{margin-top: 14%;font-size: 20px;}
+    .uploadPicturePanel{margin-left:5px;margin-bottom:16px;width:18.54%;background-color:white;position:absolute;display:none;}
     .uploadPicturePanel:hover .buttonShowAndHide{display:block;}
     .uploadPicturePanel:hover{-webkit-box-shadow:0px 3px 3px #c8c8c8 ;-moz-box-shadow:0px 3px 3px #c8c8c8 ;box-shadow:0px 3px 3px #c8c8c8 ;}
-   .buttonShowAndHide{display:none;}
-   .uploadPicturePanel img:hover{cursor:pointer}
-   .redHeardClass{color:#d43f3a}
+    .buttonShowAndHide{display:none;}
+    .uploadPicturePanel img:hover{cursor:pointer}
+    .redHeardClass{color:#d43f3a}
    
    /*图片面板*/
     .collectPictureButton{position:absolute;z-index:2}
@@ -405,6 +406,39 @@
 		});
 		}); 
 		/*轮播模态框*/    
+		/* 关注与取消关注用户 */
+		$('.navFocusOnUserButton').click(function(){
+				var albumId = $(this).attr('userId');
+				var formDataTemp = new FormData();
+            formDataTemp.append('userId',albumId);
+            $.ajax({
+				  url: "/personalCenter/focusOnUser",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					   location.reload(); 
+              }
+	  	      });
+				
+		});
+		$('.navCancelFocusOnUserButton').click(function(){
+			   var albumId = $(this).attr('userId');
+			   var formDataTemp = new FormData();
+	            formDataTemp.append('userId',albumId);
+	            $.ajax({
+					  url: "/personalCenter/cancelFocusOnUser",
+					  type: "POST",
+					  data: formDataTemp,
+					  processData: false,	
+					  contentType: false ,
+					  success: function(data){	
+						 location.reload();
+	              }
+		  	   });
+		});
+		/* 关注与取消关注用户 */
    });
   </script>
 </head>
@@ -462,7 +496,7 @@
     <!-- 照片加名字 -->
     <div id="pictureAndNamePanel" class="panel panel-default" th:if="${userDTO!=null}">
       <div class="panel-body">
-        <div class="container" >
+        <div class="container">
            <div class="row">
               <div class="col-md-2">
                 <img id="userPicture" class="img-thumbnail" th:src="${userDTO.userPicture}" >
@@ -472,9 +506,10 @@
               </div>
               <div id="setting" class="col-md-1 col-md-offset-7">          	
                  <p id="userSetting" th:if="${userDTO.isMyUser==1}" class="glyphicon glyphicon-cog" style="margin-right:-40px;" ></p>
-                 <div th:if="${userDTO.isMyUser==0}">
-                  	<a class="btn btn-default" style="margin-left:-10px" th:text="${userDTO.isFocusOn==1}?'取消关注' :'关注用户' ">关注用户</a>
-                		<div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope"></span></a></div>
+                 <div>
+		                 <button style="margin-left:-10px" class="navFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 0}" th:userId="${userDTO.userId}">关注用户</button>
+		                 <button style="margin-left:-10px" class="navCancelFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 1}" th:userId="${userDTO.userId}">取消关注</button> 
+		                 <div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope" th:if="${userDTO.isMyUser ==0}"></span></a></div>
                  </div>
               </div>
             </div>
@@ -485,21 +520,21 @@
                  </a>
               </div>
               <div id="follow" class="col-md-1" th:userId="${userDTO.userId}">
-              	  <a th:href="'/personalCenter/personalCenterOfFocusOn?userId='+${userDTO.userId}">
+              	  <a th:href="'/personalCenter/personalCenterOfFocusOnAlbum?userId='+${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.focusOnNumber}">4</strong><br>关注
                  </a>
               </div> 
+            </div> 
           </div> 
         </div>
       <div id="navTabPanel" class="panel-footer">
            <ul class="nav nav-tabs">
               <li><a id="toPersonalCenterOfAlbum" data-toggle="tab" href="#menu3" th:userId="${userDTO.userId}">相册</a></li>
-              <li><a id="toPersonalCenterOfCollect" data-toggle="tab" href="#menu3" th:userId="${userDTO.userId}">收藏</a></li>
+              <li><a id="toPersonalCenterOfCollect" data-toggle="tab" href="#menu2" th:userId="${userDTO.userId}">收藏</a></li>
               <li class="active"><a id="toPersonalCenterOfLike" data-toggle="tab" href="#menu3" th:userId="${userDTO.userId}">喜欢</a></li>
           </ul>
       </div>
      </div>
-    </div>
 
 
 

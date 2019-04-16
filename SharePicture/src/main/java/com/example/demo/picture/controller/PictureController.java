@@ -63,6 +63,7 @@ public class PictureController
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albumDTO", albumDTOTemp);
 		model.addAttribute("albums", albums);
+		System.out.println("PictureController.showPictureOfAlbum()");
         return "showPictureOfAlbum";
     }
 	

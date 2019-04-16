@@ -46,10 +46,9 @@ public class PersonalCenterService implements IPersonalCenterService
 	 * 被关注用户Id和fansId不能一样，
 	 * fans表中不能已有该关注关系
 	 */
-	public void focusOnUser(Long userId, String email)
+	public void focusOnUser(Long userId, Long fansId)
 	{
 		User user = userRepository.findById(userId).get();
-		Long fansId = userRepository.findByEmial(email).getId(); 
 		if (user != null && !fansId.equals(user.getId()))
 		{
 			Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
@@ -70,10 +69,9 @@ public class PersonalCenterService implements IPersonalCenterService
 	 * 取消关注用户:1.将用户的被关注属性-1， 2.删除数据库中的关注关系
 	 * fans表中需已有该关注关系
 	 */
-	public void cancelFocusOnUser(Long userId, String email)
+	public void cancelFocusOnUser(Long userId, Long fansId)
 	{
 		User user = userRepository.findById(userId).get();
-		Long fansId = userRepository.findByEmial(email).getId();	
 		Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
 		if(fansData != null)
 		{
@@ -456,7 +454,7 @@ public class PersonalCenterService implements IPersonalCenterService
 					 albumDTO.setAlbumDescribe((String)userDTOTemp[2]);
 					 albumDTO.setUserId((Long)userDTOTemp[3]);
 					 albumDTO.setUserName((String)userDTOTemp[4]);
-					 albumDTO.setCoverPictureName((String)userDTOTemp[5]);
+					 albumDTO.setUserPicture((String)userDTOTemp[5]);
 					//判断是否是自己的相册
 					if(!((Long)userDTOTemp[3]).equals(myUserId))
 					{

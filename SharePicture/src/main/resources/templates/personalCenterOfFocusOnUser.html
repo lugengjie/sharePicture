@@ -10,7 +10,7 @@
   <script src="./../background-blur.min.js"></script>
   <script src="./../index.js"></script>
   <style>
-    /*   div { border:1px solid black;} */
+     /* div { border:1px solid black;} */
     /*防止打开模态框时页面抖动*/
 	.modal-open{overflow-y: scroll;}
     body{ padding-right:1px!important;background-color:#f5f5f5;}
@@ -46,31 +46,17 @@
     #fansAndFollow{text-align:center;margin-top:10px;margin-left:-25px}
     #navTabPanel{background-color:white;}
 
-    /* 用户面板 */
-    .userPanel {width:19%; height:326px;text-align: center;margin:5.4px;float:left;z-index:-3}
+   /* 用户面板 */
+    .userPanel {width:19%; height:326px;text-align: center;margin-left:9.5px;float:left;z-index:-3}
     .underUserPicture{background-color:white;height:165px;margin-top:-10px;padding-top:13px}
 	 .focusOnUserButton{margin-top:10px;width:94%;background-color:#ededed}
+	 .cancelFocusOnUserButton{margin-top:10px;width:94%;background-color:#ededed}
+	 .accountSettingButton{margin-top:10px;width:94%;background-color:#ededed}
 	
-	/* 相册组 */
-    #albumPage .container{width:1275px;}
-    .outerBorder{border:2px dashed #dedede;width:100%;height:100%;}
-    .innerBorder{margin-top: 50%;font-size: 20px;}
-    .coverPicture{height:65%;width:99.1%;margin-bottom:1.6%;border:1.5px solid #ededed;}
-    .littlePicture{height:20%;width:32.34%;float:left;margin-right:1%;border:1.5px solid #ededed;}
-    .albumEditButton{margin-top: 4%}
-    .albumCoverPicture{width:100%;height:100%;display:none}
-    .albumLittlePicture{width:100%;height:100%;display:none}
-    .maskOfPanel{position:absolute;height:81%;width:91%;background-color: black;opacity:0.4;display: none}
-    .myPanel:hover .maskOfPanel{display:block;}
-    .albumDescribeOfPanel{position:absolute;z-index:3;text-align: left;font-weight:normal;color:white;left:25px;top:50px;display:none}
-    .myPanel:hover .albumDescribeOfPanel{display:block;}
-    .albumTitleOfPanel{position:absolute;z-index:3;text-align: left;font-weight:bold;color:white;top:25px;left:25px;color:white}
-
-
   </style>
   <script type="text/javascript">
       $(document).ready(function(){
-    	  
+
     	    /*点击导航按钮进行跳转*/
     	    $('#toPersonalCenterOfCollect').click(function(){
     	       var userId = $(this).attr('userId');
@@ -83,7 +69,82 @@
     	    $('#toPersonalCenterOfLike').click(function(){
      	       var userId = $(this).attr('userId');
      	       window.location.href="/personalCenter/personalCenterOfLike?userId="+userId;
-       	 });		
+       	 });
+    	    $('#personalCenterOfFocusOnAlbum').click(function(){
+       	       var userId = $(this).attr('userId');
+       	       window.location.href="/personalCenter/personalCenterOfFocusOnAlbum?userId="+userId;
+          });
+     	    $('#personalCenterOfFocusOnUser').click(function(){
+       	       var userId = $(this).attr('userId');
+       	       window.location.href="/personalCenter/personalCenterOfFocusOnUser?userId="+userId;
+          });
+     	   /*点击导航按钮进行跳转*/
+    	    /* 关注与取消关注用户 */
+    		$('.focusOnUserButton').click(function(){
+    				var albumId = $(this).attr('userId');
+    				var formDataTemp = new FormData();
+                formDataTemp.append('userId',albumId);
+                $.ajax({
+    				  url: "/personalCenter/focusOnUser",
+    				  type: "POST",
+    				  data: formDataTemp,
+    				  processData: false,	
+    				  contentType: false ,
+    				  success: function(data){	
+    					   location.reload(); 
+                  }
+    	  	      });
+    				
+    		});
+    		$('.cancelFocusOnUserButton').click(function(){
+    			   var albumId = $(this).attr('userId');
+    			   var formDataTemp = new FormData();
+    	            formDataTemp.append('userId',albumId);
+    	            $.ajax({
+    					  url: "/personalCenter/cancelFocusOnUser",
+    					  type: "POST",
+    					  data: formDataTemp,
+    					  processData: false,	
+    					  contentType: false ,
+    					  success: function(data){	
+    						 location.reload();
+    	              }
+    		  	   });
+    		});
+    		/* 关注与取消关注用户 */
+    		/* 关注与取消关注用户 */
+    		$('.navFocusOnUserButton').click(function(){
+    				var albumId = $(this).attr('userId');
+    				var formDataTemp = new FormData();
+                formDataTemp.append('userId',albumId);
+                $.ajax({
+    				  url: "/personalCenter/focusOnUser",
+    				  type: "POST",
+    				  data: formDataTemp,
+    				  processData: false,	
+    				  contentType: false ,
+    				  success: function(data){	
+    					   location.reload(); 
+                  }
+    	  	      });
+    				
+    		});
+    		$('.navCancelFocusOnUserButton').click(function(){
+    			   var albumId = $(this).attr('userId');
+    			   var formDataTemp = new FormData();
+    	            formDataTemp.append('userId',albumId);
+    	            $.ajax({
+    					  url: "/personalCenter/cancelFocusOnUser",
+    					  type: "POST",
+    					  data: formDataTemp,
+    					  processData: false,	
+    					  contentType: false ,
+    					  success: function(data){	
+    						 location.reload();
+    	              }
+    		  	   });
+    		});
+    		/* 关注与取消关注用户 */
    });
   </script>
 </head>
@@ -152,9 +213,10 @@
               </div>
               <div id="setting" class="col-md-1 col-md-offset-7">          	
                  <p id="userSetting" th:if="${userDTO.isMyUser==1}" class="glyphicon glyphicon-cog" style="margin-right:-40px;" ></p>
-                 <div th:if="${userDTO.isMyUser==0}">
-                  	<a class="btn btn-default" style="margin-left:-10px" th:text="${userDTO.isFocusOn==1}?'取消关注' :'关注用户' ">关注用户</a>
-                		<div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope"></span></a></div>
+                 <div>
+		                 <button style="margin-left:-10px" class="navFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 0}" th:userId="${userDTO.userId}">关注用户</button>
+		                 <button style="margin-left:-10px" class="navCancelFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 1}" th:userId="${userDTO.userId}">取消关注</button> 
+		                 <div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope" th:if="${userDTO.isMyUser ==0}"></span></a></div>
                  </div>
               </div>
             </div>
@@ -165,7 +227,7 @@
                  </a>
               </div>
               <div id="follow" class="col-md-1" th:userId="${userDTO.userId}">
-              	  <a th:href="'/personalCenter/personalCenterOfFocusOn?userId='+${userDTO.userId}">
+              	  <a th:href="'/personalCenter/personalCenterOfFocusOnAlbum?userId='+${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.focusOnNumber}">4</strong><br>关注
                  </a>
               </div>  
@@ -184,11 +246,11 @@
       <div style="margin-left:50px">
  		 <span style="font-size:15px">兵长的全部关注:</span>
         <div class="btn-group">
-	       <a type="button" class="btn btn-default active" data-toggle="tab" href="#focusOnUserPage">用户</a>
-	       <a type="button" class="btn btn-default" data-toggle="tab" href="#focusOnAlbumPage">相册</a>
+        	 <a id="personalCenterOfFocusOnAlbum" th:userId="${userDTO.userId}"  type="button" class="btn btn-default" data-toggle="tab" href="#albumPage">相册</a>
+	       <a id="personalCenterOfFocusOnUser" th:userId="${userDTO.userId}"  type="button" class="btn btn-default" data-toggle="tab" href="#focusOnUserPage">用户</a> 
        </div>
  	   </div>
- 	   <hr style="border:1px groove white;width:93%"/>
+ 	   <hr style="border:1px groove white;width:92.5%"/>
  		
  <div class="tab-content">
  	  <div id="focusOnUserPage" class="tab-pane fade in active">
@@ -210,8 +272,11 @@
                         	<span th:text="${focusOnDTO.fansNumber}">111</span><span>粉丝</span>&nbsp;
                            <span th:text="${focusOnDTO.collectionNumber}">111</span><span>收藏</span>
                         </div>
-                        <button class="focusOnUserButton btn btn-default" type="button" th:if="${focusOnDTO.isMyUser ==0}" th:text="${focusOnDTO.isFocusOn} == 0?'关注用户':'取消关注'">关注用户</button>
-                        <button class="focusOnUserButton btn btn-default" type="button" th:if="${focusOnDTO.isMyUser ==1}">账号设置</button>
+                        <div>
+                        	<button class="focusOnUserButton btn btn-default" type="button" th:if="${focusOnDTO.isMyUser ==0 && focusOnDTO.isFocusOn == 0}" th:userId="${focusOnDTO.userId}">关注用户</button>
+                           <button class="cancelFocusOnUserButton btn btn-default" type="button" th:if="${focusOnDTO.isMyUser ==0 && focusOnDTO.isFocusOn == 1}" th:userId="${focusOnDTO.userId}">取消关注</button>
+                           <button class="accountSettingButton btn btn-default" type="button" th:if="${focusOnDTO.isMyUser ==1}">账号设置</button>
+                        </div>
                      </div>
             		</div>
             		
@@ -219,28 +284,10 @@
      </div>
      </div>
      
-     <div id="focusOnAlbumPage" class="tab-pane fade">
-     		<div class="container" style="min-height:400px;">
-         <div class="row">
-         <div th:if="${albumDTOs!=null}">
-      	<div class="myPanel" th:each="album:${albumDTOs}" style="position : relative;">
-       		<p class="albumTitleOfPanel" th:text="${album.albumTitle}">开心就好</p>
-       		<p class="albumDescribeOfPanel"  th:text="${album.albumDescribe}"><br><br>这是一张图片</p>
-       		<div class="maskOfPanel" th:albumId="${album.id}">
-       		</div>
-       		<div class="coverPicture">
-       			<img class="albumCoverPicture" th:src="@{${album.coverPictureName}}">
-       		</div> 		
-       		<div th:each="pictureName:${album.pictureNames}" class="littlePicture">
-       			<img class="albumLittlePicture" th:src="@{${pictureName}}">
-       		</div>
-       		<button class="btn albumEditButton" style="width:99%" th:albumId="${album.id}" th:albumTitle="${album.albumTitle}" th:albumClassification="${album.albumClassification}" th:albumDescribe="${album.albumDescribe}" th:if="${album.isMyAlbum==1}">编辑</button>
-       		<button class="btn albumEditButton" style="width:99%" th:albumId="${album.id}" th:albumTitle="${album.albumTitle}" th:albumClassification="${album.albumClassification}" th:albumDescribe="${album.albumDescribe}" th:if="${album.isMyAlbum==0}">关注相册</button>
-       	</div>
-       	</div>
-       	</div>
-       	</div>
-    </div>
+     <div id="albumPage" class="tab-pane fade">  
+          
+     </div>
+
     
     
 </div> 

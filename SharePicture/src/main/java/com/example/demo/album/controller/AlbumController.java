@@ -181,7 +181,7 @@ public class AlbumController
 	}
 	
 	/**
-	 *关注相册
+	 *取消关注相册
 	 * @param albumDTO
 	 * @param model
 	 * @return

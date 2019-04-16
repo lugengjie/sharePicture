@@ -9,10 +9,10 @@ import com.example.demo.picture.entity.PictureDTO;
 public interface IPersonalCenterService
 {
 	//关注用户
-	public void focusOnUser(Long userId, String email);
+	public void focusOnUser(Long userId, Long fansId);
 	
 	//取消关注用户
-	public void cancelFocusOnUser(Long userId, String email);
+	public void cancelFocusOnUser(Long userId, Long fansId);
 	
 	//根据AlbumIds封装PictureDTOs
 	public List<PictureDTO> findPictureDTOsOfUserByAlbumIds(List<Long> albumIds, Long userId);

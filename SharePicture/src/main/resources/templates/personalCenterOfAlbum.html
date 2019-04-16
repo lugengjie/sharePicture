@@ -44,12 +44,14 @@
     #navTabPanel{background-color:white;}
 
     /* 相册组 */
-    #albumPage .container{width:1275px;}
+    #albumPage .container{width:1275px;margin-top:-5px}
     .outerBorder{border:2px dashed #dedede;width:100%;height:100%;}
     .innerBorder{margin-top: 50%;font-size: 20px;}
     .coverPicture{height:65%;width:99.1%;margin-bottom:1.6%;border:1.5px solid #ededed;}
     .littlePicture{height:20%;width:32.34%;float:left;margin-right:1%;border:1.5px solid #ededed;}
     .albumEditButton{margin-top: 4%}
+    .albumFoucusButton{margin-top: 4%}
+    .albumCancelFoucusButton{margin-top: 4%}
     .albumCoverPicture{width:100%;height:100%;display:none}
     .albumLittlePicture{width:100%;height:100%;display:none}
     .maskOfPanel{position:absolute;height:81%;width:91%;background-color: black;opacity:0.4;display: none}
@@ -174,6 +176,73 @@
 	  	     });
 		});
 		
+		/* 关注与取消关注相册 */
+		$('.albumFoucusButton').click(function(){
+				var albumId = $(this).attr('albumId');
+				var formDataTemp = new FormData();
+            formDataTemp.append('albumId',albumId);
+            $.ajax({
+				  url: "/album/foucusOnAlbum",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					   location.reload(); 
+              }
+	  	      });
+				
+		});
+		$('.albumCancelFoucusButton').click(function(){
+			   var albumId = $(this).attr('albumId');
+			   var formDataTemp = new FormData();
+	            formDataTemp.append('albumId',albumId);
+	            $.ajax({
+					  url: "/album/cancelFoucusOnAlbum",
+					  type: "POST",
+					  data: formDataTemp,
+					  processData: false,	
+					  contentType: false ,
+					  success: function(data){	
+						 location.reload();
+	              }
+		  	   });
+		});
+		/* 关注与取消关注相册 */
+		
+		/* 关注与取消关注用户 */
+		$('.navFocusOnUserButton').click(function(){
+				var albumId = $(this).attr('userId');
+				var formDataTemp = new FormData();
+            formDataTemp.append('userId',albumId);
+            $.ajax({
+				  url: "/personalCenter/focusOnUser",
+				  type: "POST",
+				  data: formDataTemp,
+				  processData: false,	
+				  contentType: false ,
+				  success: function(data){	
+					   location.reload(); 
+              }
+	  	      });
+				
+		});
+		$('.navCancelFocusOnUserButton').click(function(){
+			   var albumId = $(this).attr('userId');
+			   var formDataTemp = new FormData();
+	            formDataTemp.append('userId',albumId);
+	            $.ajax({
+					  url: "/personalCenter/cancelFocusOnUser",
+					  type: "POST",
+					  data: formDataTemp,
+					  processData: false,	
+					  contentType: false ,
+					  success: function(data){	
+						 location.reload();
+	              }
+		  	   });
+		});
+		/* 关注与取消关注用户 */
 		
    });
   </script>
@@ -243,9 +312,10 @@
               </div>
               <div id="setting" class="col-md-1 col-md-offset-7">          	
                  <p id="userSetting" th:if="${userDTO.isMyUser==1}" class="glyphicon glyphicon-cog" style="margin-right:-40px;" ></p>
-                 <div th:if="${userDTO.isMyUser==0}">
-                  	<a class="btn btn-default" style="margin-left:-10px" th:text="${userDTO.isFocusOn==1}?'取消关注' :'关注用户' ">关注用户</a>
-                		<div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope"></span></a></div>
+                 <div>
+		                 <button style="margin-left:-10px" class="navFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 0}" th:userId="${userDTO.userId}">关注用户</button>
+		                 <button style="margin-left:-10px" class="navCancelFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 1}" th:userId="${userDTO.userId}">取消关注</button> 
+		                 <div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope" th:if="${userDTO.isMyUser ==0}"></span></a></div>
                  </div>
               </div>
             </div>
@@ -256,7 +326,7 @@
                  </a>
               </div>
               <div id="follow" class="col-md-1" th:userId="${userDTO.userId}">
-              	  <a th:href="'/personalCenter/personalCenterOfFocusOn?userId='+${userDTO.userId}">
+              	  <a th:href="'/personalCenter/personalCenterOfFocusOnAlbum?userId='+${userDTO.userId}">
                  <strong style="font-size:17px" th:text="${userDTO.focusOnNumber}">4</strong><br>关注
                  </a>
               </div> 
@@ -303,7 +373,8 @@
 	                			<img class="albumLittlePicture" th:src="@{${pictureName}}">
 	                		</div>
 	                		<button class="btn albumEditButton" style="width:99%" th:albumId="${album.id}" th:albumTitle="${album.albumTitle}" th:albumClassification="${album.albumClassification}" th:albumDescribe="${album.albumDescribe}" th:if="${album.isMyAlbum==1}">编辑</button>
-	                		<button class="btn albumEditButton" style="width:99%" th:albumId="${album.id}" th:albumTitle="${album.albumTitle}" th:albumClassification="${album.albumClassification}" th:albumDescribe="${album.albumDescribe}" th:if="${album.isMyAlbum==0}">关注相册</button>
+	                		<button class="btn albumCancelFoucusButton" style="width:99%" th:albumId="${album.id}" th:if="${album.isMyAlbum==0&&album.isFocusOn==1}">取消关注</button>
+	                		<button class="btn albumFoucusButton" style="width:99%" th:albumId="${album.id}" th:if="${album.isMyAlbum==0&&album.isFocusOn==0}">关注相册</button>
 	                	</div>
 
                 	

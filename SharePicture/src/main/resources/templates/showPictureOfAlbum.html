@@ -556,6 +556,40 @@
           }); 
          /*轮播模态框*/
 			 
+       /* 关注与取消关注相册 */
+  		$('.albumFoucusButton').click(function(){
+  				var albumId = $(this).attr('albumId');
+  				var formDataTemp = new FormData();
+              formDataTemp.append('albumId',albumId);
+              $.ajax({
+  				  url: "/album/foucusOnAlbum",
+  				  type: "POST",
+  				  data: formDataTemp,
+  				  processData: false,	
+  				  contentType: false ,
+  				  success: function(data){	
+  					   location.reload(); 
+                }
+  	  	      });
+  				
+  		});
+  		$('.albumCancelFoucusButton').click(function(){
+  			   var albumId = $(this).attr('albumId');
+  			   var formDataTemp = new FormData();
+  	            formDataTemp.append('albumId',albumId);
+  	            $.ajax({
+  					  url: "/album/cancelFoucusOnAlbum",
+  					  type: "POST",
+  					  data: formDataTemp,
+  					  processData: false,	
+  					  contentType: false ,
+  					  success: function(data){	
+  						 location.reload();
+  	              }
+  		  	   });
+  		});
+  		/* 关注与取消关注相册 */
+         
 			 
 			 
   	 });
@@ -621,9 +655,10 @@
                 <div class="col-md-6" >
                     <h3><strong th:text="${albumDTO.albumTitle}">海贼王打赏</strong>&nbsp;<span style="color: #ddd">|</span>&nbsp;<small>所属分类:<span style="color: #9e7e6b" th:text="${albumDTO.albumClassification}">UI/UX</span> </small></h3>
                 </div>
-               <div id="setting" class="col-md-1 col-md-offset-5">          	
-                  <a th:if="${albumDTO.isMyAlbum == 0}"  type="button" class="btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px" th:text="${albumDTO.isFocusOn}==1?'关注相册':'取消关注'">关注相册</a>
-                  <a th:if="${albumDTO.isMyAlbum == 1}" type="button" class="btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px">批量管理</a>
+               <div id="setting" class="col-md-1 col-md-offset-5">  
+		            <a th:if="${albumDTO.isMyAlbum == 0 && albumDTO.isFocusOn ==1}"  type="button" class="albumCancelFoucusButton btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px" th:albumId="${albumDTO.id}">取消关注</a>       	
+                  <a th:if="${albumDTO.isMyAlbum == 0 && albumDTO.isFocusOn ==0}"  type="button" class="albumFoucusButton btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px"  th:albumId="${albumDTO.id}">关注相册</a>
+                  <a th:if="${albumDTO.isMyAlbum == 1}" type="button" class="albumEditButton btn btn-default btn-danger"  style="margin-left:-40px;margin-top:22px">批量管理</a>
               </div>
             </div>
             <div class="row">

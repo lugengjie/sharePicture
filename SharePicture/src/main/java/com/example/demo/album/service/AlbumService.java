@@ -239,7 +239,7 @@ public class AlbumService implements IAlbumService
 				}
 				albumDTO.setUserName(user.getName());
 				albumDTO.setUserPicture(user.getUserPicture());
-				FocusOnAlbum focusOnAlbum =focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userIdTemp);
+				FocusOnAlbum focusOnAlbum =focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(albumId, userId);
 				if(focusOnAlbum == null)
 				{
 					albumDTO.setIsFocusOn(0);

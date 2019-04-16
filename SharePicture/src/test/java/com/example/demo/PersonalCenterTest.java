@@ -22,17 +22,17 @@ public class PersonalCenterTest
 	@Autowired
 	private FansRepository fansRepository;
 	
-	@Test
+	/*@Test
 	public void focusOnUser()
 	{
 		personalCenterService.focusOnUser(1L, "xueyuancpt@163.com");
-	}
-	
+	}*/
+	/*
 	@Test
 	public void cancelFocusOnUser()
 	{
 		personalCenterService.cancelFocusOnUser(7L, "xueyuancpt@163.com");
-	}
+	}*/
 	
 	@Test
 	public void findAlbumIdsOfUsersByFansId()

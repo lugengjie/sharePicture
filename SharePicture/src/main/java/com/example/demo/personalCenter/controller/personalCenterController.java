@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.account.entity.UserDTO;
 import com.example.demo.album.entity.AlbumDTO;
@@ -36,7 +37,6 @@ public class personalCenterController
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		model.addAttribute("albums", albums);
 		model.addAttribute("userDTO", userDTO);
-		System.out.println(userDTO);
 		return "personalCenterOfAlbum";
 	}
 	
@@ -90,19 +90,28 @@ public class personalCenterController
 	}
 	
 	/*
-	 * 跳转到PersonalCenterOfFans
+	 * 跳转到PersonalCenterOfFoucusOn
 	 */
-	@RequestMapping(value="/personalCenterOfFocusOn")
-	public String toPersonalCenterOfFocusOn(HttpSession session,Long userId, Model model)
+	@RequestMapping(value="/personalCenterOfFocusOnAlbum")
+	public String toPersonalCenterOfFocusOnAlbum(HttpSession session,Long userId, Model model)
+	{
+		Long myUserId = (Long) session.getAttribute("userId");
+		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		List<AlbumDTO> albumDTOs = personalCenterService.personalCenterOfFocusOnOfAlbumDTOs(myUserId, userId);
+		model.addAttribute("userDTO", userDTO);
+		model.addAttribute("albums", albumDTOs);
+		return "personalCenterOfFocusOnAlbum";
+	}
+	
+	@RequestMapping(value="/personalCenterOfFocusOnUser")
+	public String toPersonalCenterOfFocusOnUser(HttpSession session,Long userId, Model model)
 	{
 		Long myUserId = (Long) session.getAttribute("userId");
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<UserDTO> focusOnDTOs = personalCenterService.personalCenterOfFocusOnOfUserDTOs(myUserId, userId);
-		List<AlbumDTO> albumDTOs = personalCenterService.personalCenterOfFocusOnOfAlbumDTOs(myUserId, myUserId);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("focusOnDTOs", focusOnDTOs);
-		model.addAttribute("albumDTOs", albumDTOs);
-		return "personalCenterOfFocusOn";
+		return "personalCenterOfFocusOnUser";
 	}
 	
 	/**
@@ -123,6 +132,22 @@ public class personalCenterController
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albums", albums);
 		return "homepage";
+	}
+	
+	@RequestMapping(value = "/focusOnUser")
+	public @ResponseBody String focusOnUser(Long userId, HttpSession session)
+	{
+		Long fansId =(Long) session.getAttribute("userId");
+		personalCenterService.focusOnUser(userId, fansId);
+		return "成功";
+	}
+	
+	@RequestMapping(value = "/cancelFocusOnUser")
+	public @ResponseBody String cancelFocusOnUser(Long userId, HttpSession session)
+	{
+		Long fansId =(Long) session.getAttribute("userId");
+		personalCenterService.cancelFocusOnUser(userId, fansId);
+		return "成功";
 	}
 	
 	
