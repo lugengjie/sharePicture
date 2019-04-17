@@ -167,5 +167,13 @@ public class personalCenterController
 		return "失败";
 	}
 	
+	@RequestMapping(value = "/toUserSetting")
+	public String toUserSetting(HttpSession session, Model model)
+	{
+		Long myUserId =(Long) session.getAttribute("userId");
+		UserSettingDTO userSettingDTO = personalCenterService.toUserSetting(myUserId);
+		model.addAttribute("userSettingDTO", userSettingDTO);
+		return "userSetting";
+	}
 	
 }

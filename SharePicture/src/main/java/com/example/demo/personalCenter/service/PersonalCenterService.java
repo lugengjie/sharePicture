@@ -17,7 +17,9 @@ import com.example.demo.album.entity.FocusOnAlbum;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.repository.FocusOnAlbumRepository;
 import com.example.demo.personalCenter.entity.Fans;
+import com.example.demo.personalCenter.entity.UserSettingDTO;
 import com.example.demo.personalCenter.repository.FansRepository;
+import com.example.demo.personalCenter.repository.InterestRepository;
 import com.example.demo.picture.entity.Picture;
 import com.example.demo.picture.entity.PictureDTO;
 import com.example.demo.picture.repository.LikePictureRepository;
@@ -39,6 +41,8 @@ public class PersonalCenterService implements IPersonalCenterService
 	PictureRepository pictureRepository;
 	@Autowired
 	LikePictureRepository likePictureRepository;
+	@Autowired
+	InterestRepository interestRepository;
 	
 	/**
 	 * 关注用户:1.将用户的被关注属性+1， 2.就关注关系存入数据库
@@ -189,6 +193,7 @@ public class PersonalCenterService implements IPersonalCenterService
 			int albumNumber = albumRepository.findAlbumNumberByUserId(userId);
 			int fansNumber = fansRepository.findFansNumberByUserId(userId);
 			int findPictureNumber =pictureRepository.findPictureNumberByUserId(userId);
+			userDTO.setUserId(userId);
 			userDTO.setAlbumNumber(albumNumber);
 			userDTO.setCollectionNumber(findPictureNumber);
 			userDTO.setFansNumber(fansNumber);
@@ -502,5 +507,30 @@ public class PersonalCenterService implements IPersonalCenterService
 		 }
 		 return albumDTOs;
 	}
+	
+	/**
+	 * 封装发送到UserSetting的UserSettingDTO
+	 */
+    public UserSettingDTO toUserSetting(Long myUserId)
+    {
+    	UserSettingDTO userSettingDTO = null;
+    	if(myUserId != null)
+    	{
+    		User user = userRepository.findById(myUserId).get();
+    		userSettingDTO = new UserSettingDTO();
+    		userSettingDTO.setUserName(user.getName());
+    		userSettingDTO.setUserPicture(user.getUserPicture());
+    		List<String> interestNames = interestRepository.findInterestByUserId(myUserId);
+    		if(interestNames != null && !interestNames.isEmpty())
+    		{
+    		
+    			String[] interestNameArray = new String[interestNames.size()];
+    			interestNames.toArray(interestNameArray);
+    			userSettingDTO.setInterestNames(interestNameArray);
+    		}
+    	}
+    	return userSettingDTO;
+    }
+    
 	
 }

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"> 
+  <title>personalCenter</title>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  /* div { border:1px solid black;}*/
+    /*防止打开模态框时页面抖动*/
+	.modal-open{overflow-y: scroll;}
+    body{ padding-right:1px!important;background-color:#f5f5f5;}
+    .myPanel {cursor: pointer;width:18.54%; height:326px;text-align: center;padding:10px;margin-left:16px;margin-bottom:16px;float:left;background-color:white;}
+   
+    /* 导航栏*/
+    nav{background-color:white;}
+    nav .container{width:1250px;}
+    .navbar-header{height:50px}
+    #navLogo{width:100px;height: 70px;margin-top:-8px}
+    #bellButton{font-size: 20px;color:#a6a6a6;margin-top: 8px}
+    #noticeIcon{border-left:1px solid #ddd;}
+    #noticeIcon p{font-size:17px;height:1px}
+    #navUserPicture{border-left:1px solid #ddd;border-right:1px solid #ddd;}
+    #navUserPicture img{height:20px;width:20px}
+    #navSearch{float:right;width:350px}
+    #navSearch button{height:35px}
+    #navSearchInput{height:35px;position:relative;}
+    #navSearchInput input{height:100%;width:300px}
+    #navSearchInput span {position:absolute;font-size:20px;color:#c8c8c8;margin-left:270px;margin-top: 5px}
+
+    /*上传图片*/
+    #uploadPictureInput{display:none;}
+    
+  </style>
+  <script type="text/javascript" th:inline="javascript">
+      $(document).ready(function(){
+      	var ulformData = new FormData();
+      	/*	在上传图片模态框中，点击特定区域触发提交文件*/
+			$("#uploadPictureInnerBorder").click(function(){
+ 				 $("#uploadPictureInput").trigger("click");
+			});
+    	   /*在上传图片模态框中，当文件输入框变化时，FileReader()读取图片，并给选择相册框的图片src赋值*/
+			$("#uploadPictureInput").change(function(){
+		   		var pictureFile = document.getElementById('uploadPictureInput').files[0];
+		   		var fileReader = new FileReader();
+		   		fileReader.readAsDataURL(pictureFile);
+				   fileReader.onload=function(){
+					/*清除文件输入框内容*/
+					$("#uploadPictureInput").val("");
+
+					var image = new Image();
+					image.src = fileReader.result;
+					/*将图片显示在屏幕*/
+					document.getElementById('uploadPictureSize').src=fileReader.result;
+				    image.onload = function(){
+				    	compressImage(image);
+				    }   
+				};
+	  		}); 
+	  	 /*在上传图片模态框中，当文件输入框变化时，FileReader()读取图片，并给选择相册框的图片src赋值*/
+	  	 /*文件压缩*/
+	 		function compressImage(image){
+		  		var canvas=document.createElement('canvas');
+		  		var context = canvas.getContext('2d');
+				var pictureQuality=1;
+				// 图片的宽度超过658px就改为658同时高度等比例，同时降低清晰度进行压缩
+				// 图片的宽度没超过658就不进行压缩
+				if(image.width>658){
+					canvas.width = 658;
+					canvas.height = image.height / image.width * 658;
+					pictureQuality=0.92;
+				}else{
+					canvas.width = image.width;
+					canvas.height = image.height;
+				}
+
+				// 绘制图片
+	  			context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+	  			//将canvas上的图片转为二进制大文件同时添加到ulformData
+	  			canvas.toBlob(function(blob){
+	  	  			ulformData.append('multipartFile',blob);	
+	  			},'image/jpeg', pictureQuality);		
+	        }  
+	      /*文件压缩*/	
+	      /*  提交压缩后图片按钮的触发事件 */
+		 $(".uploadPictureButton").click(function(){
+			   var interestNames = [];//定义一个空数组
+			   $("input[name='checkBoxValue']:checked").each(function(i){
+		            interestNames[i] =$(this).val();
+		      });
+			   if(interestNames.length!=0)
+			   {
+				    ulformData.append('interestNames',interestNames); 
+				}  
+			   var userName = $('#userNameOfSetting').val();
+			   if(typeof userName !== "undefined"&&userName!=''&&userName!=null)
+			   {
+					ulformData.append('userName',userName);
+			   }
+	        	$.ajax({
+					  url: "/personalCenter/userSetting",
+					  type: "POST",
+					  data: ulformData,
+					  processData: false,	
+					  contentType: false ,
+					  success: function(data){
+						  location.reload();
+	              }
+	  			 });	      	
+		  });  
+		 /* 提交压缩后图片按钮的触发事件 */		
+		 /*复选框默认值 */
+		      var interestNamesArray = [[${userSettingDTO.interestNames}]];
+		      if(interestNamesArray!=null&&interestNamesArray.length!=0){ 
+			    	 $.each(interestNamesArray,function(i,item){
+			    		 item=item.replace("/", '\\/');
+				 		 $("input[name='checkBoxValue'][value="+item+"]").attr("checked","checked");
+				 	 });
+		      } 
+		 /*复选框默认值 */
+    	
+		
+     });
+  </script>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:3">
+        <div class="container">
+          <div class="row" style="margin-left:-53px">
+              <div class="col-md-5" >
+                  <div class="navbar-header">
+                      <img id="navLogo" src="./../logo2.png">
+                  </div>
+                  <ul class="nav navbar-nav">
+                      <li><a class="navbar-brand" href="#">SharePicture</a></li>
+                      <li><a href="#">首页</a></li>
+                      <li><a href="#">推荐</a></li> 
+                      <li><a href="#">●●●</a></li> 
+                        
+                  </ul>
+              </div>
+              <div class="col-md-6 col-md-offset-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="noticeIcon">
+                          <a  href="#"> 
+                            <p class="glyphicon glyphicon-bullhorn">    
+                            </p>
+                          </a>
+                        </li>
+                        <li id="navUserPicture">
+                          <a href="#"><img  src="./../aa.jfif"></a>
+                        </li>
+                   </ul>      
+          <div id="navSearch" class="input-group navbar-form">
+             <div class="input-group-btn">
+              <button type="button" class="btn btn-default 
+              dropdown-toggle" data-toggle="dropdown">相册
+              <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">收藏</a></li>
+                <li><a href="#">用户</a></li>
+              </ul>
+            </div>
+            <div id="navSearchInput">         
+              <input type="text">
+              <span class="glyphicon glyphicon-search"></span>
+            </div>
+            </div>      
+          </div>
+
+        </div>
+    </nav>
+
+
+
+    <div class="panel panel-primary" style="margin-top:110px;width: 800px;margin-left:23%;margin-right:20%;width:670px;height:370px">
+    	<div class="panel-heading">
+            <h3 class="panel-title">账号设置</h3>
+        </div>	   
+	    <div class="panel-body">
+	       <div class="container" style="width:750px;" th:if="${userSettingDTO != null}">
+	       		<div class="row">
+	       			<div class="col-md-4">
+	       				<img id="uploadPictureSize" th:src="${userSettingDTO.userPicture}" style="width:200px;height:245px" class="img-thumbnail">
+	       				<a id="uploadPictureInnerBorder" class="btn btn-default" style="width:91%;margin-top: 10px">上传图片</a>
+	       				<input id="uploadPictureInput" type="file" accept="image/*">
+	       			</div>
+	       			<div class="col-md-6">
+		       				<form class="form-horizontal" role="form">
+	           					<div class="form-group">
+								    <label for="firstname" class="col-sm-2 control-label" style="font-size: 16px;color: #616361;">名字</label>
+								    <div class="col-sm-10">
+								      <input type="text" th:value="${userSettingDTO.userName}" class="form-control" id="userNameOfSetting" placeholder="请输入名字">
+								    </div>
+								</div>
+	        				</form>
+	        				 <label style="font-size: 16px;color: #616361;" for="name">兴趣</label><br>
+							
+							    &nbsp;&nbsp;<label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="UI/UX"> UI/UX
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="平面"> 平面
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="插画/漫画"> 插画/漫画
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="家居/家装"> 家居/家装
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="女装"> 女装
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="男士/风尚"> 男士/风尚
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="婚礼"> 婚礼
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="工业设计"> 工业设计
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="摄影"> 摄影
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="造型/美妆"> 造型/美妆
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="美食"> 美食
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="旅游"> 旅游
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="手工/布艺"> 手工/布艺
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="健身/舞蹈"> 健身/舞蹈
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="儿童"> 儿童
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="美图"> 美图
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="明星"> 明星
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="美女"> 美女
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="礼物"> 礼物
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="极客"> 极客
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="动漫"> 动漫
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="建筑设计"> 建筑设计
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="人文艺术"> 人文艺术
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="数据图"> 数据图
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="游戏"> 游戏
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="汽车/摩托"> 汽车/摩托
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="电影/图书"> 电影/图书
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="生活百科"> 生活百科
+							    </label>
+							    <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="教育"> 教育
+							    </label>
+							     <label class="checkbox-inline">
+							        <input type="checkbox" name="checkBoxValue" value="运动"> 运动
+							    </label>
+							    <div>
+							    	<a class="uploadPictureButton btn btn-default btn-danger" style="width:20%;margin-top: 10px;margin-left: 280px">保存</a>
+							    </div> 
+							    
+	       			</div>
+	       		</div>
+	       </div>
+	    </div>
+    </div>
+
+
+ 
+  
+ 
+
+</body>
+</html>

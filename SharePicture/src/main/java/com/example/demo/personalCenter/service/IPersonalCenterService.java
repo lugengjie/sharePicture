@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.account.entity.UserDTO;
 import com.example.demo.album.entity.AlbumDTO;
+import com.example.demo.personalCenter.entity.UserSettingDTO;
 import com.example.demo.picture.entity.PictureDTO;
 
 public interface IPersonalCenterService
@@ -37,6 +38,9 @@ public interface IPersonalCenterService
 	
 	//封装发送到personalCenterOfFocusOn的AlbumDTOs
 	public List<AlbumDTO> personalCenterOfFocusOnOfAlbumDTOs(Long myUserId, Long userId);
+	
+	//封装发送到UserSetting的UserSettingDTO
+	public UserSettingDTO toUserSetting(Long myUserId);
 	
 	
 }

@@ -449,9 +449,9 @@
                     <span style="font-size: 17px">&nbsp;<strong th:text="${userDTO.userName}"></strong></span>
                   </div> 
                    <ul class="nav navbar-nav" style="width:100%;text-align: center;margin-top: 10px">
-                      <li  style="width:33%;"><a href="#" ><span th:text="${userDTO.collectionNumber}">30</span><br><span>收藏</span></a></li>
-                      <li style="width:33%;"><a href="#"><span th:text="${userDTO.albumNumber}">30</span><br><span>相册</span></a></li> 
-                      <li style="width:33%;"> <a href="#"><span th:text="${userDTO.fansNumber}">30</span><br><span>粉丝</span></a></li> 
+                      <li  style="width:33%;"><a th:href="'/personalCenter/personalCenterOfCollect?userId='+${userDTO.userId}" ><span th:text="${userDTO.collectionNumber}">30</span><br><span>收藏</span></a></li>
+                      <li style="width:33%;"><a th:href="'/personalCenter/personalCenterOfAlbum?userId='+${userDTO.userId}"><span th:text="${userDTO.albumNumber}">30</span><br><span>相册</span></a></li> 
+                      <li style="width:33%;"> <a th:href="'/personalCenter/personalCenterOfFans?userId='+${userDTO.userId}"><span th:text="${userDTO.fansNumber}">30</span><br><span>粉丝</span></a></li> 
                   </ul>       
               </div> 
 

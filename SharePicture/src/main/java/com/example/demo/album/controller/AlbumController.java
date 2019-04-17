@@ -96,6 +96,24 @@ public class AlbumController
 	}
 	
 	/**
+	 * RecommendPage页面在选择相册模态框中中添加相册
+	 * @param session
+	 * @param albumDto
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/addAlbumAtRecommendPage")
+	public String addAlbumAtSelectAlbumOfRecommendPage(HttpSession session, AlbumDTO albumDto,Model model)
+	{
+		Long userId = (Long)session.getAttribute("userId");
+		albumService.addAlbum(userId, albumDto);
+		List<AlbumDTO> albums=albumService.showAlbum(userId);
+		model.addAttribute("albums", albums);
+		return "recommendPage::cpalbumUl";
+
+	}
+	
+	/**
 	 * personalCenterOfCollect页面在选择相册模态框中中添加相册
 	 * @param session
 	 * @param albumDto

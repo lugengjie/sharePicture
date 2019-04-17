@@ -20,13 +20,10 @@ public class InterestTest
 	InterestRepository interestRepository;
 	@Autowired
 	InterestService interestService;
-//	@Test
-//	public void saveTest() 
-//	{
-//		Interest interest = new Interest();
-//		interest.setUserId(1L);
-//		List<String> interestName = interest.getInterestName();
-//		interestName.add("aa");
-//		interestService.saveInteresetService(interest);
-//	}
+	@Test
+	public void findInterestByUserIdTest() 
+	{
+	
+		System.out.println(interestRepository.findInterestByUserId(7L));
+	}
 }
