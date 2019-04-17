@@ -61,7 +61,6 @@ public class AlbumService implements IAlbumService
 				BeanUtils.copyProperties(album, albumDto);
 				albumDtos.add(albumDto);
 			}
-			Collections.reverse(albumDtos);
 			return albumDtos;
 		}
 		return null;

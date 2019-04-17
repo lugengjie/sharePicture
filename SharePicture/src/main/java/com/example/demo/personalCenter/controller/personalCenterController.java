@@ -162,7 +162,7 @@ public class personalCenterController
 		for(int i=0;i<10;i++)System.out.println(userSettingDTO);
 		if(interestService.userSetting(multipartFile, myUserId, userSettingDTO))
 		{
-			return "成功";
+			return myUserId+"";
 		}
 		return "失败";
 	}

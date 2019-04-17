@@ -446,7 +446,7 @@
               <div id="outerBorder"> 
                   <div style="margin-left:10px;margin-top: 8px">
                     <img  th:src="${userDTO.userPicture}" style="height:70px;width:70px"> 
-                    <span style="font-size: 17px">&nbsp;<strong th:text="${userDTO.userName}"></strong></span>
+                    <a th:href="'/personalCenter/personalCenterOfAlbum?userId='+${userDTO.userId}"><span style="font-size: 17px">&nbsp;<strong th:text="${userDTO.userName}"></strong></span></a>
                   </div> 
                    <ul class="nav navbar-nav" style="width:100%;text-align: center;margin-top: 10px">
                       <li  style="width:33%;"><a th:href="'/personalCenter/personalCenterOfCollect?userId='+${userDTO.userId}" ><span th:text="${userDTO.collectionNumber}">30</span><br><span>收藏</span></a></li>

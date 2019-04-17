@@ -12,7 +12,7 @@ import com.example.demo.album.entity.Album;
 @Repository
 public interface AlbumRepository extends CrudRepository<Album, Long>
 {
-	@Query("from Album a where a.userId=?1")
+	@Query("from Album a where a.userId=?1 order by a.id desc")
 	public List<Album> findAlbumsByUserId(Long id);
 	
 	@Modifying
