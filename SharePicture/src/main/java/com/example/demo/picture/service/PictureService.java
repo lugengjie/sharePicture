@@ -19,6 +19,7 @@ import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.service.AlbumService;
 import com.example.demo.common.utils.FileUploadUtil;
+import com.example.demo.communication.service.CommentOfPictureService;
 import com.example.demo.picture.entity.LikePicture;
 import com.example.demo.picture.entity.Picture;
 import com.example.demo.picture.entity.PictureDTO;
@@ -35,7 +36,8 @@ public class PictureService implements IPictureService
 	private AlbumRepository albumRepository;
 	@Autowired
 	private UserRepository userRepository;
-	
+	@Autowired
+	private CommentOfPictureService commentOfPictureService;
 	@Autowired
 	private LikePictureRepository likePictureRepository;
 	
@@ -111,16 +113,31 @@ public class PictureService implements IPictureService
 	 * 2.把请求中的图片所在相册的位置的前的不超过8张图片（包括该图片）加该图片后的所有图片放在PictureDTO中
 	 * 3.将所有信息放在AlbumDTO中返回
 	 */
-	public AlbumDTO pictureCarousel(Long pictureId)
+	public AlbumDTO pictureCarousel(Long pictureId,Long myUserId)
 	{
+		if(myUserId == null)
+		{
+			return null;
+		}
 		Picture picture=pictureRepository.findById(pictureId).get();	
 		AlbumDTO albumDTO=new AlbumDTO();
 		if(picture != null)
 		{		
+			albumDTO.setRealPictureId(pictureId);
+			User tourister = userRepository.findById(myUserId).get();
+			albumDTO.setTouristId(tourister.getId());
+			albumDTO.setTouristName(tourister.getName());
+			albumDTO.setTouristPicture(tourister.getUserPicture());
 			albumDTO.setCoverPictureName(picture.getPictureName());
 			albumDTO.setId(picture.getAlbumId());
 			albumDTO.setMainPictureDescribe(picture.getPictureDescribe());
-			Album album = albumRepository.findAlbumByAlbumId(picture.getAlbumId());		
+			//图片的评论
+			String commentOfMainPictureTemp =commentOfPictureService.commentsOfPictureTOJson(pictureId);
+			if(commentOfMainPictureTemp != null)
+			{
+				albumDTO.setCommentOfMainPicture(commentOfMainPictureTemp);
+			}
+			Album album = albumRepository.findAlbumByAlbumId(picture.getAlbumId());
 			albumDTO.setAlbumTitle(album.getAlbumTitle());
 			User user = userRepository.findUserByUserId(album.getUserId());		
 			albumDTO.setUserName(user.getName());
@@ -138,6 +155,12 @@ public class PictureService implements IPictureService
 				}
 				PictureDTO pictureDTO = new PictureDTO();
 				BeanUtils.copyProperties(pictures.get(i), pictureDTO);
+				//图片的评论
+				String commentTemp =commentOfPictureService.commentsOfPictureTOJson(pictures.get(i).getId());
+				if(commentTemp != null)
+				{
+					pictureDTO.setCommentsOfPicture(commentTemp);
+				}
 				pictureDTO.setPictureId(pictures.get(i).getId());
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}
@@ -147,6 +170,12 @@ public class PictureService implements IPictureService
 			{
 				PictureDTO pictureDTO = new PictureDTO();
 				BeanUtils.copyProperties(pictures.get(j), pictureDTO);
+				//图片的评论
+				String commentTemp =commentOfPictureService.commentsOfPictureTOJson(pictures.get(j).getId());
+				if(commentTemp != null)
+				{
+					pictureDTO.setCommentsOfPicture(commentTemp);
+				}
 				pictureDTO.setPictureId(pictures.get(j).getId());
 				albumDTO.getPictureDTOs().add(pictureDTO);
 			}

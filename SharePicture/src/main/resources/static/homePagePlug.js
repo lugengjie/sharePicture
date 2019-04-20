@@ -1,4 +1,4 @@
-/*懒加载和瀑布流布局插件(版本3.0)*/
+ /*懒加载和瀑布流布局插件(版本3.0)*/
 /*参数：主图片class和用户头像class参数和第一个固定面板的高度，
  * pictureDescribleDiv:主图片描述框id
  * 所有参数不能为空*/
@@ -157,6 +157,23 @@ pictureDescribe:描述框的Id*/
               leftButton.click(function(){
                  picturesOfAlbum[pictureIndex].style.opacity = 0.3;
                  mainPicture.attr("src",picturesOfAlbum[(--pictureIndex)].getAttribute("data_src"));
+                 mainPicture.attr("realPictureId",picturesOfAlbum[(pictureIndex)].getAttribute("littlePictureId"));
+                 mainPicture.attr("commentOfMainPicture",picturesOfAlbum[(pictureIndex)].getAttribute("commentsOfPicture"));     
+                 //加载评论
+                 $("#commentTextOfPicture").empty();
+                 var commentOfMainPicture = $('#mainPicture').attr('commentOfMainPicture');
+                 if(commentOfMainPicture!=null){
+                 	 commentOfMainPicture = JSON.parse(commentOfMainPicture);
+                     for(var i=0;i<commentOfMainPicture.length;i++)
+                     {
+                   	  $("#commentTextOfPicture").append("<div style='padding:15px;border-top:1px solid #f5f2f2;height:85px'>"+
+                           	"<img id='touristPicture' src="+commentOfMainPicture[i].userPicture+">"+
+                          	"<div style='display:inline-block'>"+
+                          	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+"<a href='/personalCenter/personalCenterOfAlbum?userId="+commentOfMainPicture[i].userId+"'>"+
+                          	commentOfMainPicture[i].userName+ "</a></p>"+
+                          	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+commentOfMainPicture[i].commentWord+"</p></div></div>");
+                     }
+                 }
                  
                  var describeWord = picturesOfAlbum[pictureIndex].getAttribute("littlePictureIdDescribe");
                  if(describeWord!=null&&describeWord!=''){
@@ -185,6 +202,23 @@ pictureDescribe:描述框的Id*/
 
                 picturesOfAlbum[pictureIndex].style.opacity = 0.3;
                 mainPicture.attr("src", picturesOfAlbum[(++pictureIndex)].getAttribute("data_src"));
+                mainPicture.attr("realPictureId",picturesOfAlbum[(pictureIndex)].getAttribute("littlePictureId"));
+                mainPicture.attr("commentOfMainPicture",picturesOfAlbum[(pictureIndex)].getAttribute("commentsOfPicture"));     
+                //加载评论
+                $("#commentTextOfPicture").empty();
+                var commentOfMainPicture = $('#mainPicture').attr('commentOfMainPicture');
+                if(commentOfMainPicture!=null){
+                	 commentOfMainPicture = JSON.parse(commentOfMainPicture);
+                    for(var i=0;i<commentOfMainPicture.length;i++)
+                    {
+                  	  $("#commentTextOfPicture").append("<div style='padding:15px;border-top:1px solid #f5f2f2;height:85px'>"+
+                          	"<img id='touristPicture' src="+commentOfMainPicture[i].userPicture+">"+
+                         	"<div style='display:inline-block'>"+
+                         	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+"<a href='/personalCenter/personalCenterOfAlbum?userId="+commentOfMainPicture[i].userId+"'>"+
+                         	commentOfMainPicture[i].userName+ "</a></p>"+
+                         	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+commentOfMainPicture[i].commentWord+"</p></div></div>");
+                    }
+                }
                 
                 var describeWord = picturesOfAlbum[pictureIndex].getAttribute("littlePictureIdDescribe");
                 if(describeWord!=null&&describeWord!=''){
@@ -211,8 +245,24 @@ pictureDescribe:描述框的Id*/
         	   $(this).css("opacity",1);
                picturesOfAlbum[pictureIndex].style.opacity = 0.3;
                pictureIndex=$(this).index();
-               $("#mainPicture").attr("src", picturesOfAlbum[(pictureIndex)].getAttribute("data_src"));
-               
+               mainPicture.attr("src", picturesOfAlbum[(pictureIndex)].getAttribute("data_src"));
+               mainPicture.attr("realPictureId",picturesOfAlbum[(pictureIndex)].getAttribute("littlePictureId"));
+               mainPicture.attr("commentOfMainPicture",picturesOfAlbum[(pictureIndex)].getAttribute("commentsOfPicture"));     
+               //加载评论
+               $("#commentTextOfPicture").empty();
+               var commentOfMainPicture = $('#mainPicture').attr('commentOfMainPicture');
+               if(commentOfMainPicture!=null){
+               	 commentOfMainPicture = JSON.parse(commentOfMainPicture);
+                   for(var i=0;i<commentOfMainPicture.length;i++)
+                   {
+                 	  $("#commentTextOfPicture").append("<div style='padding:15px;border-top:1px solid #f5f2f2;height:85px'>"+
+                         	"<img id='touristPicture' src="+commentOfMainPicture[i].userPicture+">"+
+                        	"<div style='display:inline-block'>"+
+                        	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+"<a href='/personalCenter/personalCenterOfAlbum?userId="+commentOfMainPicture[i].userId+"'>"+
+                        	commentOfMainPicture[i].userName+ "</a></p>"+
+                        	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+commentOfMainPicture[i].commentWord+"</p></div></div>");
+                   }
+               }
                var describeWord = picturesOfAlbum[pictureIndex].getAttribute("littlePictureIdDescribe");
                if(describeWord!=null&&describeWord!=''){
                	$(pictureDescribleDiv).html('<div id="pictureDescrible"><span>'+describeWord+'</span></div>');

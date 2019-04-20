@@ -22,7 +22,7 @@ public interface IPictureService
 	public AlbumDTO showAllPictureOfAlbum(AlbumDTO albumDTO);
 	
 	//图片轮播
-	public AlbumDTO pictureCarousel(Long pictureId);
+	public AlbumDTO pictureCarousel(Long pictureId,Long myUserId);
 	
 	//喜欢图片
 	public boolean likePicture(Long pictureId, String email);

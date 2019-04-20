@@ -95,9 +95,10 @@ public class PictureController
 	 * @return
 	 */
 	@RequestMapping("/carouselPicture")
-	public String pictureCarousel(PictureDTO picture ,Model model)
+	public String pictureCarousel(PictureDTO picture ,Model model,HttpSession session)
 	{
-		AlbumDTO album=pictureService.pictureCarousel(picture.getPictureId());
+		Long myUserId = (Long)session.getAttribute("userId");
+		AlbumDTO album=pictureService.pictureCarousel(picture.getPictureId(), myUserId);
 		model.addAttribute("littleAlbum", album);
 		return "homePage::carouselMask";
 	}

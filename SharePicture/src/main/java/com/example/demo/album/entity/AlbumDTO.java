@@ -39,6 +39,11 @@ public class AlbumDTO
 	private int pictureNumber;
 	//是否已关注 1_是   0_不是
 	private int isFocusOn;
+	private String touristPicture;
+	private String touristName;;
+	private Long touristId;
+	private Long realPictureId;
+	private String commentOfMainPicture;
 	
 	
 	public Long getUserId()
@@ -211,6 +216,59 @@ public class AlbumDTO
 		this.isFocusOn = isFocusOn;
 	}
 
+	
+	public String getTouristPicture()
+	{
+		return touristPicture;
+	}
+
+	public void setTouristPicture(String touristPicture)
+	{
+		this.touristPicture = touristPicture;
+	}
+
+	public String getTouristName()
+	{
+		return touristName;
+	}
+
+	public void setTouristName(String touristName)
+	{
+		this.touristName = touristName;
+	}
+
+	public Long getTouristId()
+	{
+		return touristId;
+	}
+
+	public void setTouristId(Long touristId)
+	{
+		this.touristId = touristId;
+	}
+	
+	
+	public Long getRealPictureId()
+	{
+		return realPictureId;
+	}
+
+	public void setRealPictureId(Long realPictureId)
+	{
+		this.realPictureId = realPictureId;
+	}
+
+	
+	public String getCommentOfMainPicture()
+	{
+		return commentOfMainPicture;
+	}
+
+	public void setCommentOfMainPicture(String commentOfMainPicture)
+	{
+		this.commentOfMainPicture = commentOfMainPicture;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -219,7 +277,8 @@ public class AlbumDTO
 				+ pictureNames + ", userName=" + userName + ", userPicture=" + userPicture + ", userId=" + userId
 				+ ", pictureIndex=" + pictureIndex + ", mainPictureDescribe=" + mainPictureDescribe + ", isMyAlbum="
 				+ isMyAlbum + ", focusNumber=" + focusNumber + ", pictureDTOs=" + pictureDTOs + ", pictureNumber="
-				+ pictureNumber + ", isFocusOn=" + isFocusOn + "]";
+				+ pictureNumber + ", isFocusOn=" + isFocusOn + ", touristPicture=" + touristPicture + ", touristName="
+				+ touristName + ", touristId=" + touristId + ", realPictureId=" + realPictureId
+				+ ", commentOfMainPicture=" + commentOfMainPicture + "]";
 	}
-
 }

@@ -29,7 +29,7 @@ public class PictureDTO
 	private int isMine;
 	//是否喜欢 1_是  0_不是
 	private int isLike;
-	
+	private String commentsOfPicture;
 	
 	public Long getPictureId()
 	{
@@ -141,6 +141,15 @@ public class PictureDTO
 	{
 		this.isLike = isLike;
 	}
+	
+	public String getCommentsOfPicture()
+	{
+		return commentsOfPicture;
+	}
+	public void setCommentsOfPicture(String commentsOfPicture)
+	{
+		this.commentsOfPicture = commentsOfPicture;
+	}
 	@Override
 	public String toString()
 	{
@@ -148,7 +157,8 @@ public class PictureDTO
 				+ pictureDescribe + ", pictureName=" + pictureName + ", likeNumber=" + likeNumber + ", collectNumber="
 				+ collectNumber + ", albumId=" + albumId + ", albumName=" + albumName + ", userName=" + userName
 				+ ", userId=" + userId + ", userPicture=" + userPicture + ", isMine=" + isMine + ", isLike=" + isLike
-				+ "]";
+				+ ", commentsOfPicture=" + commentsOfPicture + "]";
 	}
+	
 	
 }
