@@ -74,7 +74,15 @@
   </style>
   <script type="text/javascript">
       $(document).ready(function(){
-    	  
+    	  /*Websocket连接 */
+  	     var worker = new SharedWorker('./../shared.js');
+  	     worker.port.addEventListener('message', function(e) {  
+  		  }, false);
+  		  worker.port.start(); 
+  		  worker.port.postMessage('start');
+  	     /*Websocket连接 */
+  	     
+  	     
     	    /*点击导航按钮进行跳转*/
     	    $('#toPersonalCenterOfCollect').click(function(){
     	       var userId = $(this).attr('userId');

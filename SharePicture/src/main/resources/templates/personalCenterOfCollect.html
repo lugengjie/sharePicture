@@ -528,39 +528,82 @@
 			/* 懒加载和瀑布流布局插件 */
 		
 		/*轮播模态框*/
-		$("#carouselMask").hide();
-		$(".mainPictureOfPanel").click(function(){
-		var picSrc = $(this).attr('pictureIdofPanel');
-		$('#carouselMask').load("/picture/carouselPicture",{'pictureId':picSrc},function(){  
-		     /*评论框无内容时禁止点击发送*/
-		     $("#commentTextArea").bind('input propertychange',function () { 
-		         var TextAreaContent = $("#commentTextArea").val();
-		
-		         if (TextAreaContent == "") {
-		           $("#commentTextAreaButton").attr("disabled","disabled");
-		         }else{
-		           $("#commentTextAreaButton").removeAttr("disabled");
-		         }
-		     });
-		     var mainPictureIndex = $('#mainPicture').attr('mainPictureIndex');
-		     $(document.body).css({"overflow-y":"hidden"});
-		     $("#picturesOfAlbum").carouselPlugin({
-		          'mainPicture':'mainPicture',
-		          'leftButton':'LeftButton',
-		          'rightButton':'RightButton',
-		          'pictureIndex': mainPictureIndex,
-		          'pictureDescribleDiv':'#pictureDescribleDiv'
-		     }); 
-		     $("#picturesOfAlbum").myPlugin(mainPictureIndex);
-		   $("#carouselMask").show();            
-		   $("#closeButton").click(function(){
-		     $("#carouselMask").hide();
-		     $(document.body).css({"overflow-y":"scroll"});
-		   });
-		      
-		});
-		}); 
-		/*轮播模态框*/   
+          $("#carouselMask").hide();
+          $(".mainPictureOfPanel").click(function(){
+            var picSrc = $(this).attr('pictureIdofPanel');
+            $('#carouselMask').load("/picture/carouselPicture",{'pictureId':picSrc},function(){  
+                  /*评论框无内容时禁止点击发送*/
+                  $("#commentTextArea").bind('input propertychange',function () { 
+                      var TextAreaContent = $("#commentTextArea").val();
+                      if (TextAreaContent == "") {
+                        $("#commentTextAreaButton").attr("disabled","disabled");
+                      }else{
+                        $("#commentTextAreaButton").removeAttr("disabled");
+                      }
+                  });
+                  //加载评论
+                  var commentOfMainPicture = $('#mainPicture').attr('commentOfMainPicture');
+                  if(commentOfMainPicture!=null){
+                  	 commentOfMainPicture = JSON.parse(commentOfMainPicture);
+                      for(var i=0;i<commentOfMainPicture.length;i++)
+                      {
+                    	  $("#commentTextOfPicture").append("<div style='padding:15px;border-top:1px solid #f5f2f2;height:85px'>"+
+                            	"<img id='touristPicture' src="+commentOfMainPicture[i].userPicture+">"+
+                           	"<div style='display:inline-block'>"+
+                           	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+"<a href='/personalCenter/personalCenterOfAlbum?userId="+commentOfMainPicture[i].userId+"'>"+
+                           	commentOfMainPicture[i].userName+ "</a></p>"+
+                           	"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+commentOfMainPicture[i].commentWord+"</p></div></div>");
+                      }
+                  }
+                  //点击添加评论按钮
+                  $("#commentTextAreaButton").click(function(){
+                	    $("#commentTextAreaButton").attr("disabled","disabled");
+                	    var commentWord = $("#commentTextArea").val();
+                	    var pictureId = $('#mainPicture').attr('realPictureId');
+                	    var formDataTemp = new FormData();
+                	    formDataTemp.append('commentWord',commentWord);
+                	    formDataTemp.append('pictureId',pictureId);
+                	    $.ajax({
+		  						  url: "/commentOfPicture/saveComment",
+		  						  type: "POST",
+		  						  data: formDataTemp,
+		  						  processData: false,	
+		  						  contentType: false ,
+		  						  success: function(data){	 
+		  		              }
+  			  		       });
+                	    
+                	    var touristPicture = $("#commentTextAreaButton").attr('touristPicture');
+                	    var touristName = $("#commentTextAreaButton").attr('touristName');
+                	    var touristId = $("#commentTextAreaButton").attr('touristId');
+                	    $("#commentTextOfPicture").append("<div style='padding:15px;border-top:1px solid #f5f2f2;height:85px'>"+
+                 	   "<img id='touristPicture' src="+touristPicture+">"+
+                		"<div style='display:inline-block'>"+
+                				"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+"<a href='/personalCenter/personalCenterOfAlbum?userId="+touristId+"'>"+
+                				touristName+ "</a></p>"+
+                				"<p>&nbsp;&nbsp;&nbsp;&nbsp;"+commentWord+"</p></div></div>");
+                	    $("#commentTextArea").val("");
+                  });
+                  
+                  var mainPictureIndex = $('#mainPicture').attr('mainPictureIndex');
+                  $(document.body).css({"overflow-y":"hidden"});
+                  $("#picturesOfAlbum").carouselPlugin({
+                       'mainPicture':'mainPicture',
+                       'leftButton':'LeftButton',
+                       'rightButton':'RightButton',
+                       'pictureIndex': mainPictureIndex,
+                       'pictureDescribleDiv':'#pictureDescribleDiv'
+                  }); 
+                  $("#picturesOfAlbum").myPlugin(mainPictureIndex);
+                $("#carouselMask").show();            
+                $("#closeButton").click(function(){
+                  $("#carouselMask").hide();
+                  $(document.body).css({"overflow-y":"scroll"});
+                });
+                   
+            });
+          }); 
+         /*轮播模态框*/   
 		/* 关注与取消关注用户 */
 		$('.navFocusOnUserButton').click(function(){
 				var albumId = $(this).attr('userId');
@@ -790,23 +833,27 @@
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                 </button>
                                 <div style="text-align:center"> 
-                                   <img id="mainPicture" th:mainPictureIndex="${littleAlbum.pictureIndex}" th:src="@{${littleAlbum.coverPictureName}}">                 
+                                   <img id="mainPicture" th:mainPictureIndex="${littleAlbum.pictureIndex}" th:src="@{${littleAlbum.coverPictureName}}" th:realPictureId="${littleAlbum.realPictureId}" th:commentOfMainPicture="${littleAlbum.commentOfMainPicture}">                 
                                 </div>
                           </div>
                           <div id="underMainPicturePanel">
-                                <div style="padding:15px">
-                                    <img id="umpLittlePicture" src="./../aa.jfif">
+                                <div style="padding:15px"> 	
+                                    <img id="umpLittlePicture" th:src="${littleAlbum.userPicture}">
+                                    <a th:href="'/personalCenter/personalCenterOfAlbum?userId='+${littleAlbum.userId}">
                                     <h4 id="umpUserName" th:text="${littleAlbum.userName}"></h4>
+                                    </a>
                                 </div>
                                 <div id="pictureDescribleDiv" style="text-align:center" >
                                     <div id="pictureDescrible" th:if="${littleAlbum!=null&&littleAlbum.mainPictureDescribe!=''}">
                                           <span th:text="${littleAlbum.mainPictureDescribe}"></span>
                                     </div>
                                 </div>
+                                <div id="commentTextOfPicture">       		
+                                </div>
                                 <div style="padding:15px;border-top:1px solid #f5f2f2;">
-                                  <img id="touristPicture" src="./../aa.jfif">
+                                  <img id="touristPicture" th:src="${littleAlbum.touristPicture}">
                                   <textarea id="commentTextArea" class="form-control" placeholder="添加评论"></textarea>
-                                  <button id="commentTextAreaButton" type="button" class="btn btn-default" disabled="disabled">添加评论</button>
+                                  <button id="commentTextAreaButton" type="button" class="btn btn-default" disabled="disabled" th:touristPicture="${littleAlbum.touristPicture}" th:touristName="${littleAlbum.touristName}" th:touristId="${littleAlbum.touristId}">添加评论</button>
                                 </div>
                           </div>
 
@@ -815,11 +862,17 @@
                       <div id="laRightPanel">
                           <img id="larUserPicture" th:src="${littleAlbum.userPicture}">
                           <div id="larAlbumNameAndUserName">
-                              <span   id="lanauAlbumName" th:text="${littleAlbum.albumTitle}"></span><br><span  id="lanauUserName" th:text="${littleAlbum.userName}"></span>
+                          		<a th:href="'/picture/showPictureOfAlbum?id='+${littleAlbum.id}">
+                              <span id="lanauAlbumName" th:text="${littleAlbum.albumTitle}"></span>
+                              </a>
+                              <br>
+                              <a th:href="'/personalCenter/personalCenterOfAlbum?userId='+${littleAlbum.userId}">
+                              <span  id="lanauUserName" th:text="${littleAlbum.userName}"></span>
+                              </a>
                           </div>
                         
                           <div   id="picturesOfAlbum"> 
-                              <img th:each="picture:${littleAlbum.pictureDTOs}" src=""  th:data_src="${picture.pictureName}" th:littlePictureId="${picture.pictureId}" th:littlePictureIdDescribe="${picture.pictureDescribe}">      
+                              <img th:each="picture:${littleAlbum.pictureDTOs}" src=""  th:data_src="${picture.pictureName}" th:littlePictureId="${picture.pictureId}" th:littlePictureIdDescribe="${picture.pictureDescribe}" th:commentsOfPicture="${picture.commentsOfPicture}">      
                           </div>
                          
                            <button id="followPictureButton" type="button" class="btn btn-primary btn-danger">关注相册</button>

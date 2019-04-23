@@ -51,7 +51,7 @@
              setTimeout( function () {
                scrollAndOnload(picturesOfBox.length,picturesOfBox,imageWidth,boxColum,gap,heightArray,widthArray);
                canRun = true;
-             },130);
+             },200);
            }
        } 
         

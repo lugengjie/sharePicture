@@ -104,6 +104,9 @@
   </style>
   <script type="text/javascript">
       $(document).ready(function(){   
+    	    /*Websocket连接 */
+    	    var socket = new WebSocket("ws://"+window.location.host+"/websocket");
+    	    /*Websocket连接 */
     	    /*收藏图片*/
     	    		/*收藏图片的FormDate变量*/
     	    		var cpformData;
