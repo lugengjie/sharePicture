@@ -4,11 +4,13 @@
   <meta charset="utf-8"> 
   <title>personalCenter</title>
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="./../background-blur.css">
+  <link rel="stylesheet" href="./../css/background-blur.css">
+  <link rel="stylesheet" href="./../css/navigation.css">
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="./../background-blur.min.js"></script>
-  <script src="./../index.js"></script>
+  <script src="./../js/background-blur.min.js"></script>
+  <script src="./../js/index.js"></script>
+  <script src="./../js/navigation.js"></script>
   <style>
   /* div { border:1px solid black;} */
     /*防止打开模态框时页面抖动*/
@@ -16,22 +18,7 @@
     body{ padding-right:1px!important;background-color:#f5f5f5;}
     .myPanel {cursor: pointer;width:18.54%; height:326px;text-align: center;padding:10px;margin-left:16px;margin-bottom:16px;float:left;background-color:white;}
    
-    /* 导航栏*/
-    nav{background-color:white;}
-    nav .container{width:1250px;}
-    .navbar-header{height:50px}
-    #navLogo{width:100px;height: 70px;margin-top:-8px}
-    #bellButton{font-size: 20px;color:#a6a6a6;margin-top: 8px}
-    #noticeIcon{border-left:1px solid #ddd;}
-    #noticeIcon p{font-size:17px;height:1px}
-    #navUserPicture{border-left:1px solid #ddd;border-right:1px solid #ddd;}
-    #navUserPicture img{height:20px;width:20px}
-    #navSearch{float:right;width:350px}
-    #navSearch button{height:35px}
-    #navSearchInput{height:35px;position:relative;}
-    #navSearchInput input{height:100%;width:300px}
-    #navSearchInput span {position:absolute;font-size:20px;color:#c8c8c8;margin-left:270px;margin-top: 5px}
-
+  
     /*pictureAndNamePanelCss*/
     #userSetting{cursor: pointer;}
     #fans{cursor: pointer;}
@@ -186,18 +173,18 @@
 </head>
 <body>
 
-    <!-- 导航栏 -->
-    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:3">
+     <!-- 导航栏 -->
+    <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:3" th:if="${myUserDTO!=null}">
         <div class="container">
           <div class="row" style="margin-left:-53px">
               <div class="col-md-5" >
                   <div class="navbar-header">
-                      <img id="navLogo" src="./../logo2.png">
+                      <img id="navLogo" src="./../picture/logo2.png">
                   </div>
                   <ul class="nav navbar-nav">
-                      <li><a class="navbar-brand" href="#">SharePicture</a></li>
-                      <li><a href="#">首页</a></li>
-                      <li><a href="#">推荐</a></li> 
+                      <li><a class="navbar-brand" th:href="'/personalCenter/personalCenterOfAlbum?userId='+${myUserDTO.userId}">SharePicture</a></li>
+                      <li><a href="/personalCenter/toHomePage">首页</a></li>
+                      <li><a href="/recommend/toRecommendPage">推荐</a></li> 
                       <li><a href="#">●●●</a></li> 
                         
                   </ul>
@@ -205,22 +192,29 @@
               <div class="col-md-6 col-md-offset-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li id="noticeIcon">
-                          <a  href="#"> 
+                          <a id="navPrivateLetterRemindButton"> 
                             <p class="glyphicon glyphicon-bullhorn">    
                             </p>
+                            <strong><span id="unReadPrivateLetterNumber"  class="tipIcon"  th:text="${unReadMessageNum}" th:fragment="unReadPrivateLetterNumber">6</span></strong>
                           </a>
                         </li>
-                        <li id="navUserPicture">
-                          <a href="#"><img  src="./../aa.jfif"></a>
+                        <li id="navUserPicture" class="dropdown">
+                          <a  href="#" class="dropdown-toggle" data-toggle="dropdown"><img  th:src="${myUserDTO.userPicture}"></a>
+                          <ul class="dropdown-menu">
+			                    <li>
+			                    		<li><a id="outLogin" href="#"><span class="glyphicon glyphicon-log-out">&nbsp;</span>退出登录</a></li> 
+			                    </li>
+			                 </ul>
                         </li>
                    </ul>      
           <div id="navSearch" class="input-group navbar-form">
              <div class="input-group-btn">
-              <button type="button" class="btn btn-default 
-              dropdown-toggle" data-toggle="dropdown">相册
+              <button id="navSearchChange" type="button" class="btn btn-default 
+              dropdown-toggle" data-toggle="dropdown"><span id="navChangeContent">相册</span>
               <span class="caret"></span>
               </button>
-              <ul class="dropdown-menu">
+              <ul id="navchangeName" class="dropdown-menu">
+                <li><a href="#">相册</a></li>
                 <li><a href="#">收藏</a></li>
                 <li><a href="#">用户</a></li>
               </ul>
@@ -331,6 +325,44 @@
     
     
 </div> 
+
+
+<!-- 私信模态框 -->
+ <div class="modal fade" id="privateLetter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <span>私信</span>
+            </div>
+            <div id="showPrivateLetterPanel" class="modal-body" style="overflow-y:scroll; width:596px;background-color: #ebebeb;height: 400px">
+            	
+            </div>
+            <div class="modal-footer">
+               	 <textarea id="privateLetterText" class="form-control"></textarea><br>
+                <button id="privateLetterButton" type="button" class="btn btn-danger" disabled="disabled">发送私信</button>
+            </div>
+        </div>
+    </div>
+ </div>
+  
+  
+ <!-- 私信提醒模态框 -->
+ <div class="modal fade" id="privateLetterRemind" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <span>未读信息</span>
+            </div>
+            <div id="showPrivateLetterRemindPanel" class="modal-body" style="overflow-y:scroll; width:596px;height: 400px">
+            <ul class="list-group">
+				    		   
+				</ul>
+            </div>
+        </div>
+    </div>
+  </div> 
     
 </body>
 </html>

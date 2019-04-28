@@ -111,4 +111,10 @@ public class AlbumTest
 	
 	}
 	
+	@Test
+	public void reseachAlbumsByLikeTest()
+	{
+		System.out.println(albumService.reseachAlbumsByLike(1L, "哈哈"));
+	}
+	
 }

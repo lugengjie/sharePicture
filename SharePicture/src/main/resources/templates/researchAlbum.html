@@ -12,26 +12,12 @@
   <style>
    /*   div { border:1px solid black;} */
     /*防止打开模态框时页面抖动*/
-	.modal-open{overflow-y: scroll;}
+	  .modal-open{overflow-y: scroll;}
     body{ padding-right:1px!important;background-color:#f5f5f5;}
     .myPanel {cursor: pointer;width:18.54%; height:326px;text-align: center;padding:10px;margin-left:16px;margin-bottom:16px;float:left;background-color:white;}
    
-    /*pictureAndNamePanelCss*/ 
-    #userSetting{cursor: pointer;}
-    #fans{cursor: pointer; }
-    #follow{cursor: pointer; }
-    #pictureAndNamePanel{margin-left:4%;margin-right:2%;margin-top:8.5%;width:1246px;}
-    #pictureAndNamePanel .container{width:1220px;}
-    #userPicture{height:150px;width:140px;margin-top:-60px;margin-left:-10px}
-    #userName{margin-top:-1%;margin-left:-4%}
-    #setting{font-size: 25px;text-align: right;}
-    #fans{border-right:1px solid #ededed;width:70px;margin-left:1.3%}
-    #follow{width:70px}
-    #fansAndFollow{text-align:center;margin-top:10px;margin-left:-25px}
-    #navTabPanel{background-color:white;}
-
     /* 相册组 */
-    #albumPage .container{width:1275px;margin-top:-5px}
+    #albumPage .container{width:1275px;margin-top:70px}
     .outerBorder{border:2px dashed #dedede;width:100%;height:100%;}
     .innerBorder{margin-top: 50%;font-size: 20px;}
     .coverPicture{height:65%;width:99.1%;margin-bottom:1.6%;border:1.5px solid #ededed;}
@@ -181,46 +167,13 @@
 		});
 		/* 关注与取消关注相册 */
 		
-		/* 关注与取消关注用户 */
-		$('.navFocusOnUserButton').click(function(){
-				var albumId = $(this).attr('userId');
-				var formDataTemp = new FormData();
-            formDataTemp.append('userId',albumId);
-            $.ajax({
-				  url: "/personalCenter/focusOnUser",
-				  type: "POST",
-				  data: formDataTemp,
-				  processData: false,	
-				  contentType: false ,
-				  success: function(data){	
-					   location.reload(); 
-              }
-	  	      });
-				
-		});
-		$('.navCancelFocusOnUserButton').click(function(){
-			   var albumId = $(this).attr('userId');
-			   var formDataTemp = new FormData();
-	            formDataTemp.append('userId',albumId);
-	            $.ajax({
-					  url: "/personalCenter/cancelFocusOnUser",
-					  type: "POST",
-					  data: formDataTemp,
-					  processData: false,	
-					  contentType: false ,
-					  success: function(data){	
-						 location.reload();
-	              }
-		  	   });
-		});
-		/* 关注与取消关注用户 */
 		
    });
   </script>
 </head>
 <body>
 
-    <!-- 导航栏 -->
+     <!-- 导航栏 -->
     <nav class="navbar navbar-fixed-top" role="navigation" style="z-index:3" th:if="${myUserDTO!=null}">
         <div class="container">
           <div class="row" style="margin-left:-53px">
@@ -276,69 +229,11 @@
         </div>
     </nav>
 
-
-    <!-- 照片加名字 -->
-    <div id="pictureAndNamePanel" class="panel panel-default" th:if="${userDTO!=null}">
-      <div class="panel-body">
-        <div class="container">
-           <div class="row">
-              <div class="col-md-2">
-                <img id="userPicture" class="img-thumbnail" th:src="${userDTO.userPicture}" >
-              </div>
-              <div id="userName" class="col-md-2">
-                <h2><strong th:text="${userDTO.userName}">卢耿杰</strong></h2>
-              </div>
-              <div id="setting" class="col-md-1 col-md-offset-7">          	
-                 <a href="/personalCenter/toUserSetting"><p id="userSetting" th:if="${userDTO.isMyUser==1}" class="glyphicon glyphicon-cog" style="margin-right:-40px;" ></p></a>
-                 <div>
-		                 <button style="margin-left:-10px" class="navFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 0}" th:userId="${userDTO.userId}">关注用户</button>
-		                 <button style="margin-left:-10px" class="navCancelFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 1}" th:userId="${userDTO.userId}">取消关注</button> 
-		                 <div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a id="openPrivateLetterModel" th:userId="${userDTO.userId}"><span class="glyphicon glyphicon-envelope" th:if="${userDTO.isMyUser ==0}"></span></a></div>
-                 </div>
-              </div>
-            </div>
-            <div  id="fansAndFollow" class="row">
-              <div id="fans" class="col-md-1" th:userId="${userDTO.userId}">
-              	  <a th:href="'/personalCenter/personalCenterOfFans?userId='+${userDTO.userId}">
-                 <strong style="font-size:17px" th:text="${userDTO.fansNumber}">4</strong><br>粉丝
-                 </a>
-              </div>
-              <div id="follow" class="col-md-1" th:userId="${userDTO.userId}">
-              	  <a th:href="'/personalCenter/personalCenterOfFocusOnAlbum?userId='+${userDTO.userId}">
-                 <strong style="font-size:17px" th:text="${userDTO.focusOnNumber}">4</strong><br>关注
-                 </a>
-              </div> 
-            </div> 
-          </div> 
-        </div>
-      <div id="navTabPanel" class="panel-footer">
-           <ul class="nav nav-tabs">
-              <li class="active"><a id="toPersonalCenterOfAlbum" data-toggle="tab" href="#albumPage"  th:userId="${userDTO.userId}">相册</a></li>
-              <li><a id="toPersonalCenterOfCollect" data-toggle="tab" href="#albumPage" th:userId="${userDTO.userId}">收藏</a></li>
-              <li><a id="toPersonalCenterOfLike"  data-toggle="tab" href="#albumPage" th:userId="${userDTO.userId}">喜欢</a></li>
-          </ul>
-      </div>
-     </div>
-    
-
      <!-- 相册组 -->
-    <div class="tab-content">
-        <div id="albumPage" class="tab-pane fade in active">  
+    <!-- <div class="tab-content"> -->
+        <div id="albumPage">  
             <div class="container" style="min-height:400px;">
             	<div class="row">
-	                <a data-toggle="modal" data-target="#addAlbum" th:if="${userDTO.isMyUser!=0}">
-	                    <div class="myPanel">
-	                      <div class="outerBorder">
-	                          <div class="innerBorder">
-	                            <span class="glyphicon glyphicon-plus"></span>
-	                            <p>创建相册</p>
-	                          </div>
-	                      </div>
-	                    </div>  
-	                 </a>
-	         
-           			
-           	
 	                	<div class="myPanel" th:each="album:${albums}" style="position : relative;">
 	                		<p class="albumTitleOfPanel" th:text="${album.albumTitle}">开心就好</p>
 	                		<p class="albumDescribeOfPanel"  th:text="${album.albumDescribe}"><br><br>这是一张图片</p>
@@ -358,10 +253,10 @@
                 	
                </div>
             </div>
-        </div>
+       </div> 
 
 
-       
+<!--        
         <div id="menu2" class="tab-pane fade">
             <h3>菜单 2</h3>
             <p>这是菜单 2 显示的内容。这是菜单 2 显示的内容。这是菜单 2 显示的内容。</p>
@@ -370,7 +265,7 @@
             <h3>菜单 3</h3>
             <p>这是菜单 3 显示的内容。这是菜单 3 显示的内容。这是菜单 3 显示的内容。</p>
         </div>
-  </div>
+  </div> -->
 
 
    <!-- 添加相册模态框 -->

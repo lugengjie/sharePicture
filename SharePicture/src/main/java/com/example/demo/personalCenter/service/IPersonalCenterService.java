@@ -42,5 +42,8 @@ public interface IPersonalCenterService
 	//封装发送到UserSetting的UserSettingDTO
 	public UserSettingDTO toUserSetting(Long myUserId);
 	
+	//导航栏上的用户信息
+	public UserDTO navUserDTO(Long myUserId);
+	
 	
 }

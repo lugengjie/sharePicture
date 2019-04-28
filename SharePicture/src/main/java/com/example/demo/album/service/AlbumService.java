@@ -1,7 +1,5 @@
 package com.example.demo.album.service;
 
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -260,6 +258,65 @@ public class AlbumService implements IAlbumService
 			
 		}
 		return albumDTO;
+	}
+	
+	//模糊查询相册
+	public List<AlbumDTO> reseachAlbumsByLike(Long myUserId, String likeStr)
+	{
+		List<Album> albums = albumRepository.reseachAlbumsByLike(likeStr);
+		if(albums != null && !albums.isEmpty()) 
+		{
+			List<AlbumDTO> albumDtos=new ArrayList<AlbumDTO>();
+			for(Album album:albums)
+			{
+				AlbumDTO albumDto=new AlbumDTO();
+				BeanUtils.copyProperties(album, albumDto);
+				//判断是否是自己的相册
+				if(!album.getUserId().equals(myUserId))
+				{
+					albumDto.setIsMyAlbum(0);
+				}
+				else
+				{
+					albumDto.setIsMyAlbum(1);
+				}
+				//判断是否已关注该相册
+				FocusOnAlbum focusOnAlbum = focusOnAlbumRepository.findFocusOnAlbumByAlbumIdAndUserId(album.getId(), myUserId);
+				if(focusOnAlbum == null)
+				{
+					albumDto.setIsFocusOn(0);
+				}
+				else
+				{
+					albumDto.setIsFocusOn(1);
+				}
+				List<Picture> pictures=pictureRepository.findPictureByAlbumId(album.getId());
+				albumDto.setCoverPictureName("");
+				for(int i=0;i<3;i++)
+				{
+					albumDto.getPictureNames().add("");
+				}
+				if(pictures != null && !pictures.isEmpty()) 
+				{
+					//将图片List的最后一张图片作为相册的封面
+					String coverPictureName=pictures.get(pictures.size()-1).getPictureName();
+					albumDto.setCoverPictureName(coverPictureName);
+					int j=0;
+					for(int i=pictures.size()-2;i>=0;i--)
+					{
+						String pictureName=pictures.get(i).getPictureName();
+						albumDto.getPictureNames().set(j++,pictureName);
+						if(j>2)
+						{
+							break;
+						}
+					}
+				}
+				albumDtos.add(albumDto);
+			}
+			return albumDtos;
+		}
+		return null;	
 	}
 	
 }

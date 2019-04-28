@@ -1,0 +1,19 @@
+ /* 导航栏*/
+    .glyphicon-search{cursor: pointer;}
+    #showPrivateLetterRemindPanel li{cursor: pointer;}
+    #showPrivateLetterRemindPanel li:hover{background-color:#f5f5f5}
+    a{cursor: pointer;}
+    nav{background-color:white;}
+    nav .container{width:1250px;}
+    .navbar-header{height:50px}
+    #navLogo{width:100px;height: 70px;margin-top:-8px}
+    #bellButton{font-size: 20px;color:#a6a6a6;margin-top: 8px}
+    #noticeIcon{border-left:1px solid #ddd;}
+    #noticeIcon p{font-size:17px;height:1px}
+    #navUserPicture{border-left:1px solid #ddd;border-right:1px solid #ddd;}
+    #navUserPicture img{height:20px;width:20px}
+    #navSearch{float:right;width:350px}
+    #navSearch button{height:35px}
+    #navSearchInput{height:35px;position:relative;}
+    #navSearchInput input{height:100%;width:300px}
+    #navSearchInput span {position:absolute;font-size:20px;color:#c8c8c8;margin-left:270px;margin-top: 5px}

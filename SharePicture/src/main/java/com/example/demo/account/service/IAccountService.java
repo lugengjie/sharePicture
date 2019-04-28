@@ -43,6 +43,9 @@ public interface IAccountService
 	//根据email查询用户
 	public User findUserByEmail(String email);
 	
+	//模糊查询用户
+	public List<UserDTO> researchUser(Long myUserId, String likeStr);
+	
 	
 
 }

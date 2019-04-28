@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -532,5 +533,22 @@ public class PersonalCenterService implements IPersonalCenterService
     	return userSettingDTO;
     }
     
+ 
+    /**
+     * 导航栏上的用户信息
+     */
+  	public UserDTO navUserDTO(Long myUserId)
+  	{
+  		UserDTO userDTO = null;
+  		if(myUserId != null)
+  		{
+  			userDTO = new UserDTO();
+  			User user = userRepository.findById(myUserId).get();
+  			userDTO.setUserId(user.getId());
+  			userDTO.setUserPicture(user.getUserPicture());
+  			return userDTO;
+  		}
+  		return userDTO;
+  	}
 	
 }

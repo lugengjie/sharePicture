@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.account.entity.UserDTO;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.communication.service.CommentOfPictureService;
+import com.example.demo.communication.service.PrivateLetterService;
+import com.example.demo.personalCenter.service.PersonalCenterService;
 
 @Controller
 @RequestMapping(value = "/commentOfPicture")
@@ -20,6 +22,7 @@ public class CommentOfPictureController
 {
 	@Autowired
 	CommentOfPictureService commentOfPictureService;
+	
 	
 	@RequestMapping(value="/saveComment")
 	public @ResponseBody String saveComment(HttpSession session,Long pictureId,String commentWord, Model model)

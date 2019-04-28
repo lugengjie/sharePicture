@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.account.entity.UserDTO;
+import com.example.demo.account.service.AccountService;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.service.IAlbumService;
+import com.example.demo.communication.service.PrivateLetterService;
 import com.example.demo.personalCenter.entity.UserSettingDTO;
 import com.example.demo.personalCenter.service.InterestService;
 import com.example.demo.personalCenter.service.PersonalCenterService;
 import com.example.demo.picture.entity.PictureDTO;
+import com.example.demo.picture.repository.PictureRepository;
+import com.example.demo.picture.service.PictureService;
 
 @Controller
 @RequestMapping(value = "/personalCenter")
@@ -29,7 +33,12 @@ public class personalCenterController
 	IAlbumService albumService;
 	@Autowired
 	InterestService interestService;
-	
+	@Autowired
+	PrivateLetterService privateLetterService;
+	@Autowired
+	PictureService pictureService;
+	@Autowired
+	AccountService accountService;
 	/*
 	 * 跳转到PersonalCenterOfAlbum
 	 */
@@ -40,6 +49,10 @@ public class personalCenterController
 		Long myUserId = (Long) session.getAttribute("userId");
 		List<AlbumDTO> albums=albumService.showAlbumAndCoverPicture(myUserId, userId);
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(myUserId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(myUserId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("albums", albums);
 		model.addAttribute("userDTO", userDTO);
 		return "personalCenterOfAlbum";
@@ -56,6 +69,10 @@ public class personalCenterController
 		List<AlbumDTO> albums=albumService.showAlbum(userId);
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<PictureDTO> pictureDTOs = personalCenterService.personalCenterOfCollect(myUserId, userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(myUserId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(myUserId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albums", albums);
 		model.addAttribute("userDTO", userDTO);
@@ -73,6 +90,10 @@ public class personalCenterController
 		List<AlbumDTO> albums=albumService.showAlbum(myUserId);
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<PictureDTO> pictureDTOs = personalCenterService.personalCenterOfLike(myUserId, userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(userId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(userId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albums", albums);
 		model.addAttribute("userDTO", userDTO);
@@ -89,6 +110,10 @@ public class personalCenterController
 		Long myUserId = (Long) session.getAttribute("userId");
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<UserDTO> fansDTOs = personalCenterService.personalCenterOfFans(myUserId, userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(userId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(userId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("fansDTOs", fansDTOs);
 		return "personalCenterOfFans";
@@ -103,6 +128,10 @@ public class personalCenterController
 		Long myUserId = (Long) session.getAttribute("userId");
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<AlbumDTO> albumDTOs = personalCenterService.personalCenterOfFocusOnOfAlbumDTOs(myUserId, userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(userId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(userId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("albums", albumDTOs);
 		return "personalCenterOfFocusOnAlbum";
@@ -114,6 +143,10 @@ public class personalCenterController
 		Long myUserId = (Long) session.getAttribute("userId");
 		UserDTO userDTO = personalCenterService.personalCenterOfAlbumOfUserDTOs(myUserId, userId);
 		List<UserDTO> focusOnDTOs = personalCenterService.personalCenterOfFocusOnOfUserDTOs(myUserId, userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(userId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(userId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("focusOnDTOs", focusOnDTOs);
 		return "personalCenterOfFocusOnUser";
@@ -133,6 +166,10 @@ public class personalCenterController
 		List<PictureDTO> pictureDTOs = personalCenterService.homePageOfPictureDTOs(email);
 		UserDTO userDTO = personalCenterService.homePageOfUserDTOs(email);
 		List<AlbumDTO> albums=albumService.showAlbum(userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(userId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(userId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("userDTO", userDTO);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albums", albums);
@@ -172,8 +209,60 @@ public class personalCenterController
 	{
 		Long myUserId =(Long) session.getAttribute("userId");
 		UserSettingDTO userSettingDTO = personalCenterService.toUserSetting(myUserId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(myUserId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(myUserId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("userSettingDTO", userSettingDTO);
 		return "userSetting";
 	}
 	
+	@RequestMapping(value = "/tosearchAlbum")
+	public String tosearchAlbum(HttpSession session,String likeStr, Model model)
+	{
+		Long myUserId =(Long) session.getAttribute("userId");
+		List<AlbumDTO> albums= albumService.reseachAlbumsByLike(myUserId, likeStr);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(myUserId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(myUserId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
+		model.addAttribute("albums", albums);
+		return "researchAlbum";
+	}
+	
+	@RequestMapping(value = "/tosearchPicture")
+	public String tosearchPicture(HttpSession session,String likeStr, Model model)
+	{
+		Long myUserId =(Long) session.getAttribute("userId");
+		List<PictureDTO> pictureDTOs = pictureService.reseachPicturesByLike(myUserId, likeStr);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(myUserId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(myUserId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
+		model.addAttribute("pictureDTOs", pictureDTOs);
+		return "researchPicture";
+		
+	}
+	
+	@RequestMapping(value = "/tosearchUser")
+	public String tosearchUser(HttpSession session,String likeStr, Model model)
+	{
+		Long myUserId =(Long) session.getAttribute("userId");
+		List<UserDTO> userDTOs = accountService.researchUser(myUserId, likeStr);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(myUserId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(myUserId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
+		model.addAttribute("userDTOs", userDTOs);
+		return "researchUser";
+		
+	}
+	
+	@RequestMapping(value = "/destroySession")
+	public @ResponseBody String destroySession(HttpSession session)
+	{
+		session.invalidate();
+		return "成功";
+	}
+
 }

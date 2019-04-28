@@ -26,4 +26,7 @@ public interface LikePictureRepository extends CrudRepository<LikePicture, Long>
 	@Modifying
 	@Query("delete from LikePicture l where l.pictureId=?1")
 	public void deleteLikeByPictureId(Long pictureId);
+	
+	@Query("select l.pictureId from LikePicture l where l.userId=?1")
+	public List<Long> researchPictures(Long userId);
 }

@@ -16,6 +16,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.communication.entity.PrivateLetterDTO;
 import com.google.gson.Gson;
 @ServerEndpoint(value = "/websocket", configurator = HttpSessionConfigurator.class)
 @Component
@@ -65,8 +66,8 @@ public class MyWebSocket {
     @OnMessage
     public void onMessage(String message, Session session) {
     	System.out.println("来自客户端的消息:" + message);
-    	
-
+    	PrivateLetterDTO msg = new Gson().fromJson(message,PrivateLetterDTO.class);
+    	sendOne(message,msg.getReceiverId());
         
  	   
     }
@@ -90,7 +91,7 @@ public class MyWebSocket {
     /*
      * 定向发送消息
      */
-    public void sendOne(String message,String id) {
+    public void sendOne(String message,Long id) {
     	if(message!=null&&id!=null) {	
     		for(MyWebSocket item:webSocketSet) {
     			if(item.id.equals(id)) {

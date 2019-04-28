@@ -287,5 +287,53 @@ public class AccountService implements IAccountService
     {
     	return userRepository.findByEmial(email);
     }
+    
+  //模糊查询用户
+  public List<UserDTO> researchUser(Long myUserId, String likeStr)
+  {
+		List<UserDTO> userDTOs = null;
+		if( myUserId != null && likeStr!=null && !likeStr.equals(""))
+		{
+			List<User> userTemps = userRepository.findUsersByLikeStr(likeStr);
+			if(userTemps != null && !userTemps.isEmpty())
+			{
+				userDTOs = new ArrayList<UserDTO>();
+				for(User userTemp : userTemps)
+				{				
+					UserDTO userDTO = new UserDTO();
+					userDTO.setUserId(userTemp.getId());
+					userDTO.setUserName(userTemp.getName());
+					userDTO.setUserPicture(userTemp.getUserPicture());
+					int fansNumber = fansRepository.findFansNumberByUserId(userTemp.getId());
+					userDTO.setFansNumber(fansNumber);
+					int findPictureNumber =pictureRepository.findPictureNumberByUserId(userTemp.getId());
+					userDTO.setCollectionNumber(findPictureNumber);
+					//判断是否是自己
+					if((myUserId .equals(userTemp.getId())))
+					{
+						userDTO.setIsMyUser(1);
+						
+					}
+					else
+					{
+						userDTO.setIsMyUser(0);
+					}
+					Fans fans = fansRepository.findByUserIdAndFansId(userTemp.getId(), myUserId);
+					//判断是否已关注
+					if(fans != null)
+					{
+						userDTO.setIsFocusOn(1);
+					}
+					else
+					{
+						userDTO.setIsFocusOn(0);
+					}
+					userDTOs.add(userDTO);
+				}
+				
+			}
+		}
+		return userDTOs;
+  }
 	
 }

@@ -34,4 +34,7 @@ public interface PictureRepository extends CrudRepository<Picture, Long>
 	@Query(value="select distinct p.id,p.pictureDescribe,p.pictureName,p.likeNumber,p.collectNumber,p.pictureLabel,a.id,a.albumTitle,u.id,u.name,u.userPicture from Picture p,Album a,User u  where a.userId=u.id and a.id=p.albumId and a.albumClassification=?1 order by (p.likeNumber+p.collectNumber) desc")
 	public List<Object> findPictureDTOByInterestNameAndPageable(String interestName, Pageable pageable);
 
+	//模糊查询图片
+	@Query("select p.id from Picture p where (p.pictureLabel like %?1%) or (p.pictureDescribe like %?1%) order by p.id desc")
+	public List<Long> findPictureIdsByLikeStr(String likeStr);
 }

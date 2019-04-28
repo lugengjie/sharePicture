@@ -41,5 +41,8 @@ public interface IPictureService
 	
 	//删除图片
 	public boolean deletePicture(Long userId, PictureDTO pictureDTO);
+	
+	//模糊查询图片
+	public List<PictureDTO> reseachPicturesByLike(Long myUserId,String likeStr);
 
 }

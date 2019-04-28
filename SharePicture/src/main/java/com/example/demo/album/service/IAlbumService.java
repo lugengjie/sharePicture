@@ -24,5 +24,7 @@ public interface IAlbumService
 	public boolean cancelFocusOnAlbum(Long albumId, Long userId);
 	//封装到showPictureOfAlbum的DTO
 	public AlbumDTO findAlbumDtoByUserIdAndAlbumId(Long userId, Long albumId);
+	//模糊查询相册
+	public List<AlbumDTO> reseachAlbumsByLike(Long myUserId, String likeStr);
 	
 }

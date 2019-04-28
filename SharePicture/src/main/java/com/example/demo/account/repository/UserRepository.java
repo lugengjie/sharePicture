@@ -26,5 +26,9 @@ public interface UserRepository extends CrudRepository<User, Long>
 	
 	@Query("from User u where u.id=?1")
 	public User findUserByUserId(Long userId);
+	
+	//模糊查询用户
+	@Query("from User u where (u.name like %?1%) or (u.email like %?1%) order by u.id desc")
+	public List<User> findUsersByLikeStr(String likeStr);
 
 }

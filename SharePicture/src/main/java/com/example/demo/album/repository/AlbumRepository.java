@@ -15,6 +15,11 @@ public interface AlbumRepository extends CrudRepository<Album, Long>
 	@Query("from Album a where a.userId=?1 order by a.id desc")
 	public List<Album> findAlbumsByUserId(Long id);
 	
+	//通过标签，描述，类别模糊查询
+	@Query("from Album a where (a.albumTitle like %?1%) or (a.albumDescribe like %?1%) or (a.albumClassification like %?1%) order by a.id desc")
+	public List<Album> reseachAlbumsByLike(String likeStr);
+	
+	
 	@Modifying
 	@Query("update Album a set a.albumTitle=?1,a.albumClassification=?2,a.albumDescribe=?3 where a.id=?4")
 	public void changeAlbum(String albumTitle, String albumClassification, String albumDescribe, Long id);
@@ -40,5 +45,7 @@ public interface AlbumRepository extends CrudRepository<Album, Long>
 	
 	@Query("select a.id,a.albumTitle,a.albumDescribe,u.id,u.name,u.userPicture from Album a,User u where a.id in (?1) and a.userId = u.id order by a.id desc")
 	public List<Object> findAlbumDTOByAlbumIds(List<Long> albumIds);
+	
+	
 	
 }
