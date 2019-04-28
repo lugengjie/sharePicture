@@ -17,6 +17,7 @@ import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.entity.FocusOnAlbum;
 import com.example.demo.album.repository.AlbumRepository;
 import com.example.demo.album.repository.FocusOnAlbumRepository;
+import com.example.demo.album.service.AlbumService;
 import com.example.demo.personalCenter.entity.Fans;
 import com.example.demo.personalCenter.entity.UserSettingDTO;
 import com.example.demo.personalCenter.repository.FansRepository;
@@ -44,6 +45,8 @@ public class PersonalCenterService implements IPersonalCenterService
 	LikePictureRepository likePictureRepository;
 	@Autowired
 	InterestRepository interestRepository;
+	@Autowired
+	AlbumService albumService;
 	
 	/**
 	 * 关注用户:1.将用户的被关注属性+1， 2.就关注关系存入数据库
@@ -59,6 +62,14 @@ public class PersonalCenterService implements IPersonalCenterService
 			Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
 			if(fansData == null)
 			{
+				List<Long> albumIds = albumRepository.findAlbumIdsByUserId(userId);
+				if(albumIds!=null && !albumIds.isEmpty())
+				{
+					for(Long albumId:albumIds)
+					{
+						albumService.focusOnAlbum(albumId, fansId);
+					}
+				}
 				int fansNumber = user.getFansNumber()+1;
 				user.setFansNumber(fansNumber);
 				userRepository.save(user);
@@ -80,6 +91,14 @@ public class PersonalCenterService implements IPersonalCenterService
 		Fans fansData = fansRepository.findByUserIdAndFansId(userId, fansId);
 		if(fansData != null)
 		{
+			List<Long> albumIds = albumRepository.findAlbumIdsByUserId(userId);
+			if(albumIds!=null && !albumIds.isEmpty())
+			{
+				for(Long albumId:albumIds)
+				{
+					albumService.cancelFocusOnAlbum(albumId, fansId);
+				}
+			}
 			int fansNumber = user.getFansNumber()-1;
 			user.setFansNumber(fansNumber);
 			userRepository.save(user);
@@ -159,13 +178,13 @@ public class PersonalCenterService implements IPersonalCenterService
 		{
 			Long userId = user.getId();
 			List<Long> albumIds = new ArrayList<Long>();
-			List<Long> albumIdsOfUser = albumRepository.findAlbumIdsByUserId(userId);
+			/*List<Long> albumIdsOfUser = albumRepository.findAlbumIdsByUserId(userId);*/
 			List<Long> albumIdsOfFansed = fansRepository.findAlbumIdsOfUsersByFansId(userId);
 			List<Long> albumIdsOfFocusedAlbum = focusOnAlbumRepository.findFocusOnAlbumIdsByUserId(userId);
-			if(albumIdsOfUser != null && !albumIdsOfUser.isEmpty())
+/*			if(albumIdsOfUser != null && !albumIdsOfUser.isEmpty())
 			{
 				albumIds.addAll(albumIdsOfUser);
-			}
+			}*/
 			if(albumIdsOfFansed != null && !albumIdsOfFansed.isEmpty())
 			{
 				albumIds.addAll(albumIdsOfFansed);

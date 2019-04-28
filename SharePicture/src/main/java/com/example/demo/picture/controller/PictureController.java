@@ -18,6 +18,7 @@ import com.example.demo.account.service.IAccountService;
 import com.example.demo.album.entity.AlbumDTO;
 import com.example.demo.album.service.AlbumService;
 import com.example.demo.album.service.IAlbumService;
+import com.example.demo.communication.service.PrivateLetterService;
 import com.example.demo.personalCenter.service.IPersonalCenterService;
 import com.example.demo.personalCenter.service.PersonalCenterService;
 import com.example.demo.picture.entity.PictureDTO;
@@ -36,6 +37,9 @@ public class PictureController
 	IPersonalCenterService personalCenterService;
 	@Autowired
 	IAccountService accountService;
+	@Autowired
+	PrivateLetterService privateLetterService;
+	
 	
 	/**
 	 * 展示相册中已有的图片或添加图片
@@ -59,6 +63,10 @@ public class PictureController
 		List<UserDTO> userDTOs = accountService.findUserDTOByAlbumId(userId, albumId);
 		List<PictureDTO> pictureDTOs = personalCenterService.findPictureDTOsOfUserByAlbumIds(albumIds, userId);
 		List<AlbumDTO> albums = albumService.showAlbum(userId);
+		UserDTO myUserDTO = personalCenterService.navUserDTO(userId);
+		int unreadMessageNum = privateLetterService.findUnreadMessageNum(userId);
+		model.addAttribute("unReadMessageNum", unreadMessageNum+"");
+		model.addAttribute("myUserDTO", myUserDTO);
 		model.addAttribute("userDTOs",userDTOs);
 		model.addAttribute("pictureDTOs", pictureDTOs);
 		model.addAttribute("albumDTO", albumDTOTemp);

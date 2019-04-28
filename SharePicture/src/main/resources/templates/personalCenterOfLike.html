@@ -5,6 +5,7 @@
   <title>personalCenter</title>
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="./../css/navigation.css">
+   <link rel="stylesheet" href="./../css/bubble.css">
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="./../js/homePagePlug.js"></script>
@@ -531,7 +532,7 @@
     </nav>
 
 
-    <!-- 照片加名字 -->
+     <!-- 照片加名字 -->
     <div id="pictureAndNamePanel" class="panel panel-default" th:if="${userDTO!=null}">
       <div class="panel-body">
         <div class="container">
@@ -543,11 +544,11 @@
                 <h2><strong th:text="${userDTO.userName}">卢耿杰</strong></h2>
               </div>
               <div id="setting" class="col-md-1 col-md-offset-7">          	
-                  <a href="/personalCenter/toUserSetting"><p id="userSetting" th:if="${userDTO.isMyUser==1}" class="glyphicon glyphicon-cog" style="margin-right:-40px;" ></p></a>
+                 <a href="/personalCenter/toUserSetting"><p id="userSetting" th:if="${userDTO.isMyUser==1}" class="glyphicon glyphicon-cog" style="margin-right:-40px;" ></p></a>
                  <div>
 		                 <button style="margin-left:-10px" class="navFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 0}" th:userId="${userDTO.userId}">关注用户</button>
 		                 <button style="margin-left:-10px" class="navCancelFocusOnUserButton btn btn-default" type="button" th:if="${userDTO.isMyUser ==0 && userDTO.isFocusOn == 1}" th:userId="${userDTO.userId}">取消关注</button> 
-		                 <div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a><span class="glyphicon glyphicon-envelope" th:if="${userDTO.isMyUser ==0}"></span></a></div>
+		                 <div style="margin-right:-48px;margin-top:-38px;font-size:35px;" ><a id="openPrivateLetterModel" th:userId="${userDTO.userId}"><span class="glyphicon glyphicon-envelope" th:if="${userDTO.isMyUser ==0}"></span></a></div>
                  </div>
               </div>
             </div>
@@ -567,9 +568,9 @@
         </div>
       <div id="navTabPanel" class="panel-footer">
            <ul class="nav nav-tabs">
-              <li><a id="toPersonalCenterOfAlbum" data-toggle="tab" href="#menu3" th:userId="${userDTO.userId}">相册</a></li>
-              <li><a id="toPersonalCenterOfCollect" data-toggle="tab" href="#menu2" th:userId="${userDTO.userId}">收藏</a></li>
-              <li class="active"><a id="toPersonalCenterOfLike" data-toggle="tab" href="#menu3" th:userId="${userDTO.userId}">喜欢</a></li>
+              <li class="active"><a id="toPersonalCenterOfAlbum" data-toggle="tab" href="#albumPage"  th:userId="${userDTO.userId}">相册</a></li>
+              <li><a id="toPersonalCenterOfCollect" data-toggle="tab" href="#albumPage" th:userId="${userDTO.userId}">收藏</a></li>
+              <li><a id="toPersonalCenterOfLike"  data-toggle="tab" href="#albumPage" th:userId="${userDTO.userId}">喜欢</a></li>
           </ul>
       </div>
      </div>
